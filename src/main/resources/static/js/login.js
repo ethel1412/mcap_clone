@@ -46,20 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
     handleUserTypeChange();
   }
 
+  // Stagger bounceIn animation on step numbers.
+  // The keyframe is defined in login.css (not inline) to comply with CSP.
   steps.forEach((step, index) => {
     step.style.animation = `bounceIn 0.6s ${index * 0.2}s forwards`;
-    step.style.opacity = "0";
   });
-
-  const style = document.createElement("style");
-  style.textContent = `
-    @keyframes bounceIn {
-      0% { transform: scale(0.1); opacity: 0; }
-      60% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-  `;
-  document.head.appendChild(style);
 
   document.getElementById("refresh-button")?.addEventListener("click", getCaptcha);
   getCaptcha();
