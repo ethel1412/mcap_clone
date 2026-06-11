@@ -47,9 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Stagger bounceIn animation on step numbers.
-  // The keyframe is defined in login.css (not inline) to comply with CSP.
+  // Use CSS custom property --step-delay (set via setProperty, CSP-safe) and
+  // a CSS class .step-bounce-in defined in login.css to avoid violating
+  // the style-src CSP directive (no 'unsafe-inline' allowed).
   steps.forEach((step, index) => {
-    step.style.animation = `bounceIn 0.6s ${index * 0.2}s forwards`;
+    step.style.setProperty('--step-delay', `${index * 0.2}s`);
+    step.classList.add('step-bounce-in');
   });
 
   document.getElementById("refresh-button")?.addEventListener("click", getCaptcha);
