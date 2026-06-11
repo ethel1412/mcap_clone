@@ -115,9 +115,10 @@
                     <div id="login-error" class="alert alert-danger d-none" role="alert"></div>
                     <div id="login-success" class="alert alert-success d-none" role="alert"></div>
 
+                    <!-- action aligned to /login/process to match CustomAuthenticationFilter.setFilterProcessesUrl("/login/process") -->
                     <form id="login-form"
                           name="login-form"
-                          th:action="@{/loginprocess}"
+                          th:action="@{/login/process}"
                           method="post"
                           th:object="${request}"
                           autocomplete="off">
@@ -139,15 +140,18 @@
                             <label for="username" class="col-sm-4 col-form-label fw-bold">Username</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="username" name="username"
-                                       placeholder="Enter username" maxlength="50" required>
+                                       placeholder="Enter username" maxlength="50"
+                                       autocomplete="username" required>
                             </div>
                         </div>
 
                         <div class="row mb-3 align-items-center">
                             <label for="password" class="col-sm-4 col-form-label fw-bold">Password</label>
                             <div class="col-sm-8">
+                                <!-- autocomplete="current-password" fixes browser accessibility warning -->
                                 <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Enter password" maxlength="250" required>
+                                       placeholder="Enter password" maxlength="250"
+                                       autocomplete="current-password" required>
                             </div>
                         </div>
 
