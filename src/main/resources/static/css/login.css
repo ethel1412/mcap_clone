@@ -14,13 +14,24 @@
   100% { transform: scale(1);   opacity: 1; }
 }
 
-/* Applied via JS: step.style.animation = `bounceIn ...`
-   Keep opacity:0 as the initial state via JS attribute,
-   the animation fills forward to opacity:1 */
+/* Base state — hidden until animation runs */
 .step-number {
   opacity: 0;
   animation-fill-mode: forwards;
 }
+
+/* Trigger class applied by JS — replaces style.setProperty('--step-delay', ...) */
+.step-bounce-in {
+  animation: bounceIn 0.6s ease forwards;
+}
+
+/* Per-step delay classes — replaces inline style="--step-delay: Xs" */
+.step-delay-0 { animation-delay: 0.0s; }
+.step-delay-1 { animation-delay: 0.2s; }
+.step-delay-2 { animation-delay: 0.4s; }
+.step-delay-3 { animation-delay: 0.6s; }
+.step-delay-4 { animation-delay: 0.8s; }
+.step-delay-5 { animation-delay: 1.0s; }
 
 /* Password field — autocomplete accessibility fix */
 input[name="password"] {

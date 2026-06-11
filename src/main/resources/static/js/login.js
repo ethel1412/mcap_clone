@@ -47,12 +47,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Stagger bounceIn animation on step numbers.
-  // Use CSS custom property --step-delay (set via setProperty, CSP-safe) and
-  // a CSS class .step-bounce-in defined in login.css to avoid violating
-  // the style-src CSP directive (no 'unsafe-inline' allowed).
+  // Uses CSS classes .step-bounce-in and .step-delay-{index} defined in login.css
+  // instead of inline style.setProperty — avoids CSP 'unsafe-inline' violation.
   steps.forEach((step, index) => {
-    step.style.setProperty('--step-delay', `${index * 0.2}s`);
-    step.classList.add('step-bounce-in');
+    step.classList.add("step-bounce-in", `step-delay-${index}`);
   });
 
   document.getElementById("refresh-button")?.addEventListener("click", getCaptcha);
