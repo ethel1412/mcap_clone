@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,8 +26,20 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
+/**
+ * Issue 3 – Improper Error Handling
+ *
+ * Centralises all exception handling so that:
+ *  - No stack traces, class names, or server details are leaked to clients.
+ *  - Browser requests receive a Thymeleaf error page (error/4xx or error/5xx).
+ *  - API/AJAX requests (Accept: application/json) receive a structured JSON body.
+ *  - The fallback handler catches all unhandled exceptions and logs them server-side
+ *    while returning a generic message to the client.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private static final String TRACKING_ID = "trackingId";
 
@@ -59,7 +73,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body(message, errors, req));
     }
 
-    // ── Handlers ──
+    // ── Handlers ─────────────────────────────────────────────────────────────
 
     // Custom base exception → use its HttpStatus and message
     @ExceptionHandler(PracticeCustomBaseException.class)
@@ -139,6 +153,7 @@ public class GlobalExceptionHandler {
     // Fallback – return generic 500; details are logged server-side only
     @ExceptionHandler(Exception.class)
     public Object handleGeneral(HttpServletRequest req, Exception ex) {
+        log.error("Unhandled exception on [{} {}]: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
         return resolve(req, HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred. Please try again later.", null);
     }
