@@ -1,0 +1,4 @@
+/* seat-allotment inline style replacements */
+.col-serial       { width: 60px;  }
+.col-status       { width: 150px; }
+.col-actions-wide { width: 220px; }

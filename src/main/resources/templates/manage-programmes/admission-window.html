@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Manage Programme/Major/Course Admission Window</title>
+        <link th:href="@{/css/manage-programmes/admission-window.css}" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item">
+                            <a href="/admission-window/institute" class="text-decoration-none">
+                                Admission Window
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Select Admission Window
+                        </li>
+                    </ol>
+                </nav>
+                <h4 class="mb-0 text-gray-800"><i class="bi bi-building text-primary me-2"></i>Manage Institute Seats</h4>
+            </div>
+        </div>
+
+        <div class="alert shadow-sm mb-4 alert-guide-blue" role="alert">
+            <h5 class="alert-heading text-primary fw-bold mb-2"><i class="bi bi-info-circle-fill me-2"></i>Institute Seat Matrix Guide</h5>
+            <p class="mb-2 text-secondary">Use this panel to define and submit your seat capacity for upcoming admission windows.</p>
+            <ul class="text-secondary small mb-0">
+                <li><strong>Step 1 (Configure):</strong> Select an active window and input your available seat counts.</li>
+                <li><strong>Step 2 (Submit):</strong> Lock in your seats with a Final Submit.</li>
+                <li><strong>Step 3 (Lock):</strong> Once submitted, the matrix is permanently locked. Ensure your data is correct before proceeding.</li>
+            </ul>
+        </div>
+
+        <div id="alert-box"></div>
+
+        <div id="window-selection-section">
+            <div class="section-header mb-4">
+                <h5 class="fw-bold text-dark mb-1"><span class="badge bg-primary rounded-circle me-2 px-2 py-1">1</span>Select Active Window</h5>
+                <p class="text-muted small ms-4 ps-2">Choose an admission window to manage your intake capacity.</p>
+            </div>
+
+            <div id="windows-loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted fw-bold">Loading active windows...</p>
+            </div>
+
+            <div id="windows-grid" class="row g-4 d-none">
+            </div>
+
+            <div id="no-windows" class="alert alert-info shadow-sm d-none">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                No active admission windows available for seat management at this time.
+            </div>
+        </div>
+
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/manage-programmes/admission-window.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

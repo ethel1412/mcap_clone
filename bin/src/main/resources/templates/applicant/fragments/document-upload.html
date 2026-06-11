@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <!-- Page Header and Instructions (Unchanged) -->
+    <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary"><i class="bi bi-file-earmark-arrow-up-fill me-2"></i>Document Upload</h1>
+    </div>
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.5rem;"></i>
+        <div>
+            Please upload clear copies of the required documents. <br>
+            <b>Supported formats:</b> JPG, PNG, JPEG <b>Minimum size:</b> 50Kb per file <b>Maximum size:</b> 2MB per file.
+        </div>
+    </div>
+    
+    <!-- Upload Section -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Upload Required Documents</h5>
+        </div>
+        <div class="list-group list-group-flush">
+            <!-- Loop through required documents -->
+            <div th:each="docEntry : ${requiredDocTypes}" class="list-group-item p-3">
+                <div th:with="docType=${docEntry.key}, docLabel=${docEntry.value}, uploadedDoc=${uploadedDocsMap.get(docType)}">
+                    
+                    <!-- View A: If Document is ALREADY UPLOADED (MODIFIED) -->
+                    <div th:if="${uploadedDoc != null}" class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <span class="fw-bold" th:text="${docLabel}"></span><br>
+                            <!-- ✅ UPDATE: Use the new fileName field -->
+                            <span class="text-muted small fst-italic" th:text="${uploadedDoc.fileName}"></span>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <span class="badge bg-success p-2 me-2"><i class="bi bi-check-circle-fill me-1"></i> Uploaded</span>
+
+                            <!-- ✅ UPDATE: Change the button to use the document ID -->
+                            <button type="button" class="btn btn-sm btn-outline-primary preview-uploaded-btn"
+                                    th:data-document-id="${uploadedDoc.id}"
+                                    th:data-original-name="${uploadedDoc.fileName}">
+                                <i class="bi bi-eye-fill me-1"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- View B: If Document is NOT YET UPLOADED -->
+                    <form th:unless="${uploadedDoc != null}" class="document-upload-form"
+                          th:action="@{/applicants/documents/upload}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="documentType" th:value="${docType}">
+                        
+                        <!-- B1: The initial upload area (visible by default) -->
+                        <div class="upload-area">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-md-4"><label class="form-label fw-bold mb-0" th:text="${docLabel}"></label></div>
+                                <div class="col-md-8"><input type="file" name="documentFile" class="form-control" required accept=".jpg, .jpeg, .png, .pdf"></div>
+                            </div>
+                        </div>
+
+                        <!-- B2: The staging area (hidden by default) -->
+                        <div class="staging-area d-none">
+                             <div class="row g-2 align-items-center">
+                                <div class="col-md-5">
+                                    <span class="fw-bold" th:text="${docLabel}"></span><br>
+                                    <span class="file-name-display text-muted small fst-italic"></span>
+                                </div>
+                                <div class="col-md-7 text-md-end">
+                                    <button type="button" class="btn btn-sm btn-secondary preview-staged-btn"><i class="bi bi-eye-fill me-1"></i> Preview</button>
+                                    <button type="button" class="btn btn-sm btn-danger cancel-staged-btn"><i class="bi bi-x-circle me-1"></i> Cancel</button>
+                                    <button type="submit" class="btn btn-sm btn-primary confirm-upload-btn"><i class="bi bi-upload me-1"></i> Confirm & Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Final Save/Continue Button -->
+     <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+         <button type="button" class="btn btn-success btn-lg px-4" onclick="finalSaveConfirmation()">
+            <i class="bi bi-check-lg me-2"></i>Save & Continue
+         </button>
+    </div>
+
+    <!-- Bootstrap Modal for Previewing Files -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="previewModalBody" style="height: 75vh;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

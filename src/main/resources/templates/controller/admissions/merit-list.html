@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title th:text="'Merit List - ' + ${programmeName}">Merit List</title>
+        <link th:href="@{/css/controller/admissions/merit-list.css}" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <div class="text-uppercase text-muted small fw-bold mb-1" th:text="${streamName}">Stream Name</div>
+                <h2 class="programme-title mb-2" th:text="${programmeName}">Programme Name</h2>
+
+                <div class="d-flex gap-2">
+                    <span class="meta-pill">
+                        <i class="bi bi-calendar3"></i> <span th:text="${admissionSession}">2025-26</span>
+                    </span>
+                    <span class="meta-pill meta-pill-green">
+                        <i class="bi bi-layers"></i> <span th:text="${roundType}">CUET</span>
+                    </span>
+                                        <span class="meta-pill meta-pill-blue">
+                        <i class="bi bi-geo-alt"></i> <span th:text="'Phase ' + ${phaseNo}">Phase 1</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-danger" onclick="downloadPdf()">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Export PDF
+                </button>
+                <button type="button" class="btn btn-info text-white" onclick="showMeritRules()">
+                    <i class="bi bi-info-circle me-2"></i> View Applied Rules
+                </button>
+
+                <a class="btn btn-outline-secondary"
+                   th:href="@{/controller/admissions/manage(
+                       admissionWindowCode=${admissionWindowCode},
+                       roundType=${roundType},
+                       phaseNo=${phaseNo}
+                   )}">
+                    <i class="bi bi-arrow-left me-2"></i> Back to Manage
+                </a>
+            </div>
+        </div>
+
+        <input type="hidden" id="admissionWindowCode" th:value="${admissionWindowCode}">
+        <input type="hidden" id="programmeId" th:value="${programmeId}">
+        <input type="hidden" id="streamId" th:value="${streamId}">
+        <input type="hidden" id="roundType" th:value="${roundType}">
+        <input type="hidden" id="phaseNo" th:value="${phaseNo}">
+        <input type="hidden" id="programmeLevelHidden" th:value="${programmeLevel}">
+
+        <div class="merit-card">
+            <div class="merit-card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-dark"><i class="bi bi-list-ol me-2 text-primary"></i>Merit List Candidates</h5>
+                <div id="statusBadge" class="badge bg-light text-dark border">Loading...</div>
+            </div>
+
+            <div class="merit-table-wrapper">
+                <table class="table-custom" id="meritTable">
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;" class="text-center">Rank</th>
+                        <th style="width: 15%;">App No.</th>
+                        <th style="width: 30%;">Applicant Name</th>
+                        <th style="width: 15%;">Category</th>
+                        <th style="width: 15%;" class="text-end">Merit Score</th>
+                    </tr>
+                    </thead>
+                    <tbody id="meritTbody">
+                    </tbody>
+                </table>
+
+                <div id="stateContainer" class="state-container">
+                    <i class="bi bi-hourglass-split state-icon"></i>
+                    <p class="mb-0 fw-medium">Initializing merit list data...</p>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    This list is generated based on the configured eligibility rules. Ranks are final after tie-breaking.
+                </small>
+
+                <nav aria-label="Merit list pages">
+                    <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="rulesModalLabel">
+                            <i class="bi bi-gear-fill me-2"></i> Applied Merit Rules
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4" id="rulesModalBody">
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/controller/admissions/merit-list.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

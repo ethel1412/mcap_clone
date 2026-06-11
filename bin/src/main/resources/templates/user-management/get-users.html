@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Manage Users</title>
+</head>
+<body>
+<th:block th:fragment="main">
+<section class="container-fluid px-4 py-4">
+  <h1 class="h2 mb-4">Manage Users</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-users me-2"></i> All Users
+    </div>
+    <div class="card-body">
+      <table id="usersTable" class="table table-striped table-hover" style="width:100%">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User Code</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Org Owner Type</th>
+            <th>Date Joined</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination controls -->
+  <div class="d-flex justify-content-between align-items-center mt-2" id="paginationControls">
+    <button class="btn btn-outline-primary btn-sm" id="prevBtn" disabled>Prev</button>
+    <span id="pageInfo" class="text-muted small"></span>
+    <button class="btn btn-outline-primary btn-sm" id="nextBtn" disabled>Next</button>
+  </div>
+
+  <!-- Bootstrap toast -->
+  <div id="statusToast" class="toast align-items-center text-white border-0 position-fixed bottom-0 end-0 m-3"
+       role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script th:src="@{/js/axios.min.js}" defer></script>
+  <script th:src="@{/js/user-management/get-users.js}" defer></script>
+</section>
+</th:block>
+</body>
+</html>

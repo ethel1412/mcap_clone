@@ -1,0 +1,10 @@
+package nic.meg.mcap.enums;
+
+public enum ApplicationStatus {
+    STARTED,
+    PERSONAL_DETAILS_COMPLETE,
+    ACADEMICS_COMPLETE,
+    PROGRAMME_SELECTION_COMPLETE,
+    DOCUMENTS_UPLOAD_COMPLETE,
+    SUBMITTED
+}

@@ -1,0 +1,58 @@
+/* admission-window-programmes.css */
+
+/* Table look & feel */
+.window-programmes-table td,
+.window-programmes-table th {
+    vertical-align: middle;
+}
+
+.window-programmes-table .criteria-pill {
+    font-size: 0.75rem;
+}
+
+/* Dotted border alert style, consistent with other pages */
+.border-dashed {
+    border-style: dashed !important;
+}
+
+/* Approval card at bottom */
+.approval-card {
+    border-left: 3px solid rgba(25, 135, 84, 0.25);
+}
+
+.approval-card .card-body {
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.03), rgba(25, 135, 84, 0.0));
+}
+
+/* Responsive layout for bottom card */
+@media (max-width: 767.98px) {
+    .approval-card .card-body {
+        align-items: stretch !important;
+    }
+}
+
+/* Subtle hover on table rows */
+.window-programmes-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Helper text width */
+#approval-helper-text {
+    max-width: 360px;
+}
+
+/* Schedule Status Banner */
+.schedule-status-banner {
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust top position if you have a different navbar height */
+@media (max-width: 768px) {
+    .schedule-status-banner {
+        top: 60px;
+    }
+}
+

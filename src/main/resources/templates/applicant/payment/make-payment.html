@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Processing Payment...</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/applicant/payment.css}">
+
+    <!-- Cashfree SDK & External Bridge JS-->
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <script defer src="/js/applicant/payment-bridge.js"></script>
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center payment-full-height">
+
+<div class="text-center">
+    <div class="spinner-border text-primary mb-3 cashfree-loader" role="status"></div>
+    <h3 class="fw-bold">Connecting to Secure Payment Gateway...</h3>
+    <p class="text-muted mb-4">Order ID: <span th:text="${orderId}" class="fw-bold text-dark"></span></p>
+
+    <!-- Hidden button holding data for the external JS -->
+    <button id="payBtn"
+            class="btn btn-outline-primary d-none"
+            th:data-session-id="${paymentSessionId}"
+            th:data-order-id="${orderId}">
+        Click here if the payment window does not open automatically
+    </button>
+</div>
+
+</body>
+</html>

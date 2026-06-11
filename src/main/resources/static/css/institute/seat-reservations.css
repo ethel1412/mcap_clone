@@ -1,0 +1,357 @@
+/* ===========================
+   Seat Reservations Styles
+   =========================== */
+
+/* Summary Stat Cards */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.stat-card-primary .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stat-card-success .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.stat-card-warning .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.stat-card-info .stat-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.stat-details h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #2d3748;
+}
+
+.stat-details p {
+    font-size: 0.875rem;
+    color: #718096;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Form Card */
+.reservation-form-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.reservation-form-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border: none;
+}
+
+.reservation-form-card .card-body {
+    padding: 1.5rem;
+}
+
+/* Section Header */
+.section-header {
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.section-header h5 {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* Reservation Cards */
+.reservation-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    height: 100%;
+}
+
+.reservation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.reservation-header {
+    padding: 1rem 1.25rem;
+    background: #f7fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Badge Styles - FIXED */
+.reservation-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Badge Colors - ALL TYPES */
+.badge-community {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.badge-exam {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+}
+
+.badge-pwd {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.badge-defence {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.badge-ews {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+    color: white;
+}
+
+.badge-sports {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+/* Delete Button - FIXED WITH SVG ICON */
+.btn-delete {
+    background: #fff;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-delete:active {
+    transform: scale(0.95);
+}
+
+.btn-delete svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+/* Reservation Body */
+.reservation-body {
+    padding: 1.25rem;
+}
+
+.reservation-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+/* Exam Score Info */
+.exam-score-info {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+/* Seat Info */
+.seat-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.seat-number, .seat-percentage {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+.seat-number .number, .seat-percentage .percentage {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.seat-number .label, .seat-percentage .label {
+    display: block;
+    font-size: 0.75rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+    color: #2d3748;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #718096;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Form Enhancements */
+.form-label {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.form-select, .form-control {
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    padding: 0.625rem 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.625rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary {
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    padding: 0.5rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .stat-details h3 {
+        font-size: 1.5rem;
+    }
+
+    .reservation-card {
+        margin-bottom: 1rem;
+    }
+}
+/* CSP Utility Classes for Seat Management */
+.alert-guide-blue { background-color: #f0f9ff !important; border-left: 4px solid #0284c7 !important; }
+.fs-0-85rem { font-size: 0.85rem !important; }
+.fs-0-7rem { font-size: 0.7rem !important; }
+.w-50px { width: 50px !important; }

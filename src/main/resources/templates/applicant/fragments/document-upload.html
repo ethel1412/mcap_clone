@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h2 fw-bold text-primary"><i class="bi bi-cloud-arrow-up-fill me-2"></i>Document Upload</h1>
+    </div>
+    <div class="alert alert-warning border-warning border-2" role="alert">
+        <h5 class="alert-heading fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Important Instructions</h5>
+        <p>Please upload clear, legible copies of all required documents. Ensure files are in the specified format and within the size limits.</p>
+        <hr>
+        <p class="mb-0 fw-bold">Submitting fraudulent, tampered, or misleading documents is a serious offense and will result in immediate disqualification of your application.</p>
+    </div>
+    <div th:if="${status.formLocked}" class="alert alert-info border-0" role="alert" aria-live="polite">
+        <h5 class="alert-heading mb-1"><i class="bi bi-lock-fill me-2"></i>Application Locked</h5>
+        <p class="mb-0">This section is locked. No further edits are permitted.</p>
+    </div>
+    
+    
+	<div class="form-text small text-muted mt-1">
+    Accepted documents as proof for permanent residents of Meghalaya: Permanent Resident Certificate (PRC),
+    Parent's Voter ID, or any valid government-issued residency proof.
+	</div>
+	
+    <fieldset th:disabled="${status.formLocked}">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light py-3">
+                <h5 class="mb-0">Required Documents</h5>
+            </div>
+            <div class="list-group list-group-flush" id="document-upload-container">
+                <div th:each="docEntry : ${requiredDocTypes}" class="list-group-item p-3 document-row" th:with="docType=${docEntry.key}, docLabel=${docEntry.value}, uploadedDoc=${uploadedDocsMap.get(docType)}">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-lg-5">
+                            <h6 class="mb-1 fw-bold text-dark" th:text="${docLabel}"></h6>
+                            <div class="form-text small text-muted">
+                                <ul class="list-inline mb-0">
+                                    <th:block th:switch="${docType}">
+                                        <li th:case="'Photo'" class="list-inline-item">JPG/PNG &bull; 10-200KB</li>
+                                        <li th:case="'Signature'" class="list-inline-item">JPG/JPEG &bull; 4-30KB</li>
+                                        <li th:case="*" class="list-inline-item">PDF/JPG/PNG &bull; Max 500KB</li>
+                                    </th:block>
+                                </ul>
+                            </div>
+                            <div class="validation-message text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="preview-box border rounded text-center" th:attr="data-document-id=${uploadedDoc?.id}, data-original-name=${uploadedDoc?.fileName}" th:classappend="${uploadedDoc} ? 'clickable-preview'">
+                                <div class="preview-content h-100">
+                                    <th:block th:if="${uploadedDoc}">
+                                        <img th:if="${#strings.startsWith(uploadedDoc.fileType, 'image/')}"
+                                             th:src="@{/applicants/documents/{id}(id=${uploadedDoc.id})}"
+                                             alt="Preview" class="img-fluid h-100 preview-image">
+                                        <div th:unless="${#strings.startsWith(uploadedDoc.fileType, 'image/')}" class="d-flex flex-column justify-content-center h-100 text-muted">
+                                            <i class="bi bi-file-earmark-pdf-fill fs-2"></i>
+                                            <span class="small" th:text="${#strings.abbreviate(uploadedDoc.fileName, 15)}"></span>
+                                        </div>
+                                    </th:block>
+                                    <span th:unless="${uploadedDoc}" class="preview-placeholder text-muted small d-flex align-items-center justify-content-center h-100">
+                                        <i class="bi bi-image me-2"></i>Preview
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 text-lg-end">
+                            <div class="upload-spinner spinner-border spinner-border-sm text-primary me-2 d-none" role="status">
+                                <span class="visually-hidden">Uploading...</span>
+                            </div>
+                            <label th:for="${'file-input-' + docType}" th:classappend="${uploadedDoc} ? 'btn-outline-secondary' : 'btn-primary'" class="btn btn-sm file-upload-label position-relative">
+                                <i th:classappend="${uploadedDoc} ? 'bi-arrow-repeat' : 'bi-upload'" class="bi me-2"></i>
+                                <span th:text="${uploadedDoc} ? 'Change File' : 'Choose File'"></span>
+                                <span th:if="${uploadedDoc}" class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" title="Uploaded"></span>
+                            </label>
+                            <input type="file" name="documentFile" th:id="${'file-input-' + docType}" class="document-file-input visually-hidden" th:data-doc-type="${docType}" th:attr="accept=${docType == 'Photo' ? '.jpg,.jpeg,.png' : (docType == 'Signature' ? '.jpg,.jpeg' : '.pdf,.jpg,.jpeg,.png')}, data-min-size=${docType == 'Photo' ? '10' : (docType == 'Signature' ? '4' : '10')}, data-max-size=${docType == 'Photo' ? '200' : (docType == 'Signature' ? '30' : '500')}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="d-flex justify-content-end mt-4 pt-3 border-top" th:if="${!status.formLocked}">
+        <button type="button" id="final-save-docs-btn" class="btn btn-success btn-lg px-4" th:disabled="${isDocumentsFinalized}">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span th:if="${isDocumentsFinalized}">Documents Finalized</span>
+            <span th:unless="${isDocumentsFinalized}">Finalize &amp; Continue</span>
+        </button>
+    </div>
+</div>
+
+</body>
+</html>

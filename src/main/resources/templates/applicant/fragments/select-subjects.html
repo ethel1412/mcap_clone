@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    
+    <style>
+        .shift-tile-label { transition: all 0.2s ease-in-out; border-width: 2px; }
+        .btn-check:checked + .shift-tile-label { background-color: #f0f7ff; border-color: #0d6efd; transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+        .btn-check:checked + .shift-tile-label i { color: #0d6efd !important; }
+        .btn-check:checked + .shift-tile-label .shift-title { color: #0d6efd !important; }
+    </style>
+
+    <main role="main" class="pb-5">
+        
+        <header class="d-flex justify-content-between align-items-center pt-3 pb-3 mb-4 border-bottom">
+            <h1 class="h3 fw-bold text-primary mb-0">
+                <i class="bi bi-ui-checks-grid me-2"></i>Subject Combination Builder
+            </h1>
+        </header>
+
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-center p-4 mb-4" role="alert" style="background-color: #e8f5e9;">
+            <i class="bi bi-check-circle-fill fs-1 text-success me-4"></i>
+            <div>
+                <h4 class="alert-heading h5 fw-bold text-success mb-1">Seat Acceptance Confirmed!</h4>
+                <p class="mb-0 text-dark">
+                    You are confirming your admission for <strong class="text-success" th:text="${programmeName}">Programme</strong> at <strong class="text-success" th:text="${instituteName}">Institute</strong>.<br>
+                    Please complete the final mandatory step below to lock in your curriculum.
+                </p>
+            </div>
+        </div>
+
+        <form id="subjectPreferenceForm">
+            <input type="hidden" id="seatAllotmentId" th:value="${seatAllotmentId}">
+            <input type="hidden" id="programmeOfferedId" th:value="${programmeOfferedId}">
+
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h2 class="mb-0 h5 fw-bold text-dark"><span class="badge bg-primary rounded-circle me-2 px-2 py-1">1</span> Choose Your Shift</h2>
+                </div>
+                <div class="card-body p-4 bg-light">
+                    <p class="text-muted text-center mb-4">Select your preferred class timing. The shift you choose determines which subject pools are available.</p>
+                    
+                    <div class="row g-4 justify-content-center max-w-75 mx-auto">
+                        <div class="col-md-5">
+                            <input type="radio" class="btn-check" name="chosenShift" id="morning_shift" value="MORNING" autocomplete="off">
+                            <label class="btn btn-outline-secondary w-100 p-4 rounded-4 shadow-sm shift-tile-label bg-white" for="morning_shift">
+                                <i class="bi bi-sunrise-fill fs-1 text-secondary d-block mb-3"></i>
+                                <span class="fs-5 fw-bold text-secondary shift-title d-block">Morning Shift</span>
+                                <small class="text-muted fw-normal">Classes start early</small>
+                            </label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="radio" class="btn-check" name="chosenShift" id="day_shift" value="DAY" autocomplete="off">
+                            <label class="btn btn-outline-secondary w-100 p-4 rounded-4 shadow-sm shift-tile-label bg-white" for="day_shift">
+                                <i class="bi bi-brightness-high-fill fs-1 text-secondary d-block mb-3"></i>
+                                <span class="fs-5 fw-bold text-secondary shift-title d-block">Day Shift</span>
+                                <small class="text-muted fw-normal">Standard daytime classes</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subjectSelectionContainer" class="d-none">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 h5 fw-bold text-dark"><span class="badge bg-primary rounded-circle me-2 px-2 py-1">2</span> Rank Your Subjects</h2>
+                        <span class="badge bg-warning text-dark border border-warning rounded-pill px-3"><i class="bi bi-asterisk me-1"></i>Mandatory</span>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <div class="alert alert-secondary border-0 small mb-4" style="background-color: #f8f9fa;">
+                            <i class="bi bi-info-circle-fill text-secondary me-2"></i>
+                            For each category below, click the box to search and select your top <strong>three</strong> subject preferences in your desired order of priority.
+                        </div>
+                        
+                        <div id="subjectPoolsContainer" class="px-md-3">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-success bg-success bg-opacity-10">
+                    <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                        <div class="mb-3 mb-md-0 text-success-emphasis">
+                            <i class="bi bi-shield-lock-fill me-2 fs-5 align-middle"></i>
+                            <strong>Almost done!</strong> Review your choices carefully before finalizing.
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm fw-bold" id="confirmSubjectsBtn" disabled>
+                            <i class="bi bi-check2-circle me-2"></i>Finalize & Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <script src="/js/choices.min.js"></script>
+        <script th:src="@{/js/applicant/select-subjects.js}"></script>
+    </main>
+</div>
+</body>
+</html>

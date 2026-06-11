@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="stepper(activeStep, applicationStatus)" class="stepper-nav" aria-label="Application Steps">
+    <ol class="stepper">
+        <li th:classappend="${(applicationStatus.personalDetailsComplete ?: false) ? 'complete' : (activeStep == 'personal' ? 'active' : '')}">
+            <a class="nav-loader" th:attr="data-url=@{/applicants/fragments/personal-details(applicationId=${applicationId})}">
+                <span class="step-number">1</span>
+                <span class="step-label">Personal Details</span>
+            </a>
+        </li>
+        <li th:classappend="${(applicationStatus.academicDetailsComplete ?: false) ? 'complete' : (activeStep == 'academic' ? 'active' : '')}">
+            <a th:classappend="${!(applicationStatus.personalDetailsComplete ?: false)} ? 'disabled'" class="nav-loader" th:attr="data-url=@{/applicants/fragments/academic-details(applicationId=${applicationId})}">
+                <span class="step-number">2</span>
+                <span class="step-label">Academic Details</span>
+            </a>
+        </li>
+        <li th:classappend="${(applicationStatus.programmeSelectionComplete ?: false) ? 'complete' : (activeStep == 'programme' ? 'active' : '')}">
+            <a th:classappend="${!(applicationStatus.academicDetailsComplete ?: false)} ? 'disabled'" class="nav-loader" th:attr="data-url=@{/applicants/fragments/programme-selection(applicationId=${applicationId})}">
+                <span class="step-number">3</span>
+                <span class="step-label">Programme Selection</span>
+            </a>
+        </li>
+        <li th:classappend="${(applicationStatus.documentsUploadComplete ?: false) ? 'complete' : (activeStep == 'documents' ? 'active' : '')}">
+            <a th:classappend="${!(applicationStatus.programmeSelectionComplete ?: false)} ? 'disabled'" class="nav-loader" th:attr="data-url=@{/applicants/fragments/document-upload(applicationId=${applicationId})}">
+                <span class="step-number">4</span>
+                <span class="step-label">Documents Upload</span>
+            </a>
+        </li>
+        <li th:classappend="${(applicationStatus.paymentComplete ?: false) ? 'complete' : (activeStep == 'payment' ? 'active' : '')}">
+            <a th:classappend="${!(applicationStatus.documentsUploadComplete ?: false)} ? 'disabled'" class="nav-loader" th:attr="data-url=@{/applicants/payment/show-details(applicationId=${applicationId})}">
+                <span class="step-number">5</span>
+                <span class="step-label">Payment</span>
+            </a>
+        </li>
+    </ol>
+</nav>
+</body>
+</html>

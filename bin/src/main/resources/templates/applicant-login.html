@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Applicant Login</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <!-- Google Fonts: Inter for clean readability, optionally a bolder font for headings -->
+  <link rel="stylesheet" th:href="@{/css/css2.css}">
+  <link rel="stylesheet" th:href="@{/css/applicant/applicant-login.css}">
+</head>
+<body>
+
+  <div class="container d-flex flex-column justify-content-center py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xxl-5">
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success text-center mb-4" role="alert" th:text="${success}"></div>
+
+        <div th:if="${otpDebug}" class="alert alert-warning text-center mb-4" role="alert">
+          <strong>DEBUG OTP:</strong> <span th:text="${otpDebug}"></span>
+        </div>
+
+        <div class="card bg-white">
+          <div class="card-body p-5">
+
+            <header class="text-center mb-5">
+              <h1 class="display-5 mb-3">Applicant Login</h1>
+              <p class="text-muted">Securely access your application using your Application Number and a one-time password sent to your registered mobile number.</p>
+            </header>
+
+            <div th:if="${error}" class="alert alert-danger mb-4" role="alert" th:text="${error}"></div>
+
+            
+            <!-- Request OTP Form -->
+            <form class="needs-validation mb-5" novalidate action="/otp/send-otp" method="post" autocomplete="off">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+              <div class="mb-4">
+                <label for="reqAppNo" class="form-label">Application Number</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="reqAppNo"
+                  name="applicationNo"
+                  th:value="${lastAppNo}"
+                  required />
+                <div class="invalid-feedback">Please enter your application number.</div>
+              </div>
+
+              <!-- Button aligned right -->
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary px-4">Send OTP</button>
+              </div>
+            </form>
+
+            <hr class="hr-divider" />
+
+            <!-- Login With OTP Form -->
+            <form class="needs-validation" novalidate action="/login/process" method="post" autocomplete="off">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+              <input type="hidden" name="origin" value="applicant" />
+              <input type="hidden" id="loginUsernameHidden" name="username" th:value="${lastAppNo}" />
+
+              <div class="mb-4">
+                <label for="password" class="form-label">One-time Password (OTP)</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="password"
+                  name="password"
+                  inputmode="numeric"
+                  pattern="[0-9]{4,8}"
+                  placeholder="Enter the 4-8 digit OTP"
+                  autocomplete="one-time-code"
+                  required />
+                <div class="form-text text-muted mt-2">Typically 4&ndash;8 digits. Check your SMS inbox.</div>
+                <div class="invalid-feedback">Please provide a valid OTP.</div>
+              </div>
+
+              <!-- Button aligned right -->
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success px-4">Login</button>
+              </div>
+            </form>
+
+            <p class="footer-text mt-5 text-center">
+              By continuing, you agree to abide by departmental security and usage policies. Do not share your OTP.
+            </p>
+
+            <div class="text-center mt-4 register-link-container">
+              <p class="mb-0">
+                Not registered yet?
+                <!-- MODIFIED LINK BELOW -->
+                <span th:if="${defaultAdmissionId != null}">
+                  <a th:href="@{/applicants/apply(admissionId=${defaultAdmissionId})}">Register here</a>
+                </span>
+                <span th:if="${defaultAdmissionId == null}" class="text-muted">
+                  Registration is currently unavailable (no active admission windows).
+                </span>
+                <!-- END MODIFIED LINK -->
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <footer class="text-center mt-5">
+          <p class="footer-text mb-0">
+            &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Directorate of Education &middot; NIC
+          </p>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/applicant/applicant-login.js}"></script>
+</body>
+</html>

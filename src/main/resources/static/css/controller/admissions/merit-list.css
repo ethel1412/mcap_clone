@@ -1,0 +1,153 @@
+/* merit-list.css - Professional & Modern Styling */
+
+:root {
+    --primary-brand: #0d6efd;
+    --primary-soft: #e7f1ff;
+    --text-dark: #2c3e50;
+    --text-muted: #6c757d;
+    --bg-surface: #ffffff;
+    --table-hover: #f8f9fa;
+    --border-color: #e9ecef;
+}
+
+body {
+    background-color: #f4f6f9; /* Light grey background for contrast */
+}
+
+/* --- Card & Container --- */
+.merit-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    background: var(--bg-surface);
+    overflow: hidden;
+}
+
+.merit-card-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+/* --- Typography --- */
+.programme-title {
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+
+.meta-pill {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.35em 0.8em;
+    border-radius: 50rem;
+    background-color: var(--primary-soft);
+    color: var(--primary-brand);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- Table Styling --- */
+.merit-table-wrapper {
+    max-height: 70vh; /* Fixed height for sticky header */
+    overflow-y: auto;
+    position: relative;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-custom thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: 2px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table-custom tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f1f3f5;
+    transform: scale(1); /* Fixes border rendering on some browsers */
+}
+
+/* --- Columns & Badges --- */
+
+/* Rank Badge */
+.rank-badge {
+    width: 32px;
+    height: 32px;
+    background-color: #e9ecef;
+    color: #495057;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.rank-1 { background-color: #ffc107; color: #fff; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4); }
+.rank-2 { background-color: #adb5bd; color: #fff; }
+.rank-3 { background-color: #fd7e14; color: #fff; }
+
+/* Score */
+.score-value {
+    font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace;
+    font-weight: 700;
+    color: #198754;
+    font-size: 1.1rem;
+}
+
+/* Criteria Chip */
+.criteria-chip {
+    display: inline-block;
+    background-color: #eef2f7;
+    color: #2c3e50;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid #dee2e6;
+}
+
+.tie-breaker-note {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Loading / Empty State */
+.state-container {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+.state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+/* CSP Fixes for Merit List */
+.meta-pill-green { background-color: #e8f5e9 !important; color: #198754 !important; }
+.meta-pill-blue { background-color: #e0f2fe !important; color: #0369a1 !important; }

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>My Departments - Institute Dashboard</title>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+	
+    <main class="container-fluid px-4 py-4">
+    
+	<div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 mb-0 text-gray-800 fw-bold">My Profile</h2>
+            </div>
+    </div>
+
+    <form id="instituteForm"
+          th:action="@{/institute/profile/update}"
+          th:object="${inst}"
+          method="post">
+
+        <input type="hidden" th:field="*{instituteId}" />
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <!-- BASIC -->
+                <h5 class="fw-bold mb-3 text-secondary">
+                    <i class="bi bi-info-circle me-1"></i>Basic Information
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label>Institute Name</label>
+                        <input type="text" class="form-control" th:field="*{instituteName}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>AISHE ID</label>
+                        <input type="text" class="form-control" th:field="*{AISHEId}" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Year Established</label>
+                        <input type="number" class="form-control" th:field="*{yearEstablished}">
+                    </div>
+
+                    <div class="col-md-8">
+                        <label>University</label>
+                        <input type="text" class="form-control" th:field="*{universityName}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Institution Head</label>
+                        <input type="text" class="form-control" th:field="*{institutionHeadDetails}">
+                    </div>
+
+                </div>
+
+                <!-- CONTACT -->
+                <hr class="my-4">
+
+                <h5 class="fw-bold mb-3 text-secondary">
+                    <i class="bi bi-telephone me-1"></i>Contact Details
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <input type="email" class="form-control" th:field="*{institutionOfficialEmailId}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Contact Number</label>
+                        <input type="text" class="form-control" th:field="*{institutionOfficialContactNumber}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Website</label>
+                        <input type="text" class="form-control" th:field="*{institutionWebsite}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Border District Area</label>
+                        <input type="text" class="form-control" th:field="*{borderDistrictArea}">
+                    </div>
+
+                </div>
+
+                <!-- AFFILIATION -->
+                <hr class="my-4">
+
+                <h5 class="fw-bold mb-3 text-secondary">
+                    <i class="bi bi-diagram-3 me-1"></i>Affiliation Details
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label>Affiliation Type</label>
+                        <select class="form-select" th:field="*{affiliationTypeId}">
+                            <option value="">-- Select --</option>
+                            <option th:each="a : ${affiliationTypes}"
+                                    th:value="${a.affiliationTypeId}"
+                                    th:text="${a.affiliationTypeName}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Management Type</label>
+                        <select class="form-select" th:field="*{managementTypeId}">
+                            <option value="">-- Select --</option>
+                            <option th:each="m : ${managementTypes}"
+                                    th:value="${m.managementTypeId}"
+                                    th:text="${m.managementTypeName}">
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- ADDRESS -->
+                <hr class="my-4">
+
+                <h5 class="fw-bold mb-3 text-secondary">
+                    <i class="bi bi-geo-alt me-1"></i>Address Details
+                </h5>
+
+                <div class="row g-3">
+
+                    <!-- STATE -->
+                    <div class="col-md-6">
+                        <label>State</label>
+                        <select class="form-select"
+                                id="stateDropdown"
+                                th:field="*{addressDTO.stateCode}">
+                            <option value="">-- Select State --</option>
+                            <option th:each="s : ${states}"
+                                    th:value="${s.stateCode}"
+                                    th:text="${s.stateName}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- DISTRICT -->
+                    <div class="col-md-6">
+                        <label>District</label>
+                        <select class="form-select"
+                                id="districtDropdown"
+                                th:field="*{addressDTO.districtCode}">
+                            <option value="">-- Select District --</option>
+                            <option th:each="d : ${districts}"
+                                    th:value="${d.districtCode}"
+                                    th:text="${d.districtName}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- BLOCK -->
+                    <div class="col-md-6">
+                        <label>Block</label>
+                        <select class="form-select"
+                                id="blockDropdown"
+                                th:field="*{addressDTO.blockCode}">
+                            <option value="">-- Select Block --</option>
+                            <option th:each="b : ${blocks}"
+                                    th:value="${b.blockCode}"
+                                    th:text="${b.blockName}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Address Line 1</label>
+                        <input type="text" class="form-control" th:field="*{addressDTO.addressLine1}">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Address Line 2</label>
+                        <input type="text" class="form-control" th:field="*{addressDTO.addressLine2}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Pincode</label>
+                        <input type="text" class="form-control" th:field="*{addressDTO.pincode}">
+                    </div>
+
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-1"></i> Update
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+	</main>
+	<script th:src="@{/js/institute.js}"></script>
+</th:block>
+</body>
+</html>

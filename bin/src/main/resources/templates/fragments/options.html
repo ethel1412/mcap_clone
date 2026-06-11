@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <!-- District Options Fragment -->
+    <th:block th:fragment="districtOptions">
+        <option value="">-- select district --</option>
+        <option th:each="d : ${districts}" th:value="${d.districtCode}" th:text="${d.districtName}"></option>
+    </th:block>
+
+    <!-- Block Options Fragment -->
+    <th:block th:fragment="blockOptions">
+        <option value="">-- select block --</option>
+        <option th:each="b : ${blocks}" th:value="${b.blockCode}" th:text="${b.blockName}"></option>
+    </th:block>
+</body>
+</html>

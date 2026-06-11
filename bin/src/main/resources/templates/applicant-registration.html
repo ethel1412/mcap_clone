@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Registration | MCAP</title>
+    <meta http-equiv="Content-Security-Policy" content="font-src 'self' https://cdn.jsdelivr.net;">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}" >
+    <link rel="stylesheet" th:href="@{/css/applicant/register.css}" />
+</head>
+<body th:attr="data-registration-success=${registrationSuccess == true ? 'true' : null}, data-applicant-no=${registeredApplicantNo}">
+<div class="registration-container">
+    <div class="registration-header">
+        <h1>Student Registration</h1>
+        <p>Complete your application in 3 simple steps</p>
+    </div>
+    
+    <div class="registration-card">
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- Stepper -->
+        <div class="progress-container">
+            <div class="progress-line"></div>
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            <div class="progress-steps">
+                <div class="progress-step active" id="step-ind-1">
+                    <div class="step-icon"><i class="bi bi-person-fill-add"></i></div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="progress-step" id="step-ind-2">
+                    <div class="step-icon"><i class="bi bi-people-fill"></i></div>
+                    <div class="step-label">Guardian</div>
+                </div>
+                <div class="progress-step" id="step-ind-3">
+                    <div class="step-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div class="step-label">Address</div>
+                </div>
+            </div>
+        </div>
+        
+        <form th:action="@{/applicants/register}" th:object="${applicantDTO}" method="post" id="registrationForm" autocomplete="off">
+            <input type="hidden" name="admissionId" th:value="${admissionId}" />
+            <!-- Step 1: Personal Info -->
+            <div class="form-section active" id="form-section-1">
+                <div class="section-title"><i class="bi bi-person-vcard"></i> Personal Information</div>
+                <div class="row g-3">
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">First Name *</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" required>
+                        <div class="invalid-feedback">First name is required.</div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Middle Name</label>
+                        <input type="text" class="form-control" th:field="*{middleName}">
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" required>
+                        <div class="invalid-feedback">Last name is required.</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Date of Birth *</label>
+                        <input type="date" class="form-control" th:field="*{dateOfBirth}" required>
+                        <div class="invalid-feedback">Date of birth is required.</div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Gender *</label>
+                        <select class="form-select" th:field="*{genderCode}" required>
+                            <option value="">-- select --</option>
+                            <option th:each="g : ${genders}" th:value="${g.genderCode}" th:text="${g.genderName}"></option>
+                        </select>
+                        <div class="invalid-feedback">Gender is required.</div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Phone Number *</label>
+                        <div class="input-group">
+                            <select class="form-select" style="max-width: 150px;" th:field="*{countryPhoneCode}" id="countryPhoneCode" required>
+                                <option value="">-- Country --</option>
+                                <option th:each="c : ${countries}" th:value="${c.phoneCode}" th:text="${c.countryName + ' (' + c.phoneCode + ')'}"></option>
+                            </select>
+                            <input type="tel" maxlength="15" pattern="[0-9]{5,15}" class="form-control" th:field="*{phoneNumber}" id="phoneNumber" required>
+                            <div class="invalid-feedback">Please enter a valid phone number.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}">
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Marital Status *</label>
+                        <select class="form-select" th:field="*{maritalStatusCode}" required>
+                            <option value="">-- select --</option>
+                            <option th:each="m : ${maritalStatuses}" th:value="${m.statusCode}" th:text="${m.statusName}"></option>
+                        </select>
+                        <div class="invalid-feedback">Marital status is required.</div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label class="form-label">Religion *</label>
+                        <select class="form-select" th:field="*{religionCode}" required>
+                            <option value="">-- select --</option>
+                            <option th:each="r : ${religions}" th:value="${r.religionCode}" th:text="${r.religionName}"></option>
+                        </select>
+                        <div class="invalid-feedback">Religion is required.</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-6 col-12">
+                        <label class="form-label">Community Category *</label>
+                        <select class="form-select" th:field="*{communityCategoryCode}" required>
+                            <option value="">-- select --</option>
+                            <option th:each="cc : ${communityCategories}" th:value="${cc.categoryCode}" th:text="${cc.categoryName}"></option>
+                        </select>
+                        <div class="invalid-feedback">Community category is required.</div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="form-label">Country of Origin *</label>
+                        <select class="form-select" th:field="*{countryCode}" required>
+                            <option value="">-- select --</option>
+                            <option th:each="c : ${countries}" th:value="${c.countryCode}" th:text="${c.countryName}"></option>
+                        </select>
+                        <div class="invalid-feedback">Country of origin is required.</div>
+                    </div>
+                </div>
+
+                <div class="form-navigation mt-4">
+                    <button type="button" class="btn btn-light" id="prev-btn-1" disabled>
+                        <i class="bi bi-arrow-left"></i> Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" id="next-btn-1">
+                        Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Guardian -->
+            <div class="form-section" id="form-section-2">
+                <div class="section-title"><i class="bi bi-people"></i> Guardian Details</div>
+                <div class="row g-3 align-items-end">
+                     <!-- Guardian Prefix Dropdown -->
+                    <div class="col-md-2 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Prefix *</label>
+                            <select class="form-select" th:field="*{guardianPrefix}" required>
+                                <option value="">-- select --</option>
+                                <option value="Shri">Shri</option>
+                                <option value="Smt">Smt</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a prefix.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Guardian Name *</label>
+                            <input type="text" class="form-control" th:field="*{guardianName}" required>
+                            <div class="invalid-feedback">Guardian name is required.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-12">
+                        <div class="form-group">
+                            <label class="form-label">Relationship *</label>
+                            <select class="form-select" th:field="*{guardianRelationshipCode}" required>
+                                <option value="">-- select --</option>
+                                <option th:each="r : ${relationships}" th:value="${r.relationshipCode}" th:text="${r.value}"></option>
+                            </select>
+                            <div class="invalid-feedback">Relationship is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-light" id="prev-btn-2">
+                        <i class="bi bi-arrow-left"></i> Previous
+                    </button>
+                    <button type="button" class="btn btn-primary" id="next-btn-2">
+                        Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Address -->
+            <div class="form-section" id="form-section-3">
+                <div class="section-title"><i class="bi bi-geo-alt"></i> Address Information</div>
+                
+                <div class="address-tabs">
+                    <div class="address-tab active" id="btn-permanent">
+                        <i class="bi bi-house-door"></i> Permanent Address
+                    </div>
+                    <div class="address-tab" id="btn-communication">
+                        <i class="bi bi-envelope"></i> Communication Address
+                    </div>
+                </div>
+                
+                <!-- Permanent Address -->
+                <div class="address-panel active" id="permanent-address">
+                    <div class="form-group mb-3">
+                        <label class="form-label">Address Line 1 *</label>
+                        <input type="text" class="form-control" th:field="*{permanentAddress.addressLine1}" id="permAddress1" required>
+                        <div class="invalid-feedback">Address line 1 is required.</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Address Line 2</label>
+                        <input type="text" class="form-control" th:field="*{permanentAddress.addressLine2}" id="permAddress2">
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">State *</label>
+                                <select class="form-select state-dropdown" th:field="*{permanentAddress.stateCode}" id="permState" required>
+                                    <option value="">-- select --</option>
+                                    <option th:each="s : ${states}" th:value="${s.stateCode}" th:text="${s.stateName}"></option>
+                                </select>
+                                <div class="invalid-feedback">State is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">District *</label>
+                                <select class="form-select district-dropdown" th:field="*{permanentAddress.districtCode}" id="permDistrict" required>
+                                    <option value="">-- select district --</option>
+                                </select>
+                                <div class="invalid-feedback">District is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">Block *</label>
+                                <select class="form-select block-dropdown" th:field="*{permanentAddress.blockCode}" id="permBlock" required>
+                                    <option value="">-- select block --</option>
+                                </select>
+                                <div class="invalid-feedback">Block is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12 mt-3">
+                            <div class="form-group">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" maxlength="6" class="form-control" th:field="*{permanentAddress.pincode}" id="permPincode" required>
+                                <div class="invalid-feedback">Pincode is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Communication Address -->
+                <div class="address-panel" id="communication-address">
+                    <div class="form-group mb-3">
+                        <label class="form-label">Address Line 1 *</label>
+                        <input type="text" class="form-control" th:field="*{communicationAddress.addressLine1}" id="commAddress1" required>
+                        <div class="invalid-feedback">Address line 1 is required.</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Address Line 2</label>
+                        <input type="text" class="form-control" th:field="*{communicationAddress.addressLine2}" id="commAddress2">
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">State *</label>
+                                <select class="form-select state-dropdown" th:field="*{communicationAddress.stateCode}" id="commState" required>
+                                    <option value="">-- select --</option>
+                                    <option th:each="s : ${states}" th:value="${s.stateCode}" th:text="${s.stateName}"></option>
+                                </select>
+                                <div class="invalid-feedback">State is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">District *</label>
+                                <select class="form-select district-dropdown" th:field="*{communicationAddress.districtCode}" id="commDistrict" required>
+                                    <option value="">-- select --</option>
+                                </select>
+                                <div class="invalid-feedback">District is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label class="form-label">Block *</label>
+                                <select class="form-select block-dropdown" th:field="*{communicationAddress.blockCode}" id="commBlock" required>
+                                    <option value="">-- select --</option>
+                                </select>
+                                <div class="invalid-feedback">Block is required.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12 mt-3">
+                            <div class="form-group">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" maxlength="6" class="form-control" th:field="*{communicationAddress.pincode}" id="commPincode" required>
+                                <div class="invalid-feedback">Pincode is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="sameAsPermanentFlag" name="sameAsPermanent" value="false">
+
+                <div class="form-check my-4">
+                    <input type="checkbox" class="form-check-input" id="sameAsPermanent">
+                    <label class="form-check-label" for="sameAsPermanent">Same as permanent address</label>
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-light" id="prev-btn-3">
+                        <i class="bi bi-arrow-left"></i> Previous
+                    </button>
+                    <button type="submit" class="btn btn-success" id="submitBtn">
+                        Submit <i class="bi bi-check-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/applicant/register.js}"></script>
+<script src="/js/axios.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/sweetalert2@11.js"></script>
+<script th:src="@{/js/applicant/applicant-detail-success.js}"></script>
+</body>
+</html>

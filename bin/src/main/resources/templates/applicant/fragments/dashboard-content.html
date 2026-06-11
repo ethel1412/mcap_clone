@@ -1,0 +1,73 @@
+<div th:fragment="content">
+    <!-- Page Header (Unchanged) -->
+    <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary"><i class="bi bi-grid-1x2-fill me-2"></i>Dashboard</h1>
+    </div>
+
+    <!-- Section 1: Manage Existing Applications -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light"><h5 class="mb-0">My Current Applications</h5></div>
+        <div class="card-body">
+             <div th:if="${#lists.isEmpty(applications)}" class="text-center text-muted p-3">
+                You have not started any applications yet. Choose one from the options below.
+            </div>
+             <div th:unless="${#lists.isEmpty(applications)}" class="row align-items-center">
+                <div class="col-md-4">
+                    <label for="applicationSelector" class="form-label fw-bold">Select an application to continue:</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="applicationSelector" class="form-select form-select-lg">
+                        <option value="">-- Please select an application --</option>
+                        <option th:each="app : ${applications}"
+                                th:value="${app.applicationId}"
+                                th:text="${app.admissionWindow.stream.streamName + ' (' + app.admissionWindow.session + ')'}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ NEW SECTION: Apply for Another Programme -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light"><h5 class="mb-0">Apply for Another Programme</h5></div>
+        <div class="card-body">
+            
+            <!-- Available UG Programmes -->
+            <div th:if="${!availableUgAdmissions.isEmpty()}">
+                <h6 class="text-muted mb-3">Undergraduate Programmes (UG)</h6>
+                <div class="list-group">
+                    <a th:each="window : ${availableUgAdmissions}"
+                       th:href="@{/applicants/apply(admissionId=${window.admissionId})}"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold" th:text="${window.stream.streamName}"></span>
+                            <small class="text-muted d-block" th:text="${'Session ' + window.session}"></small>
+                        </div>
+                        <span class="btn btn-sm btn-primary">Apply Now <i class="bi bi-arrow-right-circle-fill ms-1"></i></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Available PG Programmes -->
+            <div th:if="${!availablePgAdmissions.isEmpty()}" class="mt-4">
+                <h6 class="text-muted mb-3">Postgraduate Programmes (PG)</h6>
+                <div class="list-group">
+                     <a th:each="window : ${availablePgAdmissions}"
+                       th:href="@{/applicants/apply(admissionId=${window.admissionId})}"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold" th:text="${window.stream.streamName}"></span>
+                            <small class="text-muted d-block" th:text="${'Session ' + window.session}"></small>
+                        </div>
+                        <span class="btn btn-sm btn-primary">Apply Now <i class="bi bi-arrow-right-circle-fill ms-1"></i></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Message if no new programmes are available -->
+            <div th:if="${#lists.isEmpty(availableUgAdmissions) and #lists.isEmpty(availablePgAdmissions)}" class="text-center text-muted p-3">
+                You have already applied for all currently open admission programmes.
+            </div>
+        </div>
+    </div>
+</div>

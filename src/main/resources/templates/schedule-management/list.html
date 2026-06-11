@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Schedule List - Schedule Management</title>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <link th:href="@{/css/schedule/schedules-list.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/flatpickr.min.css}">
+    <link rel="stylesheet" th:href="@{/css/material_blue.css}">
+
+    <main class="container-fluid px-4 py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="/dashboard" class="text-decoration-none">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Schedule Management</li>
+                    </ol>
+                </nav>
+                <h4 class="mb-0 text-gray-800"><i class="bi bi-calendar-range text-primary me-2"></i>Live Schedules</h4>
+                <p class="text-muted mb-0 small">View and manage the timeline dates for all active admission windows.</p>
+            </div>
+            <a th:href="@{/schedule-management/create}" class="btn btn-primary shadow-sm rounded-pill px-4">
+                <i class="bi bi-plus-circle me-2"></i>Initialize New Schedule
+            </a>
+        </div>
+
+        <div id="alert-box"></div>
+
+        <div id="loading-state" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+            <p class="mt-3 text-muted fw-bold">Loading admission windows...</p>
+        </div>
+
+        <div id="main-content" class="d-none">
+
+            <div class="accordion shadow-sm" id="windowsAccordion"></div>
+
+            <div id="no-data-state" class="card shadow-sm border-0 d-none">
+                <div class="card-body text-center py-5 bg-light">
+                    <i class="bi bi-calendar-x text-muted mb-3 icon-xl"></i>
+                    <h5 class="text-dark fw-bold">No Active Schedules Found</h5>
+                    <p class="text-muted">You have not initialized any Master Roadmaps for your admission windows yet.</p>
+                    <a href="/schedule-management/create" class="btn btn-primary rounded-pill mt-2">
+                        <i class="bi bi-magic me-2"></i>Initialize a Schedule Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editScheduleModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow border-0">
+                    <form id="editScheduleForm">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Adjust Schedule Dates</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body bg-light">
+                            <input type="hidden" id="editScheduleId">
+
+                            <input type="hidden" id="editAdmissionCode">
+
+                            <input type="hidden" id="editStepOrder">
+                            <input type="hidden" id="editAdmissionRoute">
+                            <input type="hidden" id="editPhaseNumber">
+
+                            <div class="alert alert-info border-info shadow-sm mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-white text-info fw-bold rounded-circle d-flex align-items-center justify-content-center me-3 step-circle">
+                                        <span id="editStepOrderDisplay"></span>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-dark" id="editStepName"></h6>
+                                        <small class="text-secondary">Chronological Order Maintained Automatically</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="editStartDate" class="form-label fw-bold">Start Date & Time <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white"><i class="bi bi-calendar-play text-primary"></i></span>
+                                        <input type="text" class="form-control datetime-picker" id="editStartDate" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label for="editEndDate" class="form-label fw-bold">End Date & Time <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white"><i class="bi bi-calendar-x text-danger"></i></span>
+                                        <input type="text" class="form-control datetime-picker" id="editEndDate" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label fw-bold">Controller Notes <span class="text-muted fw-normal">(Optional)</span></label>
+                                <textarea class="form-control shadow-sm" id="editDescription" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4" id="updateScheduleBtn">
+                                <i class="bi bi-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/flatpickr.js}"></script>
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/schedule/schedules-list.js}" defer></script>
+
+    </main>
+</th:block>
+</body>
+</html>

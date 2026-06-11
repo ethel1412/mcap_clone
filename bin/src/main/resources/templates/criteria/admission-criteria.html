@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Admission Criteria - Institute Dashboard</title>
+    </th:block>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/criteria/admission-criteria.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard" class="text-decoration-none">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/programmes-offered" class="text-decoration-none">Programmes Offered</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Admission Criteria</li>
+                    </ol>
+                </nav>
+                <h2 class="h3 mb-0 text-gray-800">
+                    <i class="fas fa-clipboard-check text-primary me-2"></i>
+                    Admission Criteria
+                </h2>
+                <p class="text-muted mb-0">
+                    Define and manage admission criteria per Programme Offered. Submit for approval when ready.
+                </p>
+            </div>
+        </div>
+
+        <div id="alertBox" class="alert d-none" role="alert" aria-live="polite"></div>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0" id="criteriaTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Programme</th>
+                            <th>Previous Programme(s)</th>
+                            <th>Subjects</th>
+                            <th>Combinations</th>
+                            <th>Streams</th>
+                            <th>Seats booked</th>
+                            <th>Approval Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="criteriaTbody">
+                        <tr class="text-center text-muted" id="loadingRow">
+                            <td colspan="8" class="py-4">
+                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                Loading criteria...
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Seats booked per programme cannot exceed its Seat Matrix.
+                </div>
+                <button id="btnSendForApproval" class="btn btn-success btn-sm" type="button">
+                    <i class="fas fa-paper-plane me-2"></i>Send for Approval
+                </button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="criteriaModal" tabindex="-1" aria-labelledby="criteriaModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <form id="criteriaForm" novalidate>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="criteriaModalLabel">
+                                <i class="fas fa-plus me-2"></i>Add Admission Criteria
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+                            <div class="mb-1 text-muted small" id="programmeOfferedLabel" style="font-weight:bold"></div>
+                            <input type="hidden" id="modalProgrammeOfferedId" />
+                            <div class="mb-3">
+                                <label for="preferredProgrammeId" class="form-label">Previous Qualified Programme <span class="text-danger">*</span></label>
+                                <select id="preferredProgrammeId" name="preferredProgrammeId" class="form-select" multiple required></select>
+                                <div class="invalid-feedback">Select at least one programme.</div>
+                                <div class="mt-2" id="prevProgPercentages"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subjectIds" class="form-label">Preferred Subjects</label>
+                                <select id="subjectIds" name="subjectIds" class="form-select" multiple size="6"></select>
+                                <div class="mt-2" id="subjectsPercentages"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="combinationHeaderIds" class="form-label">Preferred Subject Combinations</label>
+                                <select id="combinationHeaderIds" name="combinationHeaderIds" class="form-select" multiple size="6"></select>
+                                <div class="mt-2" id="combinationsPercentages"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="streamIds" class="form-label">Preferred Streams</label>
+                                <select id="streamIds" name="streamIds" class="form-select" multiple size="5"></select>
+                                <div class="mt-2" id="streamsPercentages"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="seatsBooked" class="form-label">Seats to Book <span class="text-danger">*</span></label>
+                                <input id="seatsBooked" name="seatsBooked" type="number" min="0" class="form-control" placeholder="e.g., 10" required>
+                                <div class="form-text" id="seatsHint">Available seats: <span id="availableSeatsValue">—</span></div>
+                                <div class="invalid-feedback">Please enter a valid number of seats.</div>
+                            </div>
+                            <input type="hidden" id="editingId" name="id" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button id="btnSave" type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i><span id="successMessage"></span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+            <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-exclamation-circle me-2"></i><span id="errorMessage"></span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/criteria/admission-criteria.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

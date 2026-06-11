@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Login Activities</title>
+</head>
+<body>
+<th:block th:fragment="main">
+<section class="container-fluid px-4 py-4">
+  <h1 class="h2 mb-4">Login Activities</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-striped" id="loginActivitiesTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>IP Address</th>
+            <th>Login Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="loginActivitiesBody">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination controls -->
+  <div class="d-flex justify-content-between align-items-center mt-2" id="paginationControls">
+    <button class="btn btn-outline-primary btn-sm" id="prevBtn" disabled>Prev</button>
+    <span id="pageInfo" class="text-muted small"></span>
+    <button class="btn btn-outline-primary btn-sm" id="nextBtn" disabled>Next</button>
+  </div>
+
+  <!-- Toast -->
+  <div id="statusToast" class="toast align-items-center text-white border-0 position-fixed bottom-0 end-0 m-3"
+       role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</section>
+
+<script th:src="@{/js/user-management/login-activities.js}" defer></script>
+</th:block>
+</body>
+</html>

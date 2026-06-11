@@ -1,0 +1,319 @@
+/* Toast Containers */
+.toast-container-top {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast-container-bottom {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Custom Toast */
+.custom-toast {
+    min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-success .toast-header {
+    background-color: #28a745;
+    color: white;
+}
+
+.toast-error .toast-header {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Admission Window Info Card */
+.card.border-primary {
+    border-width: 2px !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+/* Badge Styling */
+.badge.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%) !important;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.05);
+    cursor: pointer;
+}
+
+/* Button Styling */
+.btn-outline-primary {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.btn-outline-primary:hover {
+    background-color: #667eea;
+    border-color: #667eea;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Alert Boxes */
+.alert {
+    border-radius: 8px;
+}
+
+.alert-info {
+    background-color: #e7f3ff;
+    border-color: #b3d9ff;
+    color: #004085;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Modal Styling */
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-dialog {
+    max-width: 700px;
+}
+
+/* Tie-breaker Modal Styling */
+#tieBreakerModal {
+    z-index: 1060;
+}
+
+#tieBreakerModal .modal-backdrop {
+    z-index: 1055;
+}
+
+.sortable-item {
+    cursor: move;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.sortable-item:hover {
+    background-color: #f8f9fa;
+}
+
+.sortable-item.dragging {
+    opacity: 0.5;
+    background-color: #e9ecef;
+}
+
+.sortable-item.drag-over {
+    border-top: 3px solid #667eea;
+}
+
+/* Form Input Groups */
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    font-weight: 600;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Weightage Display Card */
+.card.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.card.bg-light .card-body {
+    padding: 1.5rem;
+}
+
+/* Total Weightage Alert */
+#total-weightage-alert {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+}
+
+#total-weightage {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Spinner Override */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+
+.breadcrumb-item a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+/* Card Shadow on Hover */
+.card {
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Table */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Status Badges in Table */
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+/* Sticky Header */
+.card.sticky-top {
+    top: 20px;
+}
+
+/* Animation for Form Validation */
+.was-validated .form-control:invalid,
+.was-validated .form-select:invalid {
+    border-color: #dc3545;
+}
+
+.was-validated .form-control:valid,
+.was-validated .form-select:valid {
+    border-color: #28a745;
+}
+
+/* Custom Scrollbar */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* Disabled Button Styling */
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-success.disabled {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+/* Tiebreaker Summary */
+#tiebreakerSummary {
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+/* CSP Fixes for Manage Admissions */
+.min-h-300-flex-center {
+    min-height: 300px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.color-dee2e6 { color: #dee2e6 !important; }
+.w-60 { width: 60% !important; }
+.w-40 { width: 40% !important; }

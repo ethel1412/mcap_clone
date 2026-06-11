@@ -1,0 +1,65 @@
+/* =============================================
+   Institute Seat Acceptance Fee Management CSS
+   ============================================= */
+
+.fee-empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.fee-empty-state .fee-empty-icon {
+    font-size: 3rem;
+    color: #ced4da;
+    margin-bottom: 1rem;
+}
+
+.particulars-table tfoot td {
+    font-weight: 700;
+    background-color: #d1e7dd;
+}
+
+.particulars-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.scope-badge {
+    font-size: 0.78rem;
+    max-width: 280px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.total-amount-cell {
+    font-weight: 700;
+    color: #198754;
+    white-space: nowrap;
+}
+
+.remove-row-btn {
+    line-height: 1;
+}
+
+.particulars-row-input {
+    min-width: 0;
+}
+
+.fee-card-header {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.scope-type-group .btn-check:checked + .btn {
+    font-weight: 600;
+}
+
+/* View modal breakdown table */
+.fee-breakdown-table tfoot td {
+    font-weight: 700;
+    background-color: #d1e7dd;
+}
+
+.fee-breakdown-total {
+    font-size: 1.05rem;
+}

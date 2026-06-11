@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Seat Reservations - Seat Management</title>
+        <link th:href="@{/css/institute/seat-reservations.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+        <input type="hidden" id="admissionWindowCode" name="admissionWindowCode"
+               th:value="${admissionCode}" />
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 mb-1">
+                    <i class="bi bi-pie-chart-fill me-2 text-primary"></i>Seat Reservations
+                </h1>
+                <p class="text-muted mb-0"
+                   th:text="${programmeOffered.programme.programmeName}">Programme/Major/Course Name</p>
+            </div>
+            <a th:href="@{/admission-window/institute}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back to Seat Allocation
+            </a>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card stat-card-primary">
+                    <div class="stat-icon">
+                        <i class="bi bi-pie-chart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 th:text="${seatMatrix.totalSeats}">100</h3>
+                        <p>Total Seats</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card stat-card-success">
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 th:text="${totalReservedSeats}">75</h3>
+                        <p>Reserved Seats</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card stat-card-warning">
+                    <div class="stat-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 th:text="${availableSeats}">25</h3>
+                        <p>Available Seats</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card stat-card-info">
+                    <div class="stat-icon">
+                        <i class="bi bi-percent"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 th:text="${seatMatrix.totalSeats > 0 ? #numbers.formatDecimal(totalReservedSeats * 100.0 / seatMatrix.totalSeats, 1, 1) + '%' : '0%'}">
+                            75%
+                        </h3>
+                        <p>Allocation Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reservation-form-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Reservation
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="reservationForm">
+                    <input type="hidden" id="programmeOfferedId"
+                           th:value="${programmeOffered.programmeOfferedId}">
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="applicantType" class="form-label">Applicant Type *</label>
+                            <select class="form-select" id="applicantType" required>
+                                <option value="">Select Applicant Type</option>
+                                <option value="WITH_ENTRANCE">With Entrance</option>
+                                <option value="WITHOUT_ENTRANCE">Without Entrance</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="reservationType" class="form-label">Reservation Type *</label>
+                            <select class="form-select" id="reservationType" required>
+                                <option value="">Select Type</option>
+                                <option value="EXAM_QUALIFIED">Exam Qualified (CUET)</option>
+                                <option value="PWD">Persons with Disabilities</option>
+                                <option value="DEFENCE">Defence Personnel</option>
+                                <option value="SPORTS">Sports Quota</option>
+                                <option value="EWS">Economically Weaker Section</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-none" id="categoryGroup">
+                            <label for="categoryCode" class="form-label">Select Category *</label>
+                            <select class="form-select" id="categoryCode">
+                                <option value="">Select Category</option>
+                                <option th:each="category : ${communityCategories}"
+                                        th:value="${category.categoryCode}"
+                                        th:text="${category.categoryName}">
+                                    Category
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-none" id="examSourceGroup">
+                            <label for="examSource" class="form-label">Exam *</label>
+                            <select class="form-select" id="examSource">
+                                <option value="">Select Exam</option>
+                                <option value="CUET">CUET</option>
+                                <option value="QUALIFICATION_EXAM">Qualification Exam</option>
+                            </select>
+                            <div class="form-text">Choose the exam for this reservation.</div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="reservedPercentage" class="form-label">Reserved % *</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="reservedPercentage"
+                                   min="1"
+                                   max="100"
+                                   required>
+                            <div class="form-text">Percentage of total seats</div>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-lg me-1"></i>Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="section-header mb-3">
+            <h5 class="mb-0">
+                <i class="bi bi-list-check me-2"></i>Current Reservations
+            </h5>
+        </div>
+
+        <div class="row g-3" th:if="${not #lists.isEmpty(reservations)}">
+            <div class="col-md-6 col-lg-4" th:each="reservation : ${reservations}">
+                <div class="reservation-card">
+                    <div class="reservation-header">
+                        <span class="reservation-type-badge"
+                              th:classappend="${
+                                  (reservation.reservationType.name() == 'COMMUNITY') ? 'badge-community' :
+                                  (reservation.reservationType.name() == 'EXAM_QUALIFIED') ? 'badge-exam' :
+                                  (reservation.reservationType.name() == 'PWD') ? 'badge-pwd' :
+                                  (reservation.reservationType.name() == 'DEFENCE') ? 'badge-defence' :
+                                  (reservation.reservationType.name() == 'EWS') ? 'badge-ews' : 'badge-sports'
+                              }">
+                            <i class="bi"
+                               th:class="${
+                                   (reservation.reservationType.name() == 'COMMUNITY') ? 'bi-people-fill' :
+                                   (reservation.reservationType.name() == 'EXAM_QUALIFIED') ? 'bi-award-fill' :
+                                   (reservation.reservationType.name() == 'PWD') ? 'bi-universal-access-circle' :
+                                   (reservation.reservationType.name() == 'DEFENCE') ? 'bi-shield-fill' :
+                                   (reservation.reservationType.name() == 'EWS') ? 'bi-currency-rupee' : 'bi-trophy-fill'
+                               }"></i>
+                            <span th:text="${reservation.reservationType}">TYPE</span>
+                        </span>
+
+                        <button class="btn-delete"
+                                title="Delete Reservation"
+                                th:data-reservation-id="${reservation.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                 fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5
+                                         0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3
+                                         .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd"
+                                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0
+                                         1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0
+                                         1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0
+                                         1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0
+                                         1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0
+                                         0 1 1h6a1 1 0 0 0 1-1V4.059L11.882
+                                         4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="reservation-body">
+                        <div class="reservation-title"
+                             th:text="${reservation.displayTitle}">
+                            Reservation Title
+                        </div>
+
+                        <div class="text-muted small mb-1">
+                            <span th:if="${reservation.examDisplayName != null}"
+                                  th:text="${reservation.examDisplayName}">CUET</span>
+                            <span th:if="${reservation.examDisplayName == null and reservation.categoryName != null}"
+                                  th:text="${reservation.categoryName}">ST</span>
+                        </div>
+
+                        <div class="seat-info">
+                            <div class="seat-number">
+                                <span class="number"
+                                      th:text="${reservation.reservedSeats}">15</span>
+                                <span class="label">Seats</span>
+                            </div>
+                            <div class="seat-percentage">
+                                <span class="percentage"
+                                      th:text="${seatMatrix.totalSeats > 0 ? #numbers.formatDecimal(reservation.reservedSeats * 100.0 / seatMatrix.totalSeats, 1, 1) + '%' : '0%'}">
+                                    15%
+                                </span>
+                                <span class="label">of Total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(reservations)}">
+            <i class="bi bi-inbox"></i>
+            <h4>No Reservations Yet</h4>
+            <p>Start by adding seat reservations above.</p>
+        </div>
+
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="successToast"
+                 class="toast align-items-center text-bg-success border-0"
+                 role="alert">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage">Success message</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+
+            <div id="errorToast"
+                 class="toast align-items-center text-bg-danger border-0"
+                 role="alert">
+                <div class="d-flex">
+                    <div class="toast-body" id="errorToastMessage">Error message</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/manage-programmes/admission-window.js}"></script>
+        <script th:src="@{/js/manage-programmes/seat-reservations.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

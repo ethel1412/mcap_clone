@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Institute Dashboard</title>
+</head>
+<body>
+    <!-- It will replace the 'content' variable in your common/layout.html -->
+    <div class="container-fluid mt-3">
+        <h3 class="mb-4"><i class="fa-solid fa-gauge-high me-2"></i>Dashboard Overview</h3>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <div th:if="${institute != null}">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <i class="fa-solid fa-school me-2"></i>Institute Details
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Institute Name:</span>
+                                    <p class="mb-0" th:text="${institute.instituteName}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">AISHE ID:</span>
+                                    <p class="mb-0" th:text="${institute.AISHEId ?: 'N/A'}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Status:</span>
+                                    <p class="mb-0" th:text="${institute.status}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Year Established:</span>
+                                    <p class="mb-0" th:text="${institute.yearEstablished}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Institution Head:</span>
+                                    <p class="mb-0" th:text="${institute.institutionHeadDetails}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Official Email:</span>
+                                    <p class="mb-0" th:text="${institute.institutionOfficialEmailId}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Contact Number:</span>
+                                    <p class="mb-0" th:text="${institute.institutionOfficialContactNumber}"></p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <span class="fw-bold">Website:</span>
+                                    <p class="mb-0"><a th:href="${institute.institutionWebsite}" th:text="${institute.institutionWebsite}" target="_blank"></a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <i class="fa-clipboard-list me-2"></i>Quick Stats
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded mb-3">
+                    <h4 th:text="${totalProgrammesOffered != null ? totalProgrammesOffered : 0}">0</h4>
+                    <p class="mb-0 text-muted">Total Programmes Offered</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded mb-3">
+                    <h4 th:text="${totalApplicants != null ? totalApplicants : 0}">0</h4>
+                    <p class="mb-0 text-muted">Total Applicants</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded mb-3">
+                    <h4 th:text="${admissionsAccepted != null ? admissionsAccepted : 0}">0</h4>
+                    <p class="mb-0 text-muted">Admissions Accepted</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fa-solid fa-bell me-2"></i>Latest Announcements
+                </div>
+                <div class="card-body">
+                    <p class="card-text">No new announcements specific to your institute at this time. Check the central notice board.</p>
+                </div>
+            </div>
+
+        </div>
+        <div th:unless="${institute != null}" class="alert alert-warning text-center" role="alert">
+            <h4 class="alert-heading"><i class="fa-solid fa-exclamation-triangle me-2"></i>Details Missing</h4>
+            <p>Your institute details could not be loaded. Please contact support.</p>
+        </div>
+    </div>
+</body>
+</html>

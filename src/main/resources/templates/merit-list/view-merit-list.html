@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <th:block th:fragment="title">
+        <title th:text="${headerProgrammeName != null} ?
+                     ${headerProgrammeName + ' - Admission Management'} :
+                     'Merit Lists - Admission Management'">
+            Merit Lists - Admission Management
+        </title>
+    </th:block>
+    <link th:href="@{/css/merit-list/view-merit-list.css}" rel="stylesheet"/>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <div class="card mb-4 shadow-sm no-print" th:if="${primaryMetadata != null}">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="mb-2">
+                            <i class="bi bi-mortarboard text-primary me-2"></i>
+                            <span th:text="${primaryMetadata.programmeName}">Programme Name</span>
+                        </h4>
+                        <p class="mb-1 text-muted">
+                            <i class="bi bi-diagram-3 me-2"></i>
+                            <strong>Stream:</strong>
+                            <span th:text="${primaryMetadata.streamName}">Stream Name</span>
+                        </p>
+                        <p class="mb-1 text-muted">
+                            <i class="bi bi-layers me-2"></i>
+                            <strong>Programme Level:</strong>
+                            <span class="badge ms-1"
+                                  th:classappend="${primaryMetadata.programmeLevel.name() == 'UG'} ? 'bg-primary' : 'bg-success'"
+                                  th:text="${primaryMetadata.programmeLevel}">UG</span>
+                        </p>
+                        <p class="mb-0 text-muted">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            <strong>Admission Window:</strong>
+                            <span th:text="${primaryMetadata.admissionWindowName}">Admission Window</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="button"
+                                class="btn btn-outline-secondary btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#institutesModal"
+                                th:disabled="${institutes == null or #lists.isEmpty(institutes)}">
+                            <i class="bi bi-eye me-1"></i>
+                            View Institutes Offering
+                        </button>
+                        <p class="mt-2 mb-0 text-muted small"
+                           th:if="${institutes != null and !#lists.isEmpty(institutes)}">
+                            <span th:text="${#lists.size(institutes)}">0</span> institute(s) configured
+                        </p>
+                        <p class="mt-2 mb-0 text-muted small"
+                           th:if="${institutes == null or #lists.isEmpty(institutes)}">
+                            No institutes configured for this programme.
+                        </p>
+                        <button id="btn-view-criteria"
+                                class="btn btn-outline-secondary btn-sm ms-2 no-print"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#criteriaModal">
+                            <i class="bi bi-sliders me-1"></i> View Admission Criteria
+                        </button>
+
+                        <a th:href="@{/admission-criteria/page/setup(admissionWindowCode=${admissionWindowCode})}"
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="meritListTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active"
+                        id="cuet-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#cuet-merit-list"
+                        type="button"
+                        role="tab"
+                        aria-controls="cuet-merit-list"
+                        aria-selected="true">
+                    <i class="bi bi-journal-text me-2"></i>
+                    CUET / Entrance Based
+                    <span class="badge bg-primary ms-2" id="cuet-count-badge">0</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link"
+                        id="non-cuet-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#non-cuet-merit-list"
+                        type="button"
+                        role="tab"
+                        aria-controls="non-cuet-merit-list"
+                        aria-selected="false">
+                    <i class="bi bi-book me-2"></i>
+                    Non-CUET / Board Based
+                    <span class="badge bg-success ms-2" id="noncuet-count-badge">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="meritListTabContent">
+
+            <div class="tab-pane fade show active"
+                 id="cuet-merit-list"
+                 role="tabpanel"
+                 aria-labelledby="cuet-tab">
+
+                <div class="card mb-4 no-print">
+                    <div class="card-header bg-info text-white">
+                        <button class="btn btn-link text-white text-decoration-none w-100 text-start p-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#cuet-eligibility-collapse"
+                                aria-expanded="false"
+                                aria-controls="cuet-eligibility-collapse">
+                            <h5 class="mb-0">
+                                <i class="bi bi-people-fill me-2"></i>
+                                All Applicants Who Preferred This Programme
+                                <i class="bi bi-chevron-down float-end"></i>
+                            </h5>
+                        </button>
+                    </div>
+                    <div id="cuet-eligibility-collapse" class="collapse">
+                        <div class="card-body">
+
+                            <div class="alert alert-secondary mb-3">
+                                <h6 class="mb-2"><strong>Application Summary:</strong></h6>
+                                <p class="mb-0">
+                                    Total completed: <strong><span id="cuet-total-complete">0</span></strong>,
+                                    Eligible: <strong class="text-success"><span id="cuet-eligible">0</span></strong>
+                                    (<span id="cuet-eligibility-rate">0</span>% eligibility rate)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="cuet-preference-table">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Application No</th>
+                                    <th>Applicant Name</th>
+                                    <th>Preference Order</th>
+                                    <th>Programme</th>
+                                    <th>Eligibility Status</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="cuet-preference-tbody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2 mb-0">Loading applicants...</p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="cuet-preference-summary" class="alert alert-info mt-3" style="display: none;">
+                            <strong><i class="bi bi-bar-chart-fill"></i> Detailed Summary:</strong>
+                            <span id="cuet-pref-total">0</span> total applicants,
+                            <span id="cuet-pref-eligible" class="text-success fw-bold">0</span> eligible,
+                            <span id="cuet-pref-ineligible" class="text-danger fw-bold">0</span> ineligible
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3 no-print">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Merit List Generation</h6>
+                            <p class="mb-0 small text-muted" id="status-cuet">
+                                Merit list not generated yet.
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <button id="btn-generate-cuet"
+                                    class="btn btn-sm btn-primary"
+                                    type="button"
+                                    disabled>
+                                <i class="bi bi-gear me-1"></i>
+                                Generate CUET Merit List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${withEntranceList != null}">
+                    <div class="card mb-4 border-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4 class="mb-3">
+                                        <span class="badge bg-primary me-2">CUET / Entrance Based</span>
+                                        <span th:text="${withEntranceList.metadata.admissionWindowName}">
+                                            Admission Window
+                                        </span>
+                                    </h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Programme Level:</strong>
+                                            <span class="badge ms-2"
+                                                  th:classappend="${withEntranceList.metadata.programmeLevel.name() == 'UG' ? 'bg-primary' : 'bg-success'}"
+                                                  th:text="${withEntranceList.metadata.programmeLevel}">
+                                                Level
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2"
+                                             th:if="${withEntranceList.metadata.streamName != null}">
+                                            <strong>Stream:</strong>
+                                            <span th:text="${withEntranceList.metadata.streamName}">Stream</span>
+                                        </div>
+                                        <div class="col-md-6 mb-2"
+                                             th:if="${withEntranceList.metadata.programmeName != null}">
+                                            <strong>Programme:</strong>
+                                            <span th:text="${withEntranceList.metadata.programmeName}">
+                                                Programme
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Total Applicants:</strong>
+                                            <span class="badge bg-info text-dark ms-2"
+                                                  th:text="${withEntranceList.metadata.totalApplicants}">
+                                                0
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Generated On:</strong>
+                                            <span th:text="${#temporals.format(withEntranceList.metadata.generatedOn, 'dd-MMM-yyyy HH:mm')}">
+                                                Date
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Status:</strong>
+                                            <span class="badge bg-success ms-2"
+                                                  th:text="${withEntranceList.metadata.status}">
+                                                PUBLISHED
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="alert alert-primary mb-0">
+                                        <h6 class="mb-2">Merit List ID</h6>
+                                        <div class="merit-badge badge bg-primary fs-5"
+                                             th:text="${withEntranceList.metadata.meritListId}">
+                                            123
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-ol me-2"></i>
+                                Merit List Entries (CUET / Entrance Based)
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">Rank</th>
+                                        <th>Application No</th>
+                                        <th>Applicant Name</th>
+                                        <th class="text-center">Merit Score</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="entry : ${withEntranceList.entries}">
+                                        <td class="text-center rank-column" th:text="${entry.rank}">1</td>
+                                        <td th:text="${entry.applicationNo}">APP123</td>
+                                        <td th:text="${entry.applicantName}">John Doe</td>
+                                        <td class="text-center merit-score-column"
+                                            th:text="${#numbers.formatDecimal(entry.meritScore, 1, 4)}">
+                                            489.2500
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${withEntranceList == null}" class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    No CUET / Entrance-based merit list found for this programme.
+                    Generate the merit list using the button above.
+                </div>
+            </div>
+
+            <div class="tab-pane fade"
+                 id="non-cuet-merit-list"
+                 role="tabpanel"
+                 aria-labelledby="non-cuet-tab">
+
+                <div class="card mb-4 no-print">
+                    <div class="card-header bg-info text-white">
+                        <button class="btn btn-link text-white text-decoration-none w-100 text-start p-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#noncuet-eligibility-collapse"
+                                aria-expanded="false"
+                                aria-controls="noncuet-eligibility-collapse">
+                            <h5 class="mb-0">
+                                <i class="bi bi-people-fill me-2"></i>
+                                All Applicants Who Preferred This Programme
+                                <i class="bi bi-chevron-down float-end"></i>
+                            </h5>
+                        </button>
+                    </div>
+                    <div id="noncuet-eligibility-collapse" class="collapse">
+                        <div class="card-body">
+
+                            <div class="alert alert-secondary mb-3">
+                                <h6 class="mb-2"><strong>Application Summary:</strong></h6>
+                                <p class="mb-0">
+                                    Total completed: <strong><span id="noncuet-total-complete">0</span></strong>,
+                                    Eligible: <strong class="text-success"><span id="noncuet-eligible">0</span></strong>
+                                    (<span id="noncuet-eligibility-rate">0</span>% eligibility rate)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="noncuet-preference-table">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Application No</th>
+                                    <th>Applicant Name</th>
+                                    <th>Preference Order</th>
+                                    <th>Programme</th>
+                                    <th>Eligibility Status</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="noncuet-preference-tbody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="spinner-border text-warning" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2 mb-0">Loading applicants...</p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="noncuet-preference-summary" class="alert alert-warning mt-3" style="display: none;">
+                            <strong><i class="bi bi-bar-chart-fill"></i> Detailed Summary:</strong>
+                            <span id="noncuet-pref-total">0</span> total applicants,
+                            <span id="noncuet-pref-eligible" class="text-success fw-bold">0</span> eligible,
+                            <span id="noncuet-pref-ineligible" class="text-danger fw-bold">0</span> ineligible
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3 no-print">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Merit List Generation</h6>
+                            <p class="mb-0 small text-muted" id="status-noncuet">
+                                Merit list not generated yet.
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <button id="btn-generate-noncuet"
+                                    class="btn btn-sm btn-success"
+                                    type="button"
+                                    disabled>
+                                <i class="bi bi-gear me-1"></i>
+                                Generate Non‑CUET Merit List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${withoutEntranceList != null}">
+                    <div class="card mb-4 border-success">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4 class="mb-3">
+                                        <span class="badge bg-success me-2">Non-CUET / Board Based</span>
+                                        <span th:text="${withoutEntranceList.metadata.admissionWindowName}">
+                                            Admission Window
+                                        </span>
+                                    </h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Programme Level:</strong>
+                                            <span class="badge ms-2"
+                                                  th:classappend="${withoutEntranceList.metadata.programmeLevel.name() == 'UG' ? 'bg-primary' : 'bg-success'}"
+                                                  th:text="${withoutEntranceList.metadata.programmeLevel}">
+                                                Level
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2"
+                                             th:if="${withoutEntranceList.metadata.streamName != null}">
+                                            <strong>Stream:</strong>
+                                            <span th:text="${withoutEntranceList.metadata.streamName}">
+                                                Stream
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2"
+                                             th:if="${withoutEntranceList.metadata.programmeName != null}">
+                                            <strong>Programme:</strong>
+                                            <span th:text="${withoutEntranceList.metadata.programmeName}">
+                                                Programme
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Total Applicants:</strong>
+                                            <span class="badge bg-info text-dark ms-2"
+                                                  th:text="${withoutEntranceList.metadata.totalApplicants}">
+                                                0
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Generated On:</strong>
+                                            <span th:text="${#temporals.format(withoutEntranceList.metadata.generatedOn, 'dd-MMM-yyyy HH:mm')}">
+                                                Date
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <strong>Status:</strong>
+                                            <span class="badge bg-success ms-2"
+                                                  th:text="${withoutEntranceList.metadata.status}">
+                                                PUBLISHED
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="alert alert-success mb-0">
+                                        <h6 class="mb-2">Merit List ID</h6>
+                                        <div class="merit-badge badge bg-success fs-5"
+                                             th:text="${withoutEntranceList.metadata.meritListId}">
+                                            124
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-ol me-2"></i>
+                                Merit List Entries (Non-CUET / Board Based)
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped mb-0">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">Rank</th>
+                                        <th>Application No</th>
+                                        <th>Applicant Name</th>
+                                        <th class="text-center">Class XII %</th>
+                                        <th class="text-center"
+                                            th:if="${withoutEntranceList.metadata.programmeLevel.name() == 'PG'}">
+                                            UG Degree %
+                                        </th>
+                                        <th class="text-center">Merit Score</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="entry : ${withoutEntranceList.entries}">
+                                        <td class="text-center rank-column" th:text="${entry.rank}">1</td>
+                                        <td th:text="${entry.applicationNo}">APP124</td>
+                                        <td th:text="${entry.applicantName}">Jane Smith</td>
+                                        <td class="text-center"
+                                            th:text="${entry.class12Percentage != null ?
+                                                     #numbers.formatDecimal(entry.class12Percentage, 1, 2) : '-'}">
+                                            88.50
+                                        </td>
+                                        <td class="text-center"
+                                            th:if="${withoutEntranceList.metadata.programmeLevel.name() == 'PG'}"
+                                            th:text="${entry.ugDegreePercentage != null ?
+                                                     #numbers.formatDecimal(entry.ugDegreePercentage, 1, 2) : '-'}">
+                                            82.00
+                                        </td>
+                                        <td class="text-center merit-score-column"
+                                            th:text="${#numbers.formatDecimal(entry.meritScore, 1, 4)}">
+                                            88.5000
+                                        </td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${withoutEntranceList == null}" class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    No Non-CUET / Board-based merit list found for this programme.
+                    Generate the merit list using the button above.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="institutesModal" tabindex="-1" aria-labelledby="institutesModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="institutesModalLabel">
+                            <i class="bi bi-building me-2"></i>
+                            Institutes offering
+                            <span th:text="${primaryMetadata != null ? primaryMetadata.programmeName : 'this programme'}">
+                                Programme
+                            </span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div th:if="${institutes == null or #lists.isEmpty(institutes)}"
+                             class="alert alert-info mb-0">
+                            No institute information available for this programme.
+                        </div>
+
+                        <div th:if="${institutes != null and !#lists.isEmpty(institutes)}">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-start"
+                                    th:each="inst, idx : ${institutes}">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-semibold" th:text="${inst.instituteName}">
+                                            Institute Name
+                                        </div>
+                                        <small class="text-muted">
+                                            <span th:text="${inst.departmentName != null ? inst.departmentName : '-'}">
+                                                Department
+                                            </span>
+                                            <span th:if="${inst.streamName != null}">
+                                                • <span th:text="${inst.streamName}">Stream</span>
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill"
+                                          th:text="${idx.index + 1}">1</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 no-print">
+            <div class="card-body">
+                <p class="mb-0 text-muted">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Note:</strong>
+                    This page displays separate merit lists for CUET/Entrance-based and
+                    Non-CUET/Board-based applicants.
+                    Each list is ranked independently based on the configured weightage criteria.
+                    Use the tabs above to switch between the two lists.
+                </p>
+            </div>
+        </div>
+        <div class="modal fade" id="criteriaModal" tabindex="-1"
+             aria-labelledby="criteriaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="criteriaModalLabel">
+                            <i class="bi bi-sliders me-2"></i>
+                            Admission Criteria
+                        </h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="criteria-loading" class="text-center py-3" style="display:none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Loading criteria...</p>
+                        </div>
+
+                        <div id="criteria-content" style="display:none;">
+                            <h6 class="mb-3">
+                                <span id="criteria-programme-name"></span>
+                                <small class="text-muted">
+                                    (<span id="criteria-level"></span>)
+                                </small>
+                            </h6>
+
+                            <div class="card mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">Merit Calculation Method</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Method:</strong> Subject Average (Equal Weightage)</p>
+
+                                    <div class="alert alert-info mb-2">
+                                        <strong>WITH_ENTRANCE:</strong> Average of CUET subject percentiles
+                                    </div>
+
+                                    <div class="alert alert-warning mb-3">
+                                        <strong>WITHOUT_ENTRANCE:</strong> Average of Class XII subject marks
+                                    </div>
+
+                                    <h6 class="mb-2">Configured Subjects</h6>
+                                    <div id="subjects-list" class="mb-0">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="mb-3">
+                                Status:
+                                <span id="crit-active-badge" class="badge bg-secondary">Unknown</span>
+                            </p>
+
+                            <hr>
+
+                            <h6>Tie-breaker Configuration</h6>
+                            <div id="crit-tb-empty" class="text-muted">
+                                No tie-breaker rules configured.
+                            </div>
+                            <ul id="crit-tb-list" class="list-group list-group-flush mb-0" style="display:none;">
+                            </ul>
+                        </div>
+
+                        <div id="criteria-error" class="alert alert-danger mt-2" style="display:none;">
+                            Failed to load criteria.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/merit-list/view-merit-list.js}" defer></script>
+    </main>
+
+</th:block>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Applicant Portal</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+    <link th:href="@{/css/applicant/applicant.css}" rel="stylesheet" />
+</head>
+<body>
+<!-- ✅ Hidden inputs for messages -->
+<input type="hidden" id="academicSuccess" th:value="${academic_success}">
+<input type="hidden" id="academicError" th:value="${academic_error}">
+<header class="navbar navbar-light sticky-top main-header flex-md-nowrap p-0">
+    <div class="container-fluid d-flex align-items-center px-3">
+        <div class="d-flex align-items-center">
+            <span class="navbar-brand mb-0 h6">Applicant Portal</span>
+        </div>
+        <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav ms-auto">
+            <div class="nav-item dropdown user-dropdown">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle me-2"></i>
+                    <span th:text="${applicantName}"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item nav-loader" href="javascript:void(0);" data-url="/applicants/fragments/personal-details">
+                        <i class="bi bi-person me-2"></i>My Profile
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="logout();">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="position-sticky sidebar-sticky">
+                <div class="px-3 py-4 text-center text-white bg-dark">
+                    <div class="mb-3"><i class="bi bi-person-badge" style="font-size: 2rem;"></i></div>
+                    <h6 class="mb-0" th:text="${applicantName}">Priya Sharma</h6>
+                    <small th:text="${applicantNo}">APPL-2024-12345</small>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader active" href="javascript:void(0);" data-url="/applicants/fragments/application-selection">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader" href="javascript:void(0);" data-url="/applicants/fragments/personal-details">
+                            <i class="bi bi-person-fill"></i> Personal Details
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader" href="javascript:void(0);" data-url="/applicants/fragments/academic-details">
+                            <i class="bi bi-mortarboard-fill"></i> Academic Details
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader" href="javascript:void(0);" data-url="/applicants/fragments/programme-selection">
+                            <i class="bi bi-book-fill"></i> Programme Selection
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader" href="javascript:void(0);" data-url="/applicants/fragments/document-upload">
+                            <i class="bi bi-file-earmark-pdf-fill"></i> Documents Upload
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);">
+                            <i class="bi bi-credit-card-fill"></i> Payment
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);">
+                            <i class="bi bi-printer-fill"></i> Print Application
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+            <div id="main-content-area">
+                <!-- Dynamic content loads here -->
+            </div>
+        </main>
+    </div>
+</div>
+        </main>
+    </div>
+</div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/axios.min.js"></script>
+<script src="/js/sweetalert2@11.js"></script>
+<script th:src="@{/js/applicant/applicant.js}"></script>
+<script th:src="@{/js/applicant/applicant-detail-success.js}"></script>
+
+<script th:src="@{/js/applicant/dashboard.js}"></script>
+</body>
+</html>

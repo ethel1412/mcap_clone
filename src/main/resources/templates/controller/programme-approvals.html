@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Programme Approvals - Controller Dashboard</title>
+    </th:block>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <h2 class="mb-4 text-gray-800">
+            <i class="fas fa-tasks me-2"></i>Programme Request Approvals
+        </h2>
+
+        <!-- Requests Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">All Requests</h6>
+                
+                <!-- Search and Refresh Group -->
+                <div class="input-group search-input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" id="tableSearchInput" placeholder="Search institute, programme...">
+                    <button class="btn btn-outline-secondary" type="button" onclick="ApprovalsModule.loadRequests()" title="Refresh Data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Institute Name</th>
+                            <th>Requested Programme</th>
+                            <th>Level</th>
+                            <th>Stream</th>
+                            <th>Requested On</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="approvalTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="spinner-border spinner-border-sm me-2"></div> Loading requests...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- No Search Results Message (Hidden by default) -->
+                    <div id="noSearchResults" class="text-center py-5 d-none">
+                        <p class="text-muted mb-0"><i class="fas fa-search me-2"></i>No matching records found.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rejection Modal -->
+        <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title"><i class="fas fa-times-circle me-2"></i>Reject Request</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to reject the programme request for <strong id="rejectProgrammeName"></strong>.</p>
+                        <div class="mb-3">
+                            <label class="form-label">Reason for Rejection <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="rejectionReason" rows="3" placeholder="e.g., Duplicate request, Incorrect stream..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmRejectBtn">Reject Request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="statusToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+       <script th:src="@{/js/controller/programme-approvals.js}"></script>
+
+    </main>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <header class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary">
+            <i class="bi bi-credit-card-fill me-2"></i>
+            <span th:text="${isSlideUp} ? 'Slide Up — Seat Hold Fee Payment' : 'Seat Acceptance Fee Payment'">Seat Acceptance Fee Payment</span>
+        </h1>
+    </header>
+
+    <main role="main">
+
+        <!-- Case: No fee structure configured by the institute -->
+        <div th:if="${feeStructure == null}" class="alert alert-warning d-flex align-items-start gap-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-4 mt-1 flex-shrink-0"></i>
+            <div>
+                <h5 class="alert-heading mb-1">Fee Structure Not Configured</h5>
+                <p class="mb-0">The institute has not yet configured a seat acceptance fee for your allotted programme.
+                    Please contact the institute or check back later.</p>
+            </div>
+        </div>
+
+        <!-- Case: Fee structure available -->
+        <div th:if="${feeStructure != null}"
+             class="card shadow-sm"
+             th:classappend="${isSlideUp} ? 'border-warning' : 'border-primary'">
+
+            <div class="card-header"
+                 th:classappend="${isSlideUp} ? 'bg-warning bg-opacity-10' : 'bg-primary bg-opacity-10'">
+                <h2 class="mb-0 h5"
+                    th:classappend="${isSlideUp} ? 'text-warning-emphasis' : 'text-primary'">
+                    <span th:if="${isSlideUp}">Pay to Hold Your Seat &amp; Stay Eligible for Higher Preferences</span>
+                    <span th:unless="${isSlideUp}">Confirm Your Allotment by Paying the Fee</span>
+                </h2>
+            </div>
+
+            <div class="card-body p-4">
+                <p th:if="${isSlideUp}">
+                    You have chosen <strong>Slide Up</strong> for the seat below. Paying this fee holds your seat
+                    while keeping you eligible for higher-preference programmes in the next round.
+                </p>
+                <p th:unless="${isSlideUp}">
+                    You have accepted the following seat. To finalise your admission, you must pay the
+                    non-refundable Seat Acceptance Fee before the deadline.
+                </p>
+
+                <!-- Allotment summary -->
+                <div class="alert alert-secondary mb-3">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Allotted Programme:</dt>
+                        <dd class="col-sm-8 fw-bold" th:text="${allotment.allottedProgramme}">Programme</dd>
+
+                        <dt class="col-sm-4">Allotted Institute:</dt>
+                        <dd class="col-sm-8 fw-bold" th:text="${allotment.allottedInstitute}">Institute</dd>
+
+                        <dt class="col-sm-4">Payment Deadline:</dt>
+                        <dd class="col-sm-8 fw-bold text-danger"
+                            th:text="${#temporals.format(paymentDeadline, 'dd-MMM-yyyy, hh:mm a')}">03-Jan-2026, 05:00 PM</dd>
+                    </dl>
+                </div>
+
+                <!-- Itemized fee breakdown -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-2">
+                        <i class="bi bi-receipt me-2"></i>
+                        Fee Breakdown
+                        <small class="text-muted fw-normal ms-2 fs-6"
+                               th:text="'(' + ${feeStructure.feeName} + ')'"></small>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm align-middle mb-0">
+                            <caption class="visually-hidden">Seat acceptance fee breakdown</caption>
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Particular</th>
+                                <th scope="col" class="text-end">Amount (₹)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="p, stat : ${feeStructure.particulars}">
+                                <td class="text-muted" th:text="${stat.count}">1</td>
+                                <td th:text="${p.particularName}">Tuition Fee</td>
+                                <td class="text-end fw-semibold"
+                                    th:text="${#numbers.formatDecimal(p.amount, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr class="table-primary fw-bold">
+                                <td colspan="2" class="text-end">Total</td>
+                                <td class="text-end fs-5"
+                                    th:text="'₹ ' + ${#numbers.formatDecimal(feeStructure.totalAmount, 1, 'COMMA', 2, 'POINT')}">₹ 0.00</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pay button -->
+                <form th:action="@{/applicants/payment/initiate-seat-fee}" method="post" class="text-center mt-4">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="allotmentId" th:value="${allotmentId}" />
+                    <input type="hidden" name="isSlideUp" th:value="${isSlideUp}" />
+                    <button type="submit" class="btn btn-lg"
+                            th:classappend="${isSlideUp} ? 'btn-warning text-dark' : 'btn-success'">
+                        <i class="bi bi-lock-fill me-2"></i>
+                        <span th:text="${isSlideUp} ? 'Pay &amp; Hold Seat (Slide Up)' : 'Proceed to Secure Payment'">Proceed to Secure Payment</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="card-footer bg-light small">
+                <strong>Please Note:</strong>
+                <span th:if="${isSlideUp}">
+                    Failure to pay before the deadline will result in automatic release of this seat.
+                    If you receive a better offer next round, you can accept it — this seat will then be released automatically.
+                </span>
+                <span th:unless="${isSlideUp}">
+                    Failure to pay the fee by the deadline will result in the cancellation of this seat allotment.
+                    This action is irreversible.
+                </span>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

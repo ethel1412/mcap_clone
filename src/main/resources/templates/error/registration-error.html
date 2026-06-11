@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Invalid Registration | MCAP</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="display-4 text-danger">Invalid Registration Path</h1>
+                    <p class="lead mt-3">
+                        You have reached this page through an incorrect path. Registration can only be started by selecting an open admission window.
+                    </p>
+                    <hr class="my-4">
+                    <p>Please return to the homepage to begin your application correctly.</p>
+                    <a class="btn btn-primary btn-lg" th:href="@{/}" role="button">
+                        Return to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

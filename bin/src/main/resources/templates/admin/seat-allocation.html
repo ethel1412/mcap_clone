@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+    <title>Manage Seat Allocation</title>
+</head>
+
+<body>
+<main>
+    <div class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">
+                <i class="fas fa-chair me-2"></i>Manage Seat Allocation
+            </h1>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            Error performing action. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
+             th:if="${param.success}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="successModalLabel">Update Successful</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Seat capacity updated successfully!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Programmes Offered and Seat Capacity</h5>
+            </div>
+            <div class="card-body">
+
+                <div id="shiftTabsContainer"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="shiftTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Programme Name</th>
+                            <th>Shift</th>
+                            <th>Total Seats</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="programme : ${programmes}"
+                            class="programme-row"
+                            th:data-shift="${programme.shift ?: 'NA'}"
+                            th:data-shift-name="${programme.shiftDisplayName ?: 'Not Applicable'}">
+
+                            <td th:text="${programme.programmeName}">B.Tech. Computer Science</td>
+
+                            <td>
+                                <span class="badge bg-secondary" th:text="${programme.shiftDisplayName ?: 'N/A'}">Day</span>
+                            </td>
+
+                            <td>
+                                <div class="input-group input-group-sm" style="width: 120px;">
+                                    <input type="number" class="form-control"
+                                           th:id="'totalSeats-' + ${programme.programmeOfferedId}"
+                                           th:value="${seatMatricesMap.get(programme.programmeOfferedId)?.totalSeats ?: 0}"
+                                           min="0" required />
+                                </div>
+                            </td>
+                            <td>
+                                <form th:action="@{/seat-matrix/page/assign}" method="post" class="d-inline">
+                                    <input type="hidden" name="programmeOfferedId" th:value="${programme.programmeOfferedId}" />
+                                    <input type="hidden" name="totalSeats" th:id="'hiddenSeats-' + ${programme.programmeOfferedId}"
+                                           th:value="${seatMatricesMap.get(programme.programmeOfferedId)?.totalSeats ?: 0}" />
+                                    <button type="button" class="btn btn-info btn-sm"
+                                            th:onclick="'updateSeats(' + ${programme.programmeOfferedId} + ')'">
+                                        <i class="fas fa-save me-1"></i>Update
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(programmes)}">
+                            <td colspan="4" class="text-center py-3">No programmes offered found for your institute.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/institute/shift-tabs.js}"></script>
+    <script th:src="@{/js/seat-allocation.js}"></script>
+</main>
+</body>
+</html>

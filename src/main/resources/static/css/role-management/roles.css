@@ -1,0 +1,9 @@
+/* Roles page specific styling */
+
+#addRoleError {
+    font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f4f9;
+}

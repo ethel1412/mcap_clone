@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>Create New Schedule</title>
+</head>
+<body>
+  <!-- Main content fragment -->
+  <th:block th:fragment="main">
+    <section class="container-fluid px-4 py-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Create New Schedule</h5>
+            </div>
+            <div class="card-body">
+
+              <div id="alert-box" class="mb-3"></div>
+
+              <form id="createScheduleForm" novalidate>
+                <div class="mb-3">
+                  <label for="scheduleName" class="form-label fw-semibold">Schedule Name <span class="text-danger">*</span></label>
+                    <select id="scheduleName" name="name" class="form-select" required>
+                        <option disabled selected value="">Select schedule name/step</option>
+                        <th:block th:each="name, iter : ${scheduleNames}">
+                            <option th:value="${name}">
+                                Step <span th:text="${iter.index + 1}"/>: <span th:text="${name}"/>
+                            </option>
+                        </th:block>
+                    </select>
+
+                    <div class="invalid-feedback">Please select a schedule name.</div>
+                </div>
+                  <div class="mb-3" id="admission-window-dropdown" style="display:none;">
+                      <label for="admissionWindow" class="form-label fw-semibold">Select Admission Window <span class="text-danger">*</span></label>
+                      <select id="admissionWindow" name="admissionWindowId" class="form-select">
+                          <option disabled selected value="">Choose an admission window...</option>
+                          <th:block th:each="window, iter : ${admissionWindows}">
+                              <option th:value="${window.admissionId}"
+                                      th:attr="data-start=${#temporals.format(window.startDate, 'yyyy-MM-dd''T''HH:mm')},
+                                      data-end=${#temporals.format(window.endDate, 'yyyy-MM-dd''T''HH:mm')}">
+                                  <!-- Serial, Stream, ProgrammeLevel, Session, Dates -->
+                                  <span th:text="${iter.index + 1}"/>.
+                                  <span th:text="${window.stream.streamName}"/> /
+                                  <span th:text="${window.programmeLevel}"/> /
+                                  <span th:text="${window.session}"/>
+                                  (From <span th:text="${#temporals.format(window.startDate, 'dd-MM-yyyy HH:mm')}"/>
+                                  to <span th:text="${#temporals.format(window.endDate, 'dd-MM-yyyy HH:mm')}"/>)
+                              </option>
+                          </th:block>
+                      </select>
+                      <div class="invalid-feedback">Please select an admission window.</div>
+                  </div>
+
+                  <div class="mb-3">
+                  <label for="description" class="form-label fw-semibold">Description</label>
+                  <textarea id="description" name="description" rows="3" class="form-control" placeholder="Optional description"></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="startDate" class="form-label fw-semibold">Start Date &amp; Time <span class="text-danger">*</span></label>
+                    <input type="datetime-local" id="startDate" name="startDate" class="form-control" required>
+                    <div class="invalid-feedback">Please select start date and time.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="endDate" class="form-label fw-semibold">End Date &amp; Time <span class="text-danger">*</span></label>
+                    <input type="datetime-local" id="endDate" name="endDate" class="form-control" required>
+                  <div class="invalid-feedback">Please select end date and time.</div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="reset" class="btn btn-outline-secondary me-2">Clear</button>
+                  <button type="submit" id="submitBtn" class="btn btn-primary">Create Schedule</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <link th:href="@{/css/schedule/create-schedule.css}" rel="stylesheet"/>
+      <script th:src="@{/js/axios.min.js}" defer></script>
+      <script th:src="@{/js/common-data.js}" defer></script>
+      <script th:src="@{/js/schedule/create-schedule.js}" defer></script>
+      <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"/>
+      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    </section>
+  </th:block>
+</body>
+</html>

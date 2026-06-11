@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+
+    <!-- ================= TITLE ================= -->
+    <th:block th:fragment="title">
+        Institute MIS
+    </th:block>
+
+    <!-- ================= CONTENT ================= -->
+    <th:block th:fragment="content">
+
+        <main class="container-fluid px-4 py-4">
+
+            <h2 class="mb-4 text-gray-800">
+                <i class="fas fa-chart-bar me-2"></i>Institute MIS
+            </h2>
+
+            <!-- MIS Table -->
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Institute Summary</h6>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+
+                        <table class="table table-hover mb-0 align-middle">
+
+                            <thead class="table-light">
+							<tr>
+							    <th>Institute</th>
+							    <th>AISHE</th>
+							    <th>University</th>
+							    <th>Departments</th>
+							    <th>Programmes</th>
+							</tr>
+							</thead>
+                            <tbody>
+
+<tr th:each="r : ${list}">
+
+    <!-- Institute -->
+    <td th:text="${r.instituteName}"></td>
+
+    <!-- AISHE -->
+    <td th:text="${r.aisheId} ?: '-'"></td>
+
+    <!-- University -->
+    <td th:text="${r.universityName} ?: '-'"></td>
+
+    <!-- Departments -->
+    <td>
+        <a href="#"
+           class="view-departments text-primary fw-bold"
+           th:text="${r.departmentCount}"
+           th:data-id="${r.instituteId}">
+        </a>
+    </td>
+
+    <!-- Programmes -->
+    <td>
+        <a href="#"
+           class="view-programmes text-success fw-bold"
+           th:text="${r.programmeCount}"
+           th:data-id="${r.instituteId}">
+        </a>
+    </td>
+
+</tr>
+
+<!-- Empty State -->
+<tr th:if="${list == null or #lists.isEmpty(list)}">
+    <td colspan="5" class="text-center py-4 text-muted">
+        No MIS data available
+    </td>
+</tr>
+
+</tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="detailsModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitle"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div id="modalContent" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <script th:src="@{/js/controller/mis.js}"></script>
+
+    </th:block>
+
+</th:block>
+
+</html>

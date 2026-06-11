@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Programme Subjects Management - Institute Dashboard</title>
+    </th:block>
+    <link th:href="@{/css/institute/programme-subjects.css}" rel="stylesheet"/>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/programmes-offered" class="text-decoration-none">Programmes Offered</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Programme Subjects</li>
+                    </ol>
+                </nav>
+                <h2 class="h3 mb-0 text-gray-800">
+                    <i class="fas fa-book-open text-success me-2"></i>
+                    Manage Subjects
+                </h2>
+                <p class="text-muted mb-0">
+                    <strong th:text="${programmeName}">Programme Name</strong> -
+                    <span th:text="${departmentName}">Department Name</span>
+                </p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSemesterModal">
+                <i class="fas fa-plus me-2"></i>Add Semester
+            </button>
+        </div>
+
+        <!-- Alert Box -->
+        <div id="alertBox" class="alert alert-info py-3 fs-5 rounded shadow-sm d-none">
+            <i class="fas fa-info-circle me-2"></i>
+            No semesters have been created for this programme yet.
+        </div>
+
+        <!-- Semesters Container -->
+        <div id="semestersContainer">
+            <!-- Loading state -->
+            <div class="text-center py-5" id="loadingState">
+                <div class="spinner-border spinner-border-lg me-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2">Loading semesters...</div>
+            </div>
+        </div>
+
+        <!-- Add Semester Modal -->
+        <div class="modal fade" id="addSemesterModal" tabindex="-1" aria-labelledby="addSemesterModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSemesterModalLabel">
+                            <i class="fas fa-plus me-2"></i>Add New Semester
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="addSemesterForm" novalidate>
+                        <div class="modal-body">
+                            <input type="hidden" id="programmeOfferedId" name="programmeOfferedId" th:value="${programmeOfferedId}">
+                            <div class="mb-3">
+                                <label for="semesterNumber" class="form-label">
+                                    Semester Number <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" class="form-control" id="semesterNumber" name="semesterNumber"
+                                       min="1" max="10" required placeholder="e.g., 1">
+                                <div class="invalid-feedback">
+                                    Please enter a valid semester number.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="semesterName" class="form-label">Semester Name</label>
+                                <input type="text" class="form-control" id="semesterName" name="semesterName"
+                                       maxlength="100" placeholder="e.g., First Semester (optional)">
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Optional - will default to "Semester [Number]" if not provided
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitSemesterBtn">
+                                <i class="fas fa-plus me-2"></i>Add Semester
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Subjects Modal -->
+        <div class="modal fade" id="addSubjectsModal" tabindex="-1" aria-labelledby="addSubjectsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSubjectsModalLabel">
+                            <i class="fas fa-plus me-2"></i>Add Subjects to <span id="modalSemesterTitle">Semester</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="addSubjectsForm" novalidate>
+                        <div class="modal-body">
+                            <input type="hidden" id="modalSemesterId" name="semesterId">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Select Subjects <span class="text-danger">*</span>
+                                </label>
+                                <div id="subjectsContainer" class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                    <div class="text-muted text-center py-3">Loading available subjects...</div>
+                                </div>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Only subjects not already assigned to this semester are shown
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitSubjectsBtn">
+                                <i class="fas fa-plus me-2"></i>Add Selected Subjects
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Semester Modal -->
+        <div class="modal fade" id="deleteSemesterModal" tabindex="-1" aria-labelledby="deleteSemesterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="deleteSemesterModalLabel">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete <strong id="semesterToDelete">Semester</strong>?</p>
+                        <p class="text-muted small">This action will also remove all subjects assigned to this semester and cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteSemesterBtn">
+                            <i class="fas fa-trash me-2"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span id="successMessage"></span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+            <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span id="errorMessage"></span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/institute/programme-subjects.js}" defer></script>
+
+    </main>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <th:block th:fragment="title">
+    <title>Assign Departments</title>
+  </th:block>
+  
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+
+  <th:block th:fragment="main">
+    <main class="container p-4">
+
+      <h1 class="page-title mb-4">Assign Departments to Your Institute</h1>
+
+        <div id="alertSuccess" class="alert alert-success d-none"></div>
+        <div id="alertError" class="alert alert-danger d-none"></div>
+
+      <!-- Bind form to InstituteDepartmentRequestDTO -->
+      <form id="assignForm" th:object="${instituteDepartmentRequestDTO}" novalidate>
+        <!-- Hidden instituteId -->
+        <input type="hidden" th:field="*{instituteId}"/>
+
+        <div class="form-group mb-3">
+          <label for="departments" class="form-label">Select Department <span class="text-danger">*</span></label>
+          <select id="departments" th:field="*{departmentId}" required class="form-select">
+            <option value="" disabled selected>Select a department</option>
+            <option th:each="dept : ${departments}"
+                    th:value="${dept.departmentId}"
+                    th:text="${dept.departmentName}">
+            </option>
+          </select>
+          <small class="form-text text-muted">Select one department.</small>
+
+          <div class="invalid-feedback">Please select a department.</div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="hodName" class="form-label">HOD Name</label>
+          <input id="hodName" type="text" th:field="*{hodName}" maxlength="120" class="form-control" placeholder="Enter HOD name (optional)"/>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input id="email" type="email" th:field="*{email}" maxlength="120" class="form-control" placeholder="Enter email (optional)"/>
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="phone" class="form-label">Phone</label>
+          <input id="phone" type="text" th:field="*{phone}" maxlength="20" class="form-control" placeholder="Enter phone number (optional)"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">Assign Department</button>
+      </form>
+      <script th:src="@{/js/institute/department-assign.js}"></script>
+    </main>
+  </th:block>
+
+</body>
+</html>

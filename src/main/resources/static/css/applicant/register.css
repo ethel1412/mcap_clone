@@ -1,0 +1,235 @@
+
+/* HERO-STYLE HEADER (contained) */
+.registration-header {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+    padding: 1.6rem 1.2rem;  /* slightly tighter */
+    text-align: center;
+    min-height: 100px;
+    overflow: hidden;
+}
+
+/* subtle pattern like hero */
+.registration-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230F4C81'/><path d='M0 50 L100 50 M50 0 L50 100' stroke='%232C3E50' stroke-width='1'/></svg>") center/cover;
+    opacity: 0.05;
+    z-index: 1;
+}
+
+/* keep text above pattern */
+.registration-header * {
+    position: relative;
+    z-index: 2;
+}
+
+/* title styling */
+.registration-header h1 {
+    font-weight: 700;
+    font-size: 1.9rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.3px;
+}
+
+.registration-container {
+    max-width: 900px;
+    margin: 2rem auto;
+
+    background: #ffffff;
+    border-radius: 2px;
+    box-shadow: none;
+    border: none;
+}
+
+/* inner content */
+.registration-card {
+    background: #ffffff;
+    padding: 1.5rem 0; 
+}
+
+/* --- CSP FIX: Custom class for country code select --- */
+.registration-country-select {
+    max-width: 120px;
+}
+
+.progress-container {
+    position: relative;
+    margin: 2rem 0 3rem;
+}
+
+.progress-line {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #e9ecef;
+    z-index: 1;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    height: 4px;
+    background: var(--primary);
+    z-index: 2;
+    transition: width 0.3s ease;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: #6c757d;
+    border: 3px solid white;
+}
+
+.progress-step.active .step-icon {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.2);
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    text-align: center;
+}
+
+.progress-step.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.form-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.address-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.address-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    background: #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.address-tab.active {
+    background: white;
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.address-tab i {
+    margin-right: 8px;
+}
+
+.address-panel {
+    display: none;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.address-panel.active {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+    .registration-card {
+        padding: 1.5rem;
+    }
+    
+    .progress-step {
+        flex: 1;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+}

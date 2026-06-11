@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Roles & Access Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/role-management/dashboard.css}">
+</head>
+<body>
+<main>
+    <div class="container-fluid py-4">
+        <h2 class="mb-4 fw-bold text-primary">
+            <i class="fas fa-user-shield me-2"></i>Roles & Access Management
+        </h2>
+
+        <div class="row g-4">
+            <div class="col-xl-4 col-md-6">
+                <div class="card dashboard-card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="dashboard-icon text-primary">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Manage Roles</h5>
+                        <p class="text-muted mb-4">Create, edit and view system roles.</p>
+                        <a th:href="@{/role-management/roles}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right me-2"></i>Go to Roles
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card dashboard-card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="dashboard-icon text-success">
+                            <i class="fas fa-th-list"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Manage Menus</h5>
+                        <p class="text-muted mb-4">Define and organize menu items.</p>
+                        <a th:href="@{/role-management/menus}" class="btn btn-success">
+                            <i class="fas fa-arrow-right me-2"></i>Go to Menus
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-md-6">
+                <div class="card dashboard-card text-center shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="dashboard-icon text-warning">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Assign Access</h5>
+                        <p class="text-muted mb-4">Assign menus and permissions to roles.</p>
+                        <a th:href="@{/role-management/assign-access}" class="btn btn-warning text-white">
+                            <i class="fas fa-arrow-right me-2"></i>Go to Assign Access
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

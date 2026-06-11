@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" id="dashboard-fragment" th:attr="data-active-id=${applicationId}">
+
+    <header class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary"><i class="bi bi-person-badge me-2" aria-hidden="true"></i>My Application Journey</h1>
+        <span class="text-muted fw-bold" th:text="${'Welcome, ' + applicantName}"></span>
+    </header>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="alert alert-info mb-4" role="alert">
+                <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>
+                Please complete the steps below sequentially. <strong>You will be able to add multiple programmes and preferences in Step 3.</strong>
+            </div>
+
+            <div class="timeline">
+
+                <div class="timeline-step" th:classappend="${currentStep == 1 ? 'active' : (currentStep > 1 ? 'completed' : 'locked')}">
+                    <div class="timeline-icon">
+                        <i class="bi" th:classappend="${currentStep > 1 ? 'bi-check-lg' : 'bi-person-lines-fill'}"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 1: Personal Details</h2>
+                            <p class="text-muted mb-0">Provide your basic identity, contact, and family information.</p>
+                        </div>
+                        <a data-url="/applicants/fragments/personal-details"
+                           class="btn nav-loader text-nowrap" th:classappend="${currentStep == 1 ? 'btn-primary' : 'btn-outline-secondary'}">
+                            <span th:text="${currentStep > 1 ? 'View Details' : 'Continue'}"></span> <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="timeline-step" th:classappend="${currentStep == 2 ? 'active' : (currentStep > 2 ? 'completed' : 'locked')}">
+                    <div class="timeline-icon">
+                        <i class="bi" th:classappend="${currentStep > 2 ? 'bi-check-lg' : 'bi-mortarboard'}"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 2: Academic Details</h2>
+                            <p class="text-muted mb-0">Enter your past school marks and entrance exam scores.</p>
+                        </div>
+                        <a th:if="${currentStep >= 2}" data-url="/applicants/fragments/academic-details"
+                           class="btn nav-loader text-nowrap" th:classappend="${currentStep == 2 ? 'btn-primary' : 'btn-outline-secondary'}">
+                            <span th:text="${currentStep > 2 ? 'View Details' : 'Continue'}"></span> <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <button th:if="${currentStep < 2}" class="btn btn-secondary disabled text-nowrap">Locked</button>
+                    </div>
+                </div>
+
+                <div class="timeline-step" th:classappend="${currentStep == 3 ? 'active' : (currentStep > 3 ? 'completed' : 'locked')}">
+                    <div class="timeline-icon">
+                        <i class="bi" th:classappend="${currentStep > 3 ? 'bi-check-lg' : 'bi-list-check'}"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 3: Programme Preferences</h2>
+                            <p class="text-muted mb-0">Select and add the streams, institutes, and programmes you wish to apply for.</p>
+                        </div>
+                        <a th:if="${currentStep >= 3}" data-url="/applicants/fragments/programme-selection"
+                           class="btn nav-loader text-nowrap" th:classappend="${currentStep == 3 ? 'btn-primary' : 'btn-outline-secondary'}">
+                            <span th:text="${currentStep > 3 ? 'View Details' : 'Continue'}"></span> <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <button th:if="${currentStep < 3}" class="btn btn-secondary disabled text-nowrap">Locked</button>
+                    </div>
+                </div>
+
+                <div class="timeline-step" th:classappend="${currentStep == 4 ? 'active' : (currentStep > 4 ? 'completed' : 'locked')}">
+                    <div class="timeline-icon">
+                        <i class="bi" th:classappend="${currentStep > 4 ? 'bi-check-lg' : 'bi-file-earmark-arrow-up'}"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 4: Document Upload</h2>
+                            <p class="text-muted mb-0">Upload your photograph, signature, and mandatory certificates.</p>
+                        </div>
+                        <a th:if="${currentStep >= 4}" data-url="/applicants/fragments/document-upload"
+                           class="btn nav-loader text-nowrap" th:classappend="${currentStep == 4 ? 'btn-primary' : 'btn-outline-secondary'}">
+                            <span th:text="${currentStep > 4 ? 'View Details' : 'Continue'}"></span> <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <button th:if="${currentStep < 4}" class="btn btn-secondary disabled text-nowrap">Locked</button>
+                    </div>
+                </div>
+
+                <div class="timeline-step" th:classappend="${currentStep == 5 ? 'active' : (currentStep > 5 ? 'completed' : 'locked')}">
+                    <div class="timeline-icon">
+                        <i class="bi" th:classappend="${currentStep > 5 ? 'bi-check-lg' : 'bi-credit-card'}"></i>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 5: Payment & Submission</h2>
+                            <p class="text-muted mb-0">Pay the requisite fees to lock and finalize your profile.</p>
+                        </div>
+                        <a th:if="${currentStep >= 5}" data-url="/applicants/payment/show-details"
+                           class="btn nav-loader text-nowrap" th:classappend="${currentStep == 5 ? 'btn-primary' : 'btn-outline-secondary'}">
+                            <span th:text="${currentStep > 5 ? 'View Receipt' : 'Pay Now'}"></span> <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <button th:if="${currentStep < 5}" class="btn btn-secondary disabled text-nowrap">Locked</button>
+                    </div>
+                </div>
+
+                <div class="timeline-step" th:classappend="${currentStep == 6 ? 'active' : 'locked'}">
+                    <div class="timeline-icon"><i class="bi bi-award"></i></div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-1">Step 6: Seat Allotment Result</h2>
+                            <p class="text-muted mb-0">Check if you have been allotted a seat after the merit list is published.</p>
+                        </div>
+
+                        <a th:if="${currentStep == 6 and hasAllotment}" th:attr="data-url='/applicants/fragments/counseling/result?admissionWindowId=' + ${admissionWindowId}"
+                           class="btn btn-success nav-loader text-nowrap">
+                            View Result <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+
+                        <button th:if="${currentStep == 6 and !hasAllotment}" class="btn btn-secondary disabled text-nowrap">
+                            Awaiting Result
+                        </button>
+
+                        <button th:if="${currentStep < 6}" class="btn btn-secondary disabled text-nowrap">Locked</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

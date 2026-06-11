@@ -1,0 +1,21 @@
+/* ===== institute-departments inline style replacements ===== */
+
+/* Schedule lock banner (manage-combinations, programmesOffered) */
+.schedule-lock-banner {
+    background-color: #fff1f2;
+    border-left: 4px solid #e11d48;
+    border-radius: 8px;
+}
+
+/* Info banner */
+.info-banner {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+/* Scrollable lists */
+.scrollable-check-list { max-height: 200px; overflow-y: auto; }
+.scrollable-subjects   { max-height: 300px; overflow-y: auto; }
+
+/* Table widths */
+.col-serial { width: 50px; }

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meghalaya Common Admission Portal | Home Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">-->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="/images/emblem-logo.png" alt="Emblem Logo" class="header-logo me-2">
+                    <div class="brand-text">
+                        <h1 class="mb-0">Meghalaya Common Admission Portal</h1>
+                        <p class="mb-0 tagline">Government of Meghalaya</p>
+                    </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#">Institutions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Guidelines</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Help</a>
+                        </li> -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="studentDropdown" role="button" data-bs-toggle="dropdown">
+                                Student
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/applicants/login">Login</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="instituteDropdown" role="button" data-bs-toggle="dropdown">
+                                Institute
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/institute-form">Registration</a></li>
+                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="bottom" 
+                               title="Login for authorized users"><i class="fas fa-lock"></i>
+                                Login
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Banner -->
+    <!-- <section class="hero-banner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Meghalaya Common Admission Portal</h1>
+                    <p class="hero-subtitle">A single window for admissions to higher education institutions across Meghalaya</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a class="btn btn-light btn-lg" href="/applicants/register">
+                            Apply Now <i class="fas fa-user-graduate ms-2"></i>
+                        </a>
+                        <a href="/applicants/login" class="btn btn-outline-light btn-lg">
+                            Applicant Login <i class="fas fa-sign-in-alt ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%232C3E50' opacity='0.2'/><circle cx='200' cy='200' r='100' fill='%230F4C81' opacity='0.3'/><circle cx='400' cy='250' r='70' fill='%23E74C3C' opacity='0.3'/><path d='M150 300 L450 300 L300 100 Z' fill='%23F39C12' opacity='0.3'/></svg>" alt="Education" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section class="quick-links">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Portal Quick Links</h2>
+                <p class="text-muted">Access important resources and information</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <a href="/applicants/register" class="quick-link-card">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h5>Student Application</h5>
+                        <p>Apply for programmes across institutions</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/institute-form" class="quick-link-card">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h5>Institute Registration</h5>
+                        <p>Register your institution with MCAP</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#" class="quick-link-card">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h5>Admission Schedule</h5>
+                        <p>Important dates and deadlines</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#" class="quick-link-card">
+                        <div class="quick-link-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h5>Programmes & Programs</h5>
+                        <p>Explore available programmes</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Hero Banner Section -->
+        <section class="hero-banner text-white">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <h1 class="hero-title">Welcome to the Common Admission Portal</h1>
+                        <p class="hero-subtitle">Your single window for applying to Higher Education Institutions across Meghalaya.</p>
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="#open-admissions" class="btn btn-light btn-lg">View Open Admissions <i class="fas fa-arrow-down ms-2"></i></a>
+                            <a th:href="@{/applicants/login}" class="btn btn-outline-light btn-lg">Applicant Login <i class="fas fa-sign-in-alt ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Admissions Section -->
+        <section id="open-admissions" class="open-admissions-section py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Open Admissions</h2>
+                    <p class="text-muted">Select an open admission window to begin your application process.</p>
+                </div>
+
+                <!-- Undergraduate Admissions -->
+                <div th:if="${!ugAdmissions.isEmpty()}" class="mb-5">
+                    <h3 class="h4 mb-3">Undergraduate Programmes (UG)</h3>
+                    <div class="list-group shadow-sm">
+                        <a th:each="window : ${ugAdmissions}"
+                        th:href="@{/applicants/login}"
+                        class="list-group-item list-group-item-action p-4">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h5 class="mb-1 text-primary"
+                                th:text="${window.stream.streamName + ' (' + window.session + ')'}">
+                                </h5>
+                            </div>
+                            <small class="text-muted"
+                                th:text="'Application closes on: ' + ${#temporals.format(window.endDate, 'dd MMMM yyyy')}">
+                            </small>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Postgraduate Admissions -->
+                <div th:if="${!pgAdmissions.isEmpty()}" class="mb-5">
+                    <h3 class="h4 mb-3">Postgraduate Programmes (PG)</h3>
+                    <div class="list-group shadow-sm">
+                        <a th:each="window : ${pgAdmissions}"
+                        th:href="@{/applicants/login}"
+                        class="list-group-item list-group-item-action p-4">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h5 class="mb-1 text-primary"
+                                    th:text="${window.stream.streamName + ' (' + window.session + ')'}">
+                                </h5>
+                            </div>
+                            <small class="text-muted"
+                                th:text="'Application closes on: ' + ${#temporals.format(window.endDate, 'dd MMMM yyyy')}">
+                            </small>
+                        </a>
+                    </div>
+                </div>
+
+                
+                <!-- Message shown if both lists are empty -->
+                <div th:if="${ugAdmissions.isEmpty() and pgAdmissions.isEmpty()}" class="card text-center shadow-sm">
+                    <div class="card-body py-5">
+                        <h5 class="card-title">No Active Admissions</h5>
+                        <p class="card-text text-muted">There are currently no open admission. Please check back later.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Latest Announcements -->
+    <section class="announcements">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title">Latest Announcements</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="announcement-card">
+                        <div class="announcement-date">15 August 2025</div>
+                        <h5 class="announcement-title">Admission Portal Now Open</h5>
+                        <p class="announcement-text">Registration for 2025-26 academic session is now open for all applicants.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="announcement-card">
+                        <div class="announcement-date">10 August 2025</div>
+                        <h5 class="announcement-title">New Institutions Added</h5>
+                        <p class="announcement-text">5 additional colleges have joined the common admission portal.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="announcement-card">
+                        <div class="announcement-date">5 August 2025</div>
+                        <h5 class="announcement-title">Admission Guidelines Published</h5>
+                        <p class="announcement-text">Detailed admission process guidelines are now available for download.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Options -->
+    <!-- <section class="registration-options">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Registration Options</h2>
+                <p class="text-white-50">Choose the appropriate registration path</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>Student Registration</h3>
+                        <p>Apply for programmes across multiple institutions through a single application</p>
+                        <a href="/applicants/register" class="btn btn-light mt-3">
+                            Apply Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>Institute Registration</h3>
+                        <p>Register your educational institution to participate in the common admission process</p>
+                        <a href="/institute-form" class="btn btn-light mt-3">
+                            Register Institute <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- How to Apply -->
+    <section class="how-to-apply">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">How to Apply</h2>
+                <p class="text-muted">Simple steps to complete your application</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h5>Create Account</h5>
+                        <p>Register with basic personal information</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h5>Fill Application</h5>
+                        <p>Enter academic details and preferences</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h5>Upload Documents</h5>
+                        <p>Submit required certificates and ID</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h5>Submit & Pay</h5>
+                        <p>Review and complete payment process</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <!-- <section class="statistics">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Participating Institutions</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Programmes Offered</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number">25,000+</div>
+                        <div class="stat-label">Students Registered</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand mb-3">
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23ffffff'/><text x='50' y='55' font-family='Arial' font-size='18' fill='%230F4C81' text-anchor='middle'>MCAP</text></svg>" alt="MCAP Logo" class="footer-logo">
+                        <h4 class="text-white">Meghalaya Common Admission Portal</h4>
+                    </div>
+                    <p class="text-white-50">A centralized platform for admissions to higher education institutions in Meghalaya, Government of Meghalaya.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="text-white mb-3">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#" class="text-white-50">Home</a></li>
+                        <li><a href="#" class="text-white-50">About MCAP</a></li>
+                        <li><a href="/applicants/register" class="text-white-50">Student Application</a></li>
+                        <li><a href="/institute-form" class="text-white-50">Institute Registration</a></li>
+                        <li><a href="#" class="text-white-50">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-3">Login</h5>
+                    <ul class="footer-links">
+                        <li><a href="/applicants/login" class="text-white-50">Applicant Login</a></li>
+                        <li><a href="/login" class="text-white-50">Institute Login</a></li>
+                        <li><a href="/login" class="text-white-50">Authorized Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-3">Contact Us</h5>
+                    <ul class="footer-contact">
+                        <li class="text-white-50">
+                            <i class="fas fa-map-marker-alt"></i> 
+                            National Informatics Centre, Shillong
+                        </li>
+                        <li class="text-white-50">
+                            <i class="fas fa-phone-alt"></i> 
+                            +91 0364-1234567
+                        </li>
+                        <li class="text-white-50">
+                            <i class="fas fa-envelope"></i> 
+                            help@mcap.meghalaya.gov.in
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright text-center text-white-50">
+                <p class="mb-0">&copy; 2025 Meghalaya Common Admission Portal. All Rights Reserved.</p>
+                <div class="mt-2">
+                    <a href="#" class="text-white-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-white-50 me-3">Terms of Use</a>
+                    <a href="#" class="text-white-50">Accessibility Statement</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/home.js}"></script>
+</body>
+</html>

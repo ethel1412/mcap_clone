@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Setup Criteria - Admission Criteria</title>
+
+        <meta name="_csrf" th:content="${_csrf.token}">
+        <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+        <link th:href="@{/css/admission-criteria/setup-criteria.css}" rel="stylesheet">
+        <script th:src="@{/js/sweetalert2.all.min.js}"></script>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <p class="text-muted mb-0">
+                    Configure admission criteria for each programme in this window.
+                </p>
+            </div>
+            <a th:href="@{/admission-criteria/page/select-window}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Windows
+            </a>
+        </div>
+
+        <!-- Alert box -->
+        <div id="alert-box"></div>
+
+        <!-- Window info -->
+        <div class="card mb-4 border-primary">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="mb-2">
+                            <i class="bi bi-mortarboard me-2 text-primary"></i>
+                            <span th:text="${streamName}">Stream Name</span>
+                            <span class="badge ms-2"
+                                  th:classappend="${programmeLevel == 'UG'} ? 'bg-primary' : 'bg-success'">
+                                <span th:text="${programmeLevel}">Level</span>
+                            </span>
+                        </h4>
+                        <p class="mb-0 text-muted">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            Session: <span th:text="${admissionSession}">2025-26</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <input type="hidden" id="admissionWindowId" th:value="${admissionWindow.admissionId}">
+                        <input type="hidden" id="programmeLevel" th:value="${programmeLevel}">
+                        <input type="hidden" id="streamId" th:value="${admissionWindow.stream.streamId}">
+
+                        <!-- Start Admission Process -->
+                        <button id="btn-start-admission"
+                                type="button"
+                                class="btn btn-primary"
+                                disabled>
+                            Start Admission Process
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programmes table -->
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-check me-2"></i>
+                    Programmes in this Window
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Click <strong>Configure</strong> to create or edit criteria, or
+                    <strong>Go to Merit List</strong> to manage merit lists.
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="programmeCriteriaTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Programme Name</th>
+                            <th>Stream</th>
+                            <th>Level</th>
+                            <th>Criteria Status</th>
+                            <th>Configure</th>
+                            <th>Merit List Status</th>
+                            <th>Merit List / Allotment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="programme : ${programmes}"
+                            th:attr="data-programme-id=${programme.programmeId}">
+                            <td th:text="${programme.programmeName}">Programme Name</td>
+                            <td th:text="${programme.streamName}">Stream</td>
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${programme.programmeLevel.name() == 'UG'} ? 'bg-primary' : 'bg-success'"
+                                      th:text="${programme.programmeLevel}">UG</span>
+                            </td>
+                            <td>
+                                <span th:if="${programme.hasCriteria}" class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>Configured
+                                </span>
+                                <span th:unless="${programme.hasCriteria}" class="badge bg-warning text-dark">
+                                    <i class="bi bi-exclamation-circle me-1"></i>Not Set
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-configure"
+                                        data-bs-toggle="modal" data-bs-target="#criteriaModal"
+                                        th:data-programme-id="${programme.programmeId}"
+                                        th:data-programme-name="${programme.programmeName}"
+                                        th:data-programme-level="${programme.programmeLevel}">
+                                    <i class="bi bi-sliders me-1"></i>
+                                    <span th:text="${programme.hasCriteria} ? 'Edit' : 'Configure'">Configure</span>
+                                </button>
+                            </td>
+                            <td class="merit-status-cell">
+                                <span class="badge bg-secondary">
+                                    Checking...
+                                </span>
+                            </td>
+                            <td class="merit-action-cell">
+                                <!-- Default: Go to Merit List. Will be replaced by JS with View Allotment after allocation -->
+                                <a class="btn btn-sm btn-info"
+                                   th:href="@{/merit-list/page/view(
+                                        admissionWindowId=${admissionWindow.admissionId},
+                                        programmeId=${programme.programmeId},
+                                        programmeLevel=${programme.programmeLevel},
+                                        streamId=${admissionWindow.stream.streamId}
+                                   )}">
+                                    <i class="bi bi-trophy me-1"></i>Go to Merit List
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(programmes)}">
+                            <td colspan="7" class="text-center text-muted">
+                                No programmes found for this admission window.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="allocation-summary"></div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                Programme-wise Seat Allocation
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead>
+                    <tr>
+                        <th class="text-center" style="width: 40px;">#</th>
+                        <th>Programme</th>
+                        <th>Institute</th>
+                        <th class="text-end">Total Seats</th>
+                        <th class="text-end">Reserved</th>
+                        <th class="text-end">Open</th>
+                        <th class="text-end">Allotted</th>
+                        <th class="text-end">Unfilled</th>
+                    </tr>
+                    </thead>
+                    <tbody id="allocation-programme-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Criteria Modal -->
+        <div class="modal fade" id="criteriaModal" tabindex="-1"
+             aria-labelledby="criteriaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="criteriaModalLabel">
+                            Configure Admission Criteria
+                        </h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="criteria-modal-alert"></div>
+
+                        <p class="text-muted">
+                            Window ID: <span id="crit-aw-label"
+                                             th:text="${admissionWindow.admissionId}">1</span> ·
+                            Programme: <span id="crit-prog-label">-</span> ·
+                            Level: <span id="crit-level-label"
+                                         th:text="${programmeLevel}">UG</span>
+                        </p>
+
+                        <form id="criteriaForm" novalidate>
+                            <input type="hidden" id="crit-admissionWindowId"
+                                   th:value="${admissionWindow.admissionId}">
+                            <input type="hidden" id="crit-programmeId">
+                            <input type="hidden" id="crit-programmeLevel"
+                                   th:value="${programmeLevel}">
+                            <input type="hidden" id="crit-streamId"
+                                   th:value="${admissionWindow.stream.streamId}">
+
+                            <div class="mb-3">
+                                <label class="form-label">Programme</label>
+                                <input type="text" class="form-control"
+                                       id="crit-programmeName" readonly>
+                            </div>
+
+                            <!-- Merit subject selection (replaces weightage) -->
+                            <div class="alert alert-info py-2 small mb-3">
+                                Merit criteria is now subject-based:
+                                <ul class="mb-0">
+                                    <li>If no CUET subjects are selected, overall CUET percentile will be used during merit generation.</li>
+                                    <li>If no Non-CUET subjects are selected, overall qualification percentage will be used during merit generation.</li>
+                                </ul>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12" id="group-cuetMeritSubjects">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label mb-1">CUET merit subjects (optional)</label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                id="btn-cuet-clear">
+                                            Clear
+                                        </button>
+                                    </div>
+
+                                    <!-- Checkbox list container (filled by JS) -->
+                                    <div id="cuet-subjects-box" class="border rounded p-2"
+                                         style="max-height: 180px; overflow: auto;">
+                                        <div class="text-muted small">Loading...</div>
+                                    </div>
+
+                                    <div class="form-text">
+                                        Leave empty to use overall percentile.
+                                    </div>
+                                </div>
+
+                                <div class="col-12" id="group-nonCuetMeritSubjects">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label mb-1">Non-CUET merit subjects (optional)</label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                id="btn-noncuet-clear">
+                                            Clear
+                                        </button>
+                                    </div>
+
+                                    <!-- Checkbox list container (filled by JS) -->
+                                    <div id="noncuet-subjects-box" class="border rounded p-2"
+                                         style="max-height: 180px; overflow: auto;">
+                                        <div class="text-muted small">Loading...</div>
+                                    </div>
+
+                                    <div class="form-text">
+                                        Leave empty to use overall percentage.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tie-breaker Criteria Section -->
+                            <hr class="mt-4">
+                            <div class="mt-2">
+                                <h6 class="mb-2">
+                                    <i class="bi bi-diagram-2 me-1"></i>
+                                    Tie-breaker priority order
+                                </h6>
+                                <p class="text-muted small mb-2">
+                                    Drag rows to set the priority order for breaking ties when applicants have the same merit score.
+                                </p>
+
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0"
+                                           id="tiebreaker-table">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 40px" class="text-center"></th>
+                                            <th style="width: 50px" class="text-center">Priority</th>
+                                            <th>Field</th>
+                                            <th style="width: 120px" class="text-center">Order</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!-- Rows rendered by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Hidden JSON used to send tiebreakerConfig array -->
+                                <input type="hidden"
+                                       id="tiebreaker-config-json"
+                                       value="[]">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="me-auto small text-muted" id="criteria-status-text">
+                            Select values and click Save.
+                        </span>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary"
+                                id="btn-save-criteria">
+                            Save Criteria
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/admission-criteria/setup-criteria.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

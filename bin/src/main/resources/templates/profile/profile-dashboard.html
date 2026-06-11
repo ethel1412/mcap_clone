@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+  <title>Profile Dashboard</title>
+</head>
+<body>
+  <!-- Page content -->
+  <th:block th:fragment="main">
+    <style>
+      .profile-action-card {
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        width:180px; height:160px; border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        background:#fff; text-decoration:none; transition:box-shadow .2s, transform .2s;
+        font-weight:500; font-size:1.04rem; border:none; outline:none;
+      }
+      .profile-action-card:hover { box-shadow:0 4px 14px rgba(0,64,220,0.13); transform:translateY(-2px) scale(1.04); }
+      .profile-action-icon { font-size:2.8rem; margin-bottom:16px; }
+      .profile-action-view{ color:#0d6efd; } .profile-action-update{ color:#ffc107; } .profile-action-change{ color:#dc3545; }
+    </style>
+
+    <section class="container-fluid px-4 py-4">
+      <h1 class="h2 mb-4">Profile Dashboard</h1>
+
+      <div class="d-flex flex-wrap gap-4">
+        <a th:href="@{/user-management/user-profile}" class="profile-action-card profile-action-view" title="View Profile">
+          <span class="profile-action-icon"><i class="fas fa-id-badge"></i></span>
+          <span>View Profile</span>
+        </a>
+
+        <a th:href="@{/user-management/update-profile}" class="profile-action-card profile-action-update" title="Update Profile">
+          <span class="profile-action-icon"><i class="fas fa-user-edit"></i></span>
+          <span>Update Profile</span>
+        </a>
+
+        <a th:href="@{/user-management/change-password}" class="profile-action-card profile-action-change" title="Change Password">
+          <span class="profile-action-icon"><i class="fas fa-key"></i></span>
+          <span>Change Password</span>
+        </a>
+      </div>
+    </section>
+  </th:block>
+</body>
+</html>

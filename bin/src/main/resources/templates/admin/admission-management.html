@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+
+<head>
+    <title>Manage Admission Windows</title>
+    <link rel="stylesheet" th:href="@{/css/admission-management.css}">
+</head>
+
+
+<body>
+<main>
+    <div class="container-fluid px-4 py-4">
+
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">Manage Admission Windows</h1>
+            <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addWindowModal">
+                <i class="fas fa-plus-circle me-2" aria-hidden="true"></i>Create New Window
+            </button>
+        </div>
+
+
+        <!-- FILTER FEEDBACK ALERT -->
+        <div th:if="${filterStatus}" class="alert alert-info d-flex align-items-center" role="alert">
+            <i class="fas fa-filter me-2" aria-hidden="true"></i>
+            <div>
+                Showing windows with status: <strong class="text-capitalize" th:text="${filterStatus}"></strong>.
+                <a th:href="@{/admin/admission-management}" class="alert-link ms-2">Clear Filter</a>
+            </div>
+        </div>
+
+
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2" aria-hidden="true"></i><span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i><span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header bg-light border-bottom-0">
+                <h2 class="h5 card-title mb-0"><i class="fas fa-list me-2 text-primary" aria-hidden="true"></i>Existing Windows</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle w-100" id="existingWindowsTable">
+                        <caption class="visually-hidden">A searchable and sortable table listing all created admission windows.</caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Applies To</th>
+                            <th scope="col">Session</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col" class="text-center">Status</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="window : ${windows}">
+                            <td>
+                                <strong th:text="${window.stream.streamName + ' - ' + window.programmeLevel.name()}"></strong>
+                                <div th:if="${#lists.isEmpty(window.admissionWindowProgrammes)}" class="small text-muted">(All Programmes)</div>
+                                <div th:unless="${#lists.isEmpty(window.admissionWindowProgrammes)}">
+                                    <button type="button" class="btn btn-sm btn-outline-info view-programmes-btn mt-1"
+                                            th:data-window-id="${window.admissionId}"
+                                            th:data-window-name="${window.stream.streamName + ' (' + window.session + ')'}"
+                                            th:aria-label="'View programmes for ' + ${window.stream.streamName}">
+                                        <i class="fas fa-eye me-1"></i>
+                                        View Programmes (<span th:text="${#lists.size(window.admissionWindowProgrammes)}"></span>)
+                                    </button>
+                                </div>
+                                <!-- Display associated Schedule name -->
+                                <div th:if="${window.schedule != null}" class="small text-muted mt-1">
+                                    <i class="far fa-calendar-alt me-1"></i>Schedule: <strong th:text="${window.schedule.name}"></strong>
+                                </div>
+                            </td>
+                            <td th:text="${window.session}"></td>
+                            <td th:text="${#temporals.format(window.startDate, 'dd-MMM-yyyy HH:mm')}"></td>
+                            <td th:text="${#temporals.format(window.endDate, 'dd-MMM-yyyy HH:mm')}"></td>
+                            <td class="text-center">
+                                <!-- Dynamic status calculation based on isActive, startDate, endDate -->
+                                <span th:with="now=${T(java.time.LocalDateTime).now()},
+                                              currentStatus=${!window.isActive ? 'INACTIVE' :
+                                                              (now.isBefore(window.startDate) ? 'UPCOMING' :
+                                                              (now.isAfter(window.endDate) ? 'EXPIRED' : 'ACTIVE'))},
+                                              badgeClass=${currentStatus == 'ACTIVE' ? 'bg-success' :
+                                                           (currentStatus == 'UPCOMING' ? 'bg-info text-dark' :
+                                                           (currentStatus == 'EXPIRED' ? 'bg-secondary' : 'bg-danger'))}">
+                                    <span th:classappend="${'badge ' + badgeClass}" th:text="${currentStatus}"></span>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <!-- Edit Button -->
+                                    <button type="button" class="btn btn-sm btn-primary edit-window-btn"
+                                            th:data-window-id="${window.admissionId}"
+                                            th:data-stream-id="${window.stream.streamId}"
+                                            th:data-programme-level="${window.programmeLevel.name()}"
+                                            th:data-session="${window.session}"
+                                            th:data-start-date="${#temporals.format(window.startDate, 'yyyy-MM-dd HH:mm')}"
+                                            th:data-end-date="${#temporals.format(window.endDate, 'yyyy-MM-dd HH:mm')}"
+                                            th:data-schedule-id="${window.schedule != null ? window.schedule.scheduleId : ''}"
+                                            th:data-has-programmes="${!#lists.isEmpty(window.admissionWindowProgrammes)}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Window">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </button>
+                            
+                                    <!-- Toggle Status Button -->
+                                    <form th:action="@{/admin/toggle-window-status/{id}(id=${window.admissionId})}" method="post" class="d-inline-block">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                        <button type="submit" class="btn btn-sm"
+                                                th:classappend="${window.isActive} ? 'btn-warning' : 'btn-success'"
+                                                th:title="${window.isActive} ? 'Deactivate Window' : 'Activate Window'"
+                                                data-bs-toggle="tooltip" data-bs-placement="top">
+                                            <i th:class="${window.isActive} ? 'fas fa-toggle-on' : 'fas fa-toggle-off'" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                            
+                                    <!-- Delete Button -->
+                                    <button type="button" class="btn btn-sm btn-danger delete-window-btn"
+                                            th:data-window-id="${window.admissionId}"
+                                            th:data-window-name="${window.stream.streamName + ' - ' + window.programmeLevel.name() + ' (' + window.session + ')'}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Window">
+                                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- Add New Window Modal -->
+    <div class="modal fade" id="addWindowModal" tabindex="-1" aria-labelledby="addWindowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addWindowModalLabel"><i class="fas fa-plus-circle me-2"></i>Create New Admission Window</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addWindowForm" th:action="@{/admin/save-admission-window}" method="post" th:object="${AdmissionWindow}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                    <div class="modal-body">
+
+                        <!-- Hidden input for windowType, its value is set by JS based on radio selection -->
+                        <input type="hidden" id="addWindowTypeHidden" name="windowType">
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="addWindowType" class="form-label fw-bold">Scope</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="windowTypeRadio" id="addScopeStream" value="STREAM" required>
+                                <label class="form-check-label" for="addScopeStream">Apply to an entire Stream &amp; Level combination.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="windowTypeRadio" id="addScopeProgramme" value="PROGRAMME">
+                                <label class="form-check-label" for="addScopeProgramme">Apply to specific, selected programmes only.</label>
+                            </div>
+                            <div class="invalid-feedback"></div> <!-- For JS validation messages -->
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Details</label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="addStream" class="form-label">Stream</label>
+                                    <select class="form-select filter-trigger" id="addStream" th:field="*{streamId}" required>
+                                        <option value="">-- Select Stream --</option>
+                                        <option th:each="stream : ${streams}" th:value="${stream.streamId}" th:text="${stream.streamName}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('streamId')}" th:errors="*{streamId}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="addProgrammeLevel" class="form-label">Programme Level</label>
+                                    <select class="form-select filter-trigger" id="addProgrammeLevel" th:field="*{programmeLevel}" required>
+                                        <option value="">-- Select Programme Level --</option>
+                                        <option th:each="level : ${T(nic.meg.mcap.enums.ProgrammeLevel).values()}" th:value="${level}" th:text="${level.name()}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('programmeLevel')}" th:errors="*{programmeLevel}"></div>
+                                </div>
+                            </div>
+                            <div class="programme-selection-area add-programme-selection-area" style="display: none;">
+                                <label for="addProgrammeIds" class="form-label">Specific Programmes</label>
+                                <select class="form-select programme-multiselect" id="addProgrammeIds" th:field="*{programmeIds}" multiple size="6">
+                                    <option value="" disabled selected>Select Stream and Programme Level first</option>
+                                </select>
+                                <div class="form-text">Click to select or deselect programmes.</div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('programmeIds')}" th:errors="*{programmeIds}"></div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div>
+                            <label class="form-label fw-bold">Window Dates</label>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="addSession" class="form-label">Session</label>
+                                    <select class="form-select" id="addSession" th:field="*{session}" required>
+                                        <option value="">-- Select Session --</option>
+                                        <option th:each="sessionYear : ${sessionYears}" th:value="${sessionYear}" th:text="${sessionYear}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('session')}" th:errors="*{session}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="addStartDate" class="form-label">Start Date &amp; Time</label>
+                                    <input type="datetime-local" class="form-control" id="addStartDate" th:field="*{startDate}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="addEndDate" class="form-label">End Date &amp; Time</label>
+                                    <input type="datetime-local" class="form-control" id="addEndDate" th:field="*{endDate}" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Create Window</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Edit Window Modal -->
+    <div class="modal fade" id="editWindowModal" tabindex="-1" aria-labelledby="editWindowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="editWindowModalLabel"><i class="fas fa-edit me-2"></i>Edit Admission Window</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editWindowForm" method="post" th:object="${AdmissionWindow}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" id="editAdmissionId" th:field="*{admissionId}">
+                    <input type="hidden" id="editWindowTypeHidden" name="windowType"> <!-- Value set by JS based on radio selection -->
+                    <div class="modal-body">
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="editWindowType" class="form-label fw-bold">Scope</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="windowTypeRadio" id="editScopeStream" value="STREAM" required>
+                                <label class="form-check-label" for="editScopeStream">Apply to an entire Stream & Level combination.</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="windowTypeRadio" id="editScopeProgramme" value="PROGRAMME">
+                                <label class="form-check-label" for="editScopeProgramme">Apply to specific, selected programmes only.</label>
+                            </div>
+                            <div class="invalid-feedback"></div> <!-- For JS validation messages -->
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Details</label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="editStream" class="form-label">Stream</label>
+                                    <select class="form-select filter-trigger" id="editStream" th:field="*{streamId}" required>
+                                        <option value="">-- Select Stream --</option>
+                                        <option th:each="stream : ${streams}" th:value="${stream.streamId}" th:text="${stream.streamName}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('streamId')}" th:errors="*{streamId}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="editProgrammeLevel" class="form-label">Programme Level</label>
+                                    <select class="form-select filter-trigger" id="editProgrammeLevel" th:field="*{programmeLevel}" required>
+                                        <option value="">-- Select Programme Level --</option>
+                                        <option th:each="level : ${T(nic.meg.mcap.enums.ProgrammeLevel).values()}"
+                                                th:value="${level}" th:text="${level.name()}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('programmeLevel')}" th:errors="*{programmeLevel}"></div>
+                                </div>
+                            </div>
+                            <div class="programme-selection-area edit-programme-selection-area" style="display: none;">
+                                <label for="editProgrammeIds" class="form-label">Specific Programmes</label>
+                                <select class="form-select programme-multiselect" id="editProgrammeIds" th:field="*{programmeIds}" multiple size="6">
+                                    <option value="" disabled selected>Select Stream and Programme Level first</option>
+                                </select>
+                                <div class="form-text">Click to select or deselect programmes.</div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('programmeIds')}" th:errors="*{programmeIds}"></div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <label class="form-label fw-bold">Window Dates</label>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="editSession" class="form-label">Session</label>
+                                    <select class="form-select" id="editSession" th:field="*{session}" required>
+                                        <option value="">-- Select Session --</option>
+                                        <option th:each="sessionYear : ${sessionYears}" th:value="${sessionYear}" th:text="${sessionYear}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('session')}" th:errors="*{session}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="editStartDate" class="form-label">Start Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="editStartDate" th:field="*{startDate}" readonly required>
+                                    <div class="form-text">Auto-filled from selected schedule.</div>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="editEndDate" class="form-label">End Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="editEndDate" th:field="*{endDate}" readonly required>
+                                    <div class="form-text">Auto-filled from selected schedule.</div>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-info text-white"><i class="fas fa-save me-2"></i>Update Window</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- View Programmes Modal -->
+    <div class="modal fade" id="viewProgrammesModal" tabindex="-1" aria-labelledby="viewProgrammesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="viewProgrammesModalLabel"><i class="fas fa-book me-2"></i>Programmes for Window: <span id="viewWindowName"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="noProgrammesMessage" class="alert alert-info" style="display: none;">This admission window is open for all programmes within the selected stream and programme level.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="windowProgrammesTable">
+                            <thead>
+                            <tr>
+                                <th>Programme Name</th>
+                                <th>Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Programmes will be loaded here via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteWindowModal" tabindex="-1" aria-labelledby="deleteWindowModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteWindowModalLabel"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the admission window for <strong id="deleteWindowName"></strong>? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteWindowForm" method="post" style="display:inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt me-2"></i>Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/admission-management.js}"></script>
+
+</main>
+</body>
+</html>

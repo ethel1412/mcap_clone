@@ -1,0 +1,45 @@
+/* Notification Bell Badge */
+#notificationBadge {
+    font-size: 0.65rem;
+    padding: 0.25em 0.4em;
+    min-width: 1.5em;
+    text-align: center;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Notification Items */
+.notification-item {
+    padding: 0.75rem 1rem;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Bell icon hover effect */
+#notificationDropdown:hover i {
+    color: #0d6efd;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+
+/* Dropdown header button */
+#markAllReadBtn {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+#markAllReadBtn:hover {
+    color: #0d6efd;
+}

@@ -1,0 +1,134 @@
+/* Merit List View Styles */
+
+.merit-badge {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+}
+
+.rank-column {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #0d6efd;
+}
+
+.merit-score-column {
+    font-weight: 600;
+    color: #198754;
+}
+
+/* Optional: emphasize rows where tie-breaker applied */
+tr.table-active {
+    border-left: 4px solid #ffc107;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        border: 1px solid #dee2e6 !important;
+        page-break-inside: avoid;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .table thead {
+        background-color: #343a40 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .badge {
+        border: 1px solid #000;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    h4, h5 {
+        color: #000 !important;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+}
+/* Tab styling */
+.nav-tabs .nav-link {
+    color: #495057;
+    font-weight: 500;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: #e9ecef #e9ecef #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Print styling - hide tabs when printing */
+@media print {
+    .nav-tabs,
+    .no-print {
+        display: none !important;
+    }
+
+    .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Rank column highlighting */
+.rank-column {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.table-warning .rank-column {
+    color: #856404;
+}
+
+.table-info .rank-column {
+    color: #0c5460;
+}
+
+.table-success .rank-column {
+    color: #155724;
+}
+
+/* Merit score column */
+.merit-score-column {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+/* Tie-breaker badge */
+.tie-breaker-cell .badge {
+    font-size: 0.75rem;
+}
+@media print {
+    .no-print { display: none !important; }
+    .rank-column::after { content: attr(data-rank); } /* Anonymize */
+}

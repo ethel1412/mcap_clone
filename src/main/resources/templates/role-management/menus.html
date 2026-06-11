@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Manage Menus</title>
+    <link rel="stylesheet" th:href="@{/css/role-management/menus.css}">
+</head>
+<body>
+<main>
+    <div class="container py-4">
+        <h2 class="mb-4 fw-bold text-success">
+            <i class="fas fa-th-list me-2"></i>Menu Management
+        </h2>
+
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addMenuModal">
+            <i class="fas fa-plus me-1"></i> Add Menu
+        </button>
+
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Menu ID</th>
+                <th>Menu Name</th>
+                <th>Roles Assigned</th>
+            </tr>
+            </thead>
+            <tbody id="menusBody">
+            <tr><td colspan="4" class="text-center">Loading...</td></tr>
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="addMenuModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="addMenuForm" class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">Add New Menu</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Menu Name</label>
+                            <input type="text" id="menuNameInput" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Choose Icon</label>
+                            <input type="hidden" id="iconInput">
+
+                            <input type="text" id="iconSearch" class="form-control mb-2" placeholder="Search icon...">
+
+                            <div id="iconPickerContainer"
+                                 class="d-flex flex-wrap gap-2 border p-2 icon-picker-scroll">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order Index</label>
+                            <input type="number" id="orderInput" class="form-control" value="1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Parent Menu</label>
+                            <select id="parentMenuSelect" class="form-select">
+                                <option value="">-- None (Top Level) --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" id="activeCheck" class="form-check-input" checked>
+                            <label class="form-check-label" for="activeCheck">Active</label>
+                        </div>
+
+                        <div id="addMenuError" class="text-danger d-none"></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Add Menu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="module" th:src="@{/js/role-management/menus.js}"></script>
+</main>
+</body>
+</html>

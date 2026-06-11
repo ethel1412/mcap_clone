@@ -1,0 +1,92 @@
+/* Modern Admission Aesthetic */
+:root {
+    --primary-blue: #2563eb;
+    --surface-bg: #ffffff;
+    --background-light: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+body {
+    background-color: var(--background-light);
+}
+
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    background: var(--surface-bg);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--surface-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.table-hover tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-1px);
+}
+
+.table thead th {
+    background-color: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.nav-tabs {
+    border-bottom: 2px solid var(--border-color);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-muted);
+    border: none;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    margin-bottom: -2px;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--primary-blue);
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-blue);
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.search-bar-modern {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.lock-banner {
+    background-color: #fff1f2;
+    border-left: 4px solid #e11d48;
+    border-radius: 8px;
+}

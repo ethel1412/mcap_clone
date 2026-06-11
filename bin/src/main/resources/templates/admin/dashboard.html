@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(title=~{::title}, content=~{::main})}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<main class="container-fluid p-4">
+
+    <!-- Header & Tabs -->
+    <div class="mb-4">
+        <h1 class="h2 mb-0">Dashboard</h1>
+        <p class="text-muted">Select a module below to view its summary and recent activity.</p>
+    </div>
+    <ul class="nav nav-pills nav-fill mb-4" id="dashboard-selector" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="institute-selector" data-bs-toggle="pill" data-bs-target="#institute-dashboard" type="button" role="tab"><i class="fas fa-university fa-lg me-2"></i> Institute Overview</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="admissions-selector" data-bs-toggle="pill" data-bs-target="#admissions-dashboard" type="button" role="tab"><i class="fas fa-calendar-alt fa-lg me-2"></i> Admissions Overview</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content Area -->
+    <div class="tab-content" id="application-selection">
+
+        <!--  PANE 1: INSTITUTE OVERVIEW  -->
+        <div class="tab-pane fade show active" id="institute-dashboard" role="tabpanel">
+            
+            <!-- Institute Stat Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/institutes-list}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-primary shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${totalInstitutesCount}" data-stat="total">0</div> <!-- MODIFIED -->
+                                <div class="stat-label">Total Submissions</div>
+                                <i class="stat-icon fas fa-university"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/institutes-list(status='ACCEPTED')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-success shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${acceptedInstitutesCount}" data-stat="accepted">0</div> <!-- MODIFIED -->
+                                <div class="stat-label">Accepted</div>
+                                <i class="stat-icon fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/institutes-list(status='REJECTED')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-danger shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${rejectedInstitutesCount}" data-stat="rejected">0</div> <!-- MODIFIED -->
+                                <div class="stat-label">Rejected</div>
+                                <i class="stat-icon fas fa-times-circle"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/institutes-list(status='PENDING')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-warning shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${pendingInstitutesCount}" data-stat="pending">0</div> <!-- MODIFIED -->
+                                <div class="stat-label">Pending Review</div>
+                                <i class="stat-icon fas fa-hourglass-half"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                 <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/institutes-list(status='CORRECTION_REQUIRED')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-info shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${correctionRequiredInstitutesCount}" data-stat="correction_required">0</div> <!-- NEW CARD -->
+                                <div class="stat-label">Correction Required</div>
+                                <i class="stat-icon fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Institute Applications Table  -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-list-alt me-2" aria-hidden="true"></i>
+                        Recent Institute Applications
+                    </h2>
+                    <a th:href="@{/admin/institutes-list}" class="btn btn-sm btn-outline-primary">
+                        View All Institutes
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr th:replace="~{common/fragments :: instituteTableHeaderRow}"></tr>
+                            </thead>
+                            <tbody>
+                                <th:block th:replace="~{common/fragments :: instituteTableBodyRows(instituteList=${latestInstitutes})}"></th:block>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANE 2: ADMISSIONS OVERVIEW  -->
+        <div class="tab-pane fade" id="admissions-dashboard" role="tabpanel">
+            
+            <!-- Admission Stat Cards  -->
+            <div class="row g-4 mb-4">
+                <!-- 1. Total Windows -->
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/admission-management}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-primary shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${#lists.size(allWindows)}">0</div>
+                                <div class="stat-label">Total Windows</div>
+                                <i class="stat-icon fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 2. Currently Active -->
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/admission-management(status='active')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-success shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${#lists.size(allWindows.?[isActive and startDate.isBefore(T(java.time.LocalDateTime).now()) and endDate.isAfter(T(java.time.LocalDateTime).now())])}">0</div>
+                                <div class="stat-label">Currently Active</div>
+                                <i class="stat-icon fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 3. Upcoming -->
+                <div class="col-md-6 col-lg-3">
+                    <a th:href="@{/admin/admission-management(status='upcoming')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-info shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${#lists.size(allWindows.?[isActive and startDate.isAfter(T(java.time.LocalDateTime).now())])}">0</div>
+                                <div class="stat-label">Upcoming</div>
+                                <i class="stat-icon fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 4. Expired -->
+                <div class="col-md-6 col-lg-3">
+                     <a th:href="@{/admin/admission-management(status='expired')}" class="text-decoration-none">
+                        <div class="card stat-card bg-gradient-secondary shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="stat-number" th:text="${#lists.size(allWindows.?[!isActive or endDate.isBefore(T(java.time.LocalDateTime).now())])}">0</div>
+                                <div class="stat-label">Expired / Inactive</div>
+                                <i class="stat-icon fas fa-calendar-times"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Admission Windows Table -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-history me-2" aria-hidden="true"></i>
+                        Recent Admission Windows
+                    </h2>
+                    <a th:href="@{/admin/admission-management}" class="btn btn-sm btn-outline-primary">Manage All Windows</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <caption class="visually-hidden">Recent Admission Windows</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Stream</th>
+                                    <th scope="col">Session</th>
+                                    <th scope="col">Dates</th>
+                                    <th scope="col" class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="window : ${latestWindows}">
+                                    <td th:text="${window.stream.streamName}"></td>
+                                    <td th:text="${window.session}"></td>
+                                    <td th:text="${#temporals.format(window.startDate, 'dd-MMM-yy')} + ' to ' + ${#temporals.format(window.endDate, 'dd-MMM-yy')}"></td>
+                                    <td class="text-center">
+                                        <span th:if="${!window.isActive}" class="badge bg-secondary">Inactive</span>
+                                        <span th:if="${window.isActive and window.endDate.isBefore(T(java.time.LocalDateTime).now())}" class="badge bg-danger">Expired</span>
+                                        <span th:if="${window.isActive and window.startDate.isAfter(T(java.time.LocalDateTime).now())}" class="badge bg-info">Upcoming</span>
+                                        <span th:if="${window.isActive and window.startDate.isBefore(T(java.time.LocalDateTime).now()) and window.endDate.isAfter(T(java.time.LocalDateTime).now())}" class="badge bg-success">Active</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(latestWindows)}">
+                                    <td colspan="4" class="text-center text-muted p-4">No admission windows have been created yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

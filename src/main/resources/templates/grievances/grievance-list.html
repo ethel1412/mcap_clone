@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>Grievances</title>
+</head>
+<body>
+<div id="content">
+    <!-- Framework Styles -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+
+    <!-- Custom Extracted Styles -->
+    <link rel="stylesheet" th:href="@{/css/grievance-custom.css}">
+
+    <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary mb-0">
+            <i class="bi bi-chat-square-text-fill me-2" aria-hidden="true"></i>Grievances
+        </h1>
+        <span class="badge bg-secondary rounded-pill fs-6"
+              th:text="${grievances != null ? grievances.size() : 0} + ' total'">0 total</span>
+    </div>
+
+    <!-- Error banner -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Empty state -->
+    <div th:if="${grievances == null or grievances.isEmpty()}"
+         class="card shadow-sm border-0 bg-light p-5 text-center">
+        <i class="bi bi-inbox fs-1 text-muted mb-3" aria-hidden="true"></i>
+        <h2 class="h5 text-muted">No Grievances Received</h2>
+        <p class="text-muted mb-0">There are no grievances assigned to you at the moment.</p>
+    </div>
+
+    <!-- Grievance list -->
+    <div th:if="${grievances != null and !grievances.isEmpty()}" class="list-group shadow-sm">
+        <a th:each="g : ${grievances}"
+           href="#"
+           class="list-group-item list-group-item-action d-flex justify-content-between align-items-start py-3 grievance-row"
+           th:attr="data-id=${g.id}">
+
+            <div class="flex-grow-1 me-3">
+                <div class="d-flex align-items-center mb-1">
+                    <span class="badge bg-primary me-2 font-monospace" th:text="${g.ticketCode}">GRV-2026-1000</span>
+                    <span class="badge rounded-pill me-2"
+                          th:classappend="${g.status == 'OPEN' ? 'bg-warning text-dark' : 'bg-success'}"
+                          th:text="${g.status}">OPEN</span>
+                    <small class="text-muted" th:text="${#temporals.format(g.submittedAt, 'dd MMM yyyy, HH:mm')}"></small>
+                </div>
+
+                <!-- THE FIX: Now safely referencing the database entity 'g.category.name' -->
+                <p class="mb-1 fw-semibold" th:text="${g.category.name}">Category Name</p>
+
+                <small class="text-muted">
+                    <i class="bi bi-person me-1" aria-hidden="true"></i>
+                    <span th:text="${g.submittedBy}">applicantNo</span>
+                    <span th:if="${g.concernedInstitute != null}">
+                        &nbsp;&bull;&nbsp;<i class="bi bi-building me-1" aria-hidden="true"></i>
+                        <span th:text="${g.concernedInstitute.instituteName}"></span>
+                    </span>
+                </small>
+            </div>
+            <i class="bi bi-chevron-right text-muted align-self-center" aria-hidden="true"></i>
+        </a>
+    </div>
+
+    <!-- Detail modal -->
+    <div class="modal fade" id="grievanceDetailModal" tabindex="-1" aria-labelledby="grievanceDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="grievanceDetailModalLabel">
+                        <i class="bi bi-chat-square-text me-2" aria-hidden="true"></i>Grievance Detail
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="grievanceDetailBody">
+                    <!-- Loaded dynamically via JS -->
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Externalized Script replacing inline JS -->
+    <script type="module" th:src="@{/js/grievance/grievance-list.js}"></script>
+</div>
+</body>
+</html>

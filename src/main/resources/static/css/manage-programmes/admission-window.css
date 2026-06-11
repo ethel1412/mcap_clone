@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Institute Admission Window List Styles
+   ========================================================================== */
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #0ea5e9;
+    color: white;
+    font-size: 1.1rem;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+}
+
+.admission-card {
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.admission-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1) !important;
+    border-color: #bae6fd;
+}
+
+.schedule-info-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 50px;
+    display: inline-block;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+/* CSP Utility Classes for Seat Management */
+.alert-guide-blue { background-color: #f0f9ff !important; border-left: 4px solid #0284c7 !important; }
+.fs-0-85rem { font-size: 0.85rem !important; }
+.fs-0-7rem { font-size: 0.7rem !important; }
+.w-50px { width: 50px !important; }

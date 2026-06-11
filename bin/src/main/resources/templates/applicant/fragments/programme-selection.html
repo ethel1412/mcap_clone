@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+  <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+    <h1 class="h3 fw-bold text-primary"><i class="bi bi-card-checklist me-2"></i>Programme Selection</h1>
+  </div>
+
+  <div class="alert alert-info">Please select your preferred Institute and Programmes.</div>
+
+  <form id="programme-selection-form" th:action="@{/applicants/programmes/save}" th:object="${programmeSelectionDTO}" method="post">
+    <input type="hidden" th:field="*{applicationId}" />
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-light"><h5 class="mb-0">Step 1: Select Institute</h5></div>
+      <div class="card-body">
+        <label for="institute-select" class="form-label">Select Institute *</label>
+        
+        <!-- The th:field attribute here is correct and sufficient -->
+        <select id="institute-select" th:field="*{instituteId}" class="form-select" required>
+          
+          <!-- ✅ FIX: Removed the redundant th:selected attribute. th:field handles this. -->
+          <option value="">-- Select Institute --</option>
+          
+          <!-- ✅ FIX: Removed the redundant th:selected attribute from the loop as well. -->
+          <option th:each="inst : ${availableInstitutes}" 
+                  th:value="${inst.instituteId}" 
+                  th:text="${inst.instituteName}"></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-light"><h5 class="mb-0">Step 2: Select Programmes</h5></div>
+      <div class="card-body" id="programmes-container">
+        <!-- This section for checkboxes is correct and does not need changes -->
+        <div th:if="${#lists.isEmpty(availableProgrammes)}" class="form-text">Please select an institute to see available programmes.</div>
+        <div th:each="programme : ${availableProgrammes}" class="form-check">
+          <input class="form-check-input" type="checkbox"
+                 th:id="'programme_' + ${programme.programmeId}"
+                 th:name="programmeIds"
+                 th:value="${programme.programmeId}"
+                 th:checked="${#lists.contains(programmeSelectionDTO.programmeIds, programme.programmeId)}"/>
+          <label class="form-check-label" th:for="'programme_' + ${programme.programmeId}" th:text="${programme.programmeName}"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success btn-lg">
+        <i class="bi bi-check-lg me-2"></i>Save Selected Programmes
+      </button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content"
+     id="academic-details-fragment"
+     th:attr="data-cuet-papers=${cuetPapersJson}"
+     role="main"
+     aria-labelledby="form-heading">
+    <div id="academic-data-holder" class="d-none"
+         th:data-all-streams="${allStreamsJson}"
+         th:data-all-subjects="${allSubjectsJson}">
+    </div>
+
+    <header class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 id="form-heading" class="h3 fw-bold text-primary"><i class="bi bi-mortarboard-fill me-2" aria-hidden="true"></i>Educational &amp; Entrance Exam Details</h1>
+    </header>
+
+    <div class="visually-hidden" aria-live="polite" id="form-announcer"></div>
+
+    <div th:if="${status.formLocked}" class="alert alert-warning" role="alert">
+        <h2 class="h5 alert-heading"><i class="bi bi-lock-fill me-2" aria-hidden="true"></i>Application Locked</h2>
+        <p class="mb-0">This application has been paid for and is now locked. No further edits are permitted.</p>
+    </div>
+
+    <form id="academic-details-form" th:action="@{/applicants/academics/save}" th:object="${academicDetailsDTO}" method="post" class="needs-validation" novalidate>
+        <input type="hidden" th:field="*{applicationId}" />
+
+        <fieldset th:disabled="${status.formLocked}">
+            <p class="text-muted fst-italic"><small>Fields marked with <span class="text-danger" aria-hidden="true">*</span> are mandatory.</small></p>
+
+            <div class="alert bg-light text-danger border-danger mb-4" role="status">
+                <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>
+                <strong>Please note:</strong> You must enter your latest qualifying examination details, as this will be used for <strong>merit list calculation</strong>.
+            </div>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="latest-qual-heading">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h5 mb-0" id="latest-qual-heading">Latest Qualification (Used for Merit Calculation)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <caption class="visually-hidden">A table to enter details of your latest qualification. This will be used for the merit list.</caption>
+                            <thead>
+                            <tr>
+                                <th scope="col">Examination Passed <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Board / University <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Institution Name &amp; Address <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Stream / Major <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Date of Passing <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Overall Percentage (%) <span class="text-danger" aria-hidden="true">*</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="latest-records-container">
+                            <tr th:if="*{latestRecords != null}" th:each="record, iterStat : *{latestRecords}" class="record-row latest-qualification-row">
+                                <input type="hidden" th:field="*{latestRecords[__${iterStat.index}__].id}" />
+                                <td class="col-min-200">
+                                    <label th:for="|latestQualLevel${iterStat.index}|" class="visually-hidden">Examination Passed</label>
+                                    <select th:id="|latestQualLevel${iterStat.index}|" class="form-select qualification-level-select" th:field="*{latestRecords[__${iterStat.index}__].qualificationLevel}" required>
+                                        <option value="">-- Select --</option>
+                                        <option th:each="opt : ${latestQualificationOptions}" th:value="${opt.name}" th:text="${opt.name}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label th:for="|latestBoard${iterStat.index}|" class="visually-hidden">Board or University</label>
+                                    <textarea th:id="|latestBoard${iterStat.index}|" class="form-control" th:field="*{latestRecords[__${iterStat.index}__].boardOrUniversity}" required rows="2" autocomplete="off"></textarea>
+                                </td>
+                                <td>
+                                    <label th:for="|latestSchool${iterStat.index}|" class="visually-hidden">Institution Name and Address</label>
+                                    <textarea th:id="|latestSchool${iterStat.index}|" class="form-control" th:field="*{latestRecords[__${iterStat.index}__].schoolOrCollege}" required rows="2" autocomplete="off"></textarea>
+                                </td>
+                                <td class="col-min-200">
+                                    <label th:for="|latestStream${iterStat.index}|" class="visually-hidden">Stream or Major</label>
+                                    <select th:id="|latestStream${iterStat.index}|" class="form-select stream-major-select" th:field="*{latestRecords[__${iterStat.index}__].streamOrMajor}">
+                                        <option value="">-- Select Stream --</option>
+                                        <option th:each="s : ${allStreams}" th:value="${s.streamName}" th:text="${s.streamName}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label th:for="|latestPassingDate${iterStat.index}|" class="visually-hidden">Date of Passing</label>
+                                    <input th:id="|latestPassingDate${iterStat.index}|" type="date" class="form-control" th:field="*{latestRecords[__${iterStat.index}__].dateOfPassing}" required />
+                                </td>
+                                <td class="col-min-150">
+                                    <label th:for="|latestPercentage${iterStat.index}|" class="visually-hidden">Overall Percentage</label>
+                                    <input th:id="|latestPercentage${iterStat.index}|" type="number" min="0" max="100" step="0.01" class="form-control overall-percentage-input" th:field="*{latestRecords[__${iterStat.index}__].percentage}" required placeholder="e.g. 85.50" />
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="subject-marks-content" class="mt-4 pt-4 border-top" th:data-all-subjects="${allSubjectsJson}">
+                        <h3 class="h6 text-muted">Subject-wise Marks for Latest Qualification</h3>
+                        <table class="table table-sm table-bordered table-responsive">
+                            <caption class="visually-hidden">Enter marks for each subject of your latest qualification.</caption>
+                            <thead>
+                            <tr>
+                                <th scope="col">Subject Name <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Marks Secured <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Total Marks <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Percentage</th>
+                                <th scope="col" class="action-cell text-center">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="subject-marks-container">
+                            <tr th:if="*{latestRecords != null and !latestRecords.isEmpty()}" th:each="mark, markStat : *{latestRecords[0].subjectMarks}" class="subject-mark-row">
+                                <td class="col-min-250">
+                                    <label th:for="|subjectId${markStat.index}|" class="visually-hidden">Subject Name</label>
+                                    <select th:id="|subjectId${markStat.index}|" class="form-select form-select-sm subject-select" th:field="*{latestRecords[0].subjectMarks[__${markStat.index}__].subjectId}" required>
+                                        <option value="">-- Select Subject --</option>
+                                        <option th:each="subject : ${allSubjects}"
+                                                th:value="${subject.subjectId}"
+                                                th:text="${subject.subjectName}"
+                                                th:selected="${subject.subjectId == mark.subjectId}">
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label th:for="|marksObtained${markStat.index}|" class="visually-hidden">Marks Secured</label>
+                                    <input th:id="|marksObtained${markStat.index}|" type="number" min="0" max="999" step="0.01" class="form-control form-control-sm marks-obtained-input" th:field="*{latestRecords[0].subjectMarks[__${markStat.index}__].marksObtained}" required />
+                                </td>
+                                <td>
+                                    <label th:for="|totalMarks${markStat.index}|" class="visually-hidden">Total Marks</label>
+                                    <input th:id="|totalMarks${markStat.index}|" type="number" min="0" max="999" step="0.01" class="form-control form-control-sm total-marks-input" th:field="*{latestRecords[0].subjectMarks[__${markStat.index}__].totalMarks}" required />
+                                </td>
+                                <td>
+                                    <label th:for="|percentage${markStat.index}|" class="visually-hidden">Percentage</label>
+                                    <input th:id="|percentage${markStat.index}|" type="text" class="form-control form-control-sm percentage-display" readonly tabindex="-1" />
+                                </td>
+                                <td class="text-center action-cell">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-subject-btn" aria-label="Remove this subject"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" id="add-subject-btn" class="btn btn-sm btn-outline-primary mt-2">
+                            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Add Subject
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="past-qual-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="past-qual-heading">Past &amp; Additional Qualifications</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <caption class="visually-hidden">A table to enter details of past qualifications, such as Class X.</caption>
+                            <thead>
+                            <tr>
+                                <th scope="col">Examination Passed <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Board / University <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Institution Name &amp; Address <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Stream / Major</th>
+                                <th scope="col">Date of Passing <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col">Percentage (%) <span class="text-danger" aria-hidden="true">*</span></th>
+                                <th scope="col" class="col-w-80 text-center">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="past-records-container">
+                            <tr th:if="*{pastRecords != null}" th:each="record, iterStat : *{pastRecords}" class="record-row">
+                                <input type="hidden" th:field="*{pastRecords[__${iterStat.index}__].id}" />
+                                <td class="col-min-200">
+                                    <label th:for="|pastQualLevel${iterStat.index}|" class="visually-hidden">Examination Passed</label>
+                                    <select th:id="|pastQualLevel${iterStat.index}|" class="form-select qualification-level-select" th:field="*{pastRecords[__${iterStat.index}__].qualificationLevel}" required>
+                                        <option value="">-- Select --</option>
+                                        <option th:each="opt : ${pastQualificationOptions}" th:value="${opt.name}" th:text="${opt.name}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label th:for="|pastBoard${iterStat.index}|" class="visually-hidden">Board or University</label>
+                                    <textarea th:id="|pastBoard${iterStat.index}|" class="form-control" th:field="*{pastRecords[__${iterStat.index}__].boardOrUniversity}" required rows="2" autocomplete="off"></textarea>
+                                </td>
+                                <td>
+                                    <label th:for="|pastSchool${iterStat.index}|" class="visually-hidden">Institution Name and Address</label>
+                                    <textarea th:id="|pastSchool${iterStat.index}|" class="form-control" th:field="*{pastRecords[__${iterStat.index}__].schoolOrCollege}" required rows="2" autocomplete="off"></textarea>
+                                </td>
+                                <td>
+                                    <label th:for="|pastStreamSelect${iterStat.index}|" class="visually-hidden">Stream or Major Select</label>
+                                    <select th:id="|pastStreamSelect${iterStat.index}|" class="form-select stream-major-select" th:field="*{pastRecords[__${iterStat.index}__].streamOrMajor}">
+                                        <option value="">-- Select Stream --</option>
+                                        <option th:each="s : ${allStreams}" th:value="${s.streamName}" th:text="${s.streamName}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label th:for="|pastPassingDate${iterStat.index}|" class="visually-hidden">Date of Passing</label>
+                                    <input th:id="|pastPassingDate${iterStat.index}|" type="date" class="form-control" th:field="*{pastRecords[__${iterStat.index}__].dateOfPassing}" required />
+                                </td>
+                                <td class="col-min-150">
+                                    <label th:for="|pastPercentage${iterStat.index}|" class="visually-hidden">Overall Percentage</label>
+                                    <input th:id="|pastPercentage${iterStat.index}|" type="number" min="0" max="100" step="0.01" class="form-control" th:field="*{pastRecords[__${iterStat.index}__].percentage}" required placeholder="e.g. 75.50" />
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-record-btn" aria-label="Remove this past qualification record">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" id="add-record-btn" class="btn btn-primary mt-3"><i class="bi bi-plus-circle me-2" aria-hidden="true"></i>Add Additional Qualification</button>
+                </div>
+            </section>
+
+            <!-- Entrance Exam Scores -->
+            <section class="card shadow-sm mb-4" aria-labelledby="exam-scores-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="exam-scores-heading">Entrance Exam Scores (Optional)</h2>
+                </div>
+                <div class="card-body">
+
+                    <!-- JEE SECTION HIDDEN
+                    <fieldset class="mb-4">
+                        <legend class="form-label fs-6 fw-bold">JEE (Main) Scores</legend>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="provideJeeScores" th:field="*{provideJeeScores}" aria-controls="jee-score-section">
+                            <label class="form-check-label" for="provideJeeScores">I wish to provide my JEE (Main) scores.</label>
+                        </div>
+                    </fieldset>
+                    <div id="jee-score-section" th:classappend="*{!provideJeeScores} ? 'd-none'">
+                        <div class="row g-3 p-3 border rounded bg-light mb-4">
+                            <div class="col-md-4">
+                                <label for="jeeAppNo" class="form-label">Application No. <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="jeeAppNo" type="text" class="form-control" th:field="*{jeeScore.applicationNumber}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="jeeRollNo" class="form-label">Roll No. <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="jeeRollNo" type="text" class="form-control" th:field="*{jeeScore.rollNumber}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="jeeYear" class="form-label">Year of Exam <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select id="jeeYear" class="form-select" th:field="*{jeeScore.yearOfExam}">
+                                    <option value="">-- Year --</option>
+                                    <option th:each="y : ${passingYears}" th:value="${y}" th:text="${y}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="jeeSession" class="form-label">Session Appeared <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select id="jeeSession" class="form-select" th:field="*{jeeScore.sessionAppeared}">
+                                    <option value="">-- Select --</option>
+                                    <option value="January">January</option>
+                                    <option value="April">April</option>
+                                    <option value="Both">Both</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="jeeNtaScore" class="form-label">Best NTA Score (Percentile) <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="jeeNtaScore" type="number" min="0" max="100" step="0.01" class="form-control" th:field="*{jeeScore.bestNtaScore}" placeholder="e.g. 98.76" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="jeeAir" class="form-label">All India Rank (AIR) <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="jeeAir" type="number" min="1" step="1" class="form-control" th:field="*{jeeScore.allIndiaRank}" />
+                            </div>
+                        </div>
+                    </div>
+                    -->
+
+                    <fieldset class="mb-4">
+                        <legend class="form-label fs-6 fw-bold">CUET Scores</legend>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="provideCuetScores" th:field="*{provideCuetScores}" aria-controls="cuet-score-section">
+                            <label class="form-check-label" for="provideCuetScores">I wish to provide my CUET scores.</label>
+                        </div>
+                    </fieldset>
+                    <div id="cuet-score-section" th:classappend="*{!provideCuetScores} ? 'd-none'">
+                        <div class="row g-3 p-3 border rounded bg-light mb-4">
+                            <div class="col-md-4">
+                                <label for="cuetAppNo" class="form-label">Application No. <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="cuetAppNo" type="text" class="form-control" th:field="*{cuetScore.applicationNumber}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cuetYear" class="form-label">Year of Exam <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select id="cuetYear" class="form-select" th:field="*{cuetScore.yearOfExam}">
+                                    <option value="">-- Year --</option>
+                                    <option th:each="y : ${passingYears}" th:value="${y}" th:text="${y}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cuetOverallPercentile" class="form-label">Overall Percentile <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input id="cuetOverallPercentile" type="number" min="0" max="100" step="0.01" class="form-control" th:field="*{cuetScore.overallPercentile}" placeholder="e.g. 99.12" />
+                            </div>
+                            <div class="col-12">
+                                <h3 class="h6 text-muted mt-3">CUET Paper-wise Scores</h3>
+                                <table class="table table-sm table-bordered" aria-label="CUET Subject Scores">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Paper / Subject <span class="text-danger">*</span></th>
+                                        <th scope="col">Raw Score <span class="text-danger">*</span></th>
+                                        <th scope="col">Percentile <span class="text-danger">*</span></th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="cuet-subjects-container">
+                                    <tr th:if="*{cuetScore != null}" th:each="subject, iterStat : *{cuetScore.subjectScores}" class="cuet-subject-row">
+                                        <td>
+                                            <input type="hidden" class="cuet-subject-name-hidden"
+                                                   th:field="*{cuetScore.subjectScores[__${iterStat.index}__].subjectName}" />
+
+                                            <select class="form-select form-select-sm cuet-paper-select"
+                                                    th:field="*{cuetScore.subjectScores[__${iterStat.index}__].paperCode}" required>
+                                                <option th:value="*{cuetScore.subjectScores[__${iterStat.index}__].paperCode}"
+                                                        th:text="*{cuetScore.subjectScores[__${iterStat.index}__].subjectName}">
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td><input type="number" min="0" max="1000" step="0.01" class="form-control form-control-sm" th:field="*{cuetScore.subjectScores[__${iterStat.index}__].score}" placeholder="e.g. 185" required /></td>
+                                        <td><input type="number" min="0" max="100" step="0.01" class="form-control form-control-sm" th:field="*{cuetScore.subjectScores[__${iterStat.index}__].percentile}" placeholder="e.g. 98.76" required /></td>
+                                        <td><button type="button" class="btn btn-sm btn-outline-danger remove-cuet-subject-btn"><i class="bi bi-trash"></i></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" id="add-cuet-subject-btn" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="bi bi-plus-lg me-1"></i> Add Subject
+                                </button>
+                                <small class="ms-2 text-muted">(Maximum of 6 subjects)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div th:if="${programmeLevel == T(nic.meg.mcap.enums.ProgrammeLevel).PG}">
+                        <fieldset class="mb-4">
+                            <legend class="form-label fs-6 fw-bold">NET Scores (For PG Applicants)</legend>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="provideNetScores" th:field="*{provideNetScores}" aria-controls="net-score-section">
+                                <label class="form-check-label" for="provideNetScores">I wish to provide my NET scores.</label>
+                            </div>
+                        </fieldset>
+                        <div id="net-score-section" th:classappend="*{!provideNetScores} ? 'd-none'">
+                            <div class="row g-3 p-3 border rounded bg-light mb-4">
+                                <div class="col-md-4">
+                                    <label for="netAppNo" class="form-label">Application No.</label>
+                                    <input type="text" id="netAppNo" class="form-control" th:field="*{netScore.applicationNumber}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="netYear" class="form-label">Year of Exam</label>
+                                    <select id="netYear" class="form-select" th:field="*{netScore.yearOfExam}">
+                                        <option value="">-- Year --</option>
+                                        <option th:each="y : ${passingYears}" th:value="${y}" th:text="${y}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="netSubject" class="form-label">Subject</label>
+                                    <input type="text" id="netSubject" class="form-control" th:field="*{netScore.subject}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="netPercentile" class="form-label">Percentile</label>
+                                    <input type="number" min="0" max="100" step="0.01" id="netPercentile" class="form-control" th:field="*{netScore.percentile}" placeholder="e.g. 99.54" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GATE SECTION HIDDEN
+                    <fieldset class="mb-4">
+                        <legend class="form-label fs-6 fw-bold">GATE Scores</legend>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="provideGateScores" th:field="*{provideGateScores}" aria-controls="gate-score-section">
+                            <label class="form-check-label" for="provideGateScores">I wish to provide my GATE scores.</label>
+                        </div>
+                    </fieldset>
+                    <div id="gate-score-section" th:classappend="*{!provideGateScores} ? 'd-none'">
+                        <div class="row g-3 p-3 border rounded bg-light">
+                            <div class="col-md-4">
+                                <label for="gateRegNo" class="form-label">Registration No.</label>
+                                <input type="text" id="gateRegNo" class="form-control" th:field="*{gateScore.registrationNumber}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="gateYear" class="form-label">Year of Exam</label>
+                                <select id="gateYear" class="form-select" th:field="*{gateScore.yearOfExam}">
+                                    <option value="">-- Year --</option>
+                                    <option th:each="y : ${passingYears}" th:value="${y}" th:text="${y}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="gateSubject" class="form-label">Subject</label>
+                                <input type="text" id="gateSubject" class="form-control" th:field="*{gateScore.subject}" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="gateScoreValue" class="form-label">Score (out of 1000)</label>
+                                <input type="number" min="0" max="1000" step="0.01" id="gateScoreValue" class="form-control" th:field="*{gateScore.score}" placeholder="e.g. 750.25" />
+                            </div>
+                        </div>
+                    </div>
+                    -->
+
+                </div>
+            </section>
+        </fieldset>
+
+        <div class="d-flex justify-content-end mt-4 pt-3 border-top" th:if="${!status.isFormLocked()}">
+            <button type="submit" class="btn btn-success btn-lg px-4">
+                <i class="bi bi-check-lg me-2" aria-hidden="true"></i>Save &amp; Continue
+            </button>
+        </div>
+    </form>
+
+    <div class="d-none">
+        <table>
+            <tr id="subject-row-template" class="subject-mark-row">
+                <td class="col-min-250">
+                    <label for="template_subjectId___INDEX__" class="visually-hidden">Subject Name</label>
+                    <select id="template_subjectId___INDEX__" class="form-select form-select-sm subject-select" name="latestRecords[0].subjectMarks[__INDEX__].subjectId" required disabled>
+                        <option value="">-- Select Subject --</option>
+                        <option th:each="subject : ${allSubjects}"
+                                th:value="${subject.subjectId}"
+                                th:text="${subject.subjectName}">
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <label for="template_marksObtained___INDEX__" class="visually-hidden">Marks Secured</label>
+                    <input id="template_marksObtained___INDEX__" type="number" min="0" max="999" step="0.01" class="form-control form-control-sm marks-obtained-input" name="latestRecords[0].subjectMarks[__INDEX__].marksObtained" required disabled />
+                </td>
+                <td>
+                    <label for="template_totalMarks___INDEX__" class="visually-hidden">Total Marks</label>
+                    <input id="template_totalMarks___INDEX__" type="number" min="0" max="999" step="0.01" class="form-control form-control-sm total-marks-input" name="latestRecords[0].subjectMarks[__INDEX__].totalMarks" required disabled />
+                </td>
+                <td>
+                    <label for="template_percentage___INDEX__" class="visually-hidden">Percentage</label>
+                    <input id="template_percentage___INDEX__" type="text" class="form-control form-control-sm percentage-display" readonly tabindex="-1" disabled />
+                </td>
+                <td class="text-center action-cell">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-subject-btn" aria-label="Remove this subject"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                </td>
+            </tr>
+
+            <tr id="record-template" class="record-row">
+                <input type="hidden" name="pastRecords[__INDEX__].id" value="0" disabled/>
+                <td class="col-min-200">
+                    <label for="template_pastQualLevel___INDEX__" class="visually-hidden">Examination Passed</label>
+                    <select id="template_pastQualLevel___INDEX__" class="form-select qualification-level-select" name="pastRecords[__INDEX__].qualificationLevel" required disabled>
+                        <option value="">-- Select --</option>
+                        <option th:each="opt : ${pastQualificationOptions}" th:value="${opt.name}" th:text="${opt.name}"></option>
+                    </select>
+                </td>
+                <td>
+                    <label for="template_pastBoard___INDEX__" class="visually-hidden">Board or University</label>
+                    <textarea id="template_pastBoard___INDEX__" class="form-control" name="pastRecords[__INDEX__].boardOrUniversity" required rows="2" autocomplete="off" disabled></textarea>
+                </td>
+                <td>
+                    <label for="template_pastSchool___INDEX__" class="visually-hidden">Institution Name and Address</label>
+                    <textarea id="template_pastSchool___INDEX__" class="form-control" name="pastRecords[__INDEX__].schoolOrCollege" required rows="2" autocomplete="off" disabled></textarea>
+                </td>
+                <td>
+                    <label for="template_pastStreamSelect___INDEX__" class="visually-hidden">Stream or Major Select</label>
+                    <select id="template_pastStreamSelect___INDEX__" class="form-select stream-major-select" name="pastRecords[__INDEX__].streamOrMajor" disabled>
+                        <option value="">-- Select Stream --</option>
+                        <option th:each="s : ${allStreams}" th:value="${s.streamName}" th:text="${s.streamName}"></option>
+                    </select>
+                </td>
+                <td>
+                    <label for="template_pastPassingDate___INDEX__" class="visually-hidden">Date of Passing</label>
+                    <input id="template_pastPassingDate___INDEX__" type="date" class="form-control" name="pastRecords[__INDEX__].dateOfPassing" required disabled/>
+                </td>
+                <td class="col-min-150">
+                    <label for="template_pastPercentage___INDEX__" class="visually-hidden">Overall Percentage</label>
+                    <input id="template_pastPercentage___INDEX__" type="number" min="0" max="100" step="0.01" class="form-control" name="pastRecords[__INDEX__].percentage" required placeholder="e.g. 75.50" disabled/>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-record-btn" aria-label="Remove this past qualification record">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <tr id="cuet-subject-template" class="cuet-subject-row">
+                <td>
+                    <input type="hidden" name="cuetScore.subjectScores[__INDEX__].subjectName" class="cuet-subject-name-hidden" />
+
+                    <select class="form-select form-select-sm cuet-paper-select"
+                            name="cuetScore.subjectScores[__INDEX__].paperCode" required>
+                        <option value="">-- Select Paper --</option>
+                    </select>
+                </td>
+                <td><input type="number" name="cuetScore.subjectScores[__INDEX__].score" min="0" max="1000" step="0.01" class="form-control form-control-sm" placeholder="e.g. 185" required /></td>
+                <td><input type="number" name="cuetScore.subjectScores[__INDEX__].percentile" min="0" max="100" step="0.01" class="form-control form-control-sm" placeholder="e.g. 98.76" required /></td>
+                <td><button type="button" class="btn btn-sm btn-outline-danger remove-cuet-subject-btn" aria-label="Remove this CUET subject">
+                    <i class="bi bi-trash"></i>
+                </button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

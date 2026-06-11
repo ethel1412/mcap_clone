@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" id="allotment-container" th:attr="data-allotment-id=${allotment.allotmentId},data-programme-offered-id=${programmeOfferedId}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
+    <header class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary" th:text="'Seat Allotment Result - ' + ${allotment.roundName}">Round Name</h1>
+        <span class="badge fs-6"
+              th:classappend="${allotment.status == 'PENDING_VERIFICATION' ? 'bg-warning text-dark' : (allotment.status == 'ACCEPTED' ? 'bg-success' : 'bg-primary')}"
+              th:text="${allotment.status}">STATUS</span>
+    </header>
+
+    <main role="main" aria-live="polite">
+        <div th:switch="${allotment.status}">
+
+            <section th:case="${allotment.status == 'PENDING' or allotment.status == 'PENDING_VERIFICATION' ? allotment.status : 'NO_MATCH'}" aria-labelledby="allotment-heading-allotted">
+
+                <div th:if="${allotment.status == 'PENDING_VERIFICATION'}" class="alert alert-info border-info border-2 shadow-sm mb-4">
+                    <h4 class="alert-heading"><i class="bi bi-hourglass-split me-2"></i> Verification in Progress</h4>
+                    <p class="mb-0">The institute is currently verifying your documents. You can view your allotted details below. <strong>Actions (Accept/Reject) will be enabled once the institute completes verification.</strong></p>
+                </div>
+
+                <div th:if="${allotment.status == 'PENDING'}" class="alert alert-warning border-warning border-2 shadow-sm mb-4">
+                    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i> Action Required</h4>
+                    <p class="mb-0">Verification is complete. Please review the details below. Accepting the seat secures your admission.</p>
+                </div>
+
+                <div class="card shadow-sm border-primary mt-2">
+                    <div class="card-header bg-primary bg-opacity-10 text-primary py-3">
+                        <h2 class="mb-0 h5" id="allotment-heading-allotted">
+                            <i class="bi bi-award-fill me-2"></i> Provisional Allotment Details
+                        </h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4 text-muted">Allotted Programme:</dt>
+                            <dd class="col-sm-8 fw-bold text-dark" th:text="${allotment.allottedProgramme}">Programme</dd>
+
+                            <dt class="col-sm-4 text-muted">Allotted Institute:</dt>
+                            <dd class="col-sm-8 fw-bold text-primary" th:text="${allotment.allottedInstitute}">Institute</dd>
+
+                            <dt class="col-sm-4 text-muted">Allotted Shift:</dt>
+                            <dd class="col-sm-8 fw-bold text-dark">
+                                <span class="badge bg-info text-dark" th:text="${allotment.shiftName}">Day</span>
+                            </dd>
+
+                            <dt class="col-sm-4 text-muted">Preference Number:</dt>
+                            <dd class="col-sm-8 text-dark" th:text="${allotment.preferenceNumber > 0 ? '#' + allotment.preferenceNumber : 'N/A'}">1</dd>
+                        </dl>
+
+                        <hr class="my-4">
+
+                        <!-- Accept / Reject / Slide Up buttons for PENDING -->
+                        <div th:if="${allotment.status == 'PENDING'}">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <button type="button" id="accept-allotment-btn" class="btn btn-success w-100 p-3 fs-5 shadow-sm">
+                                        <i class="bi bi-check2-circle me-2"></i> ACCEPT SEAT
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" id="reject-allotment-btn" class="btn btn-outline-danger w-100 p-3 fs-5 shadow-sm">
+                                        <i class="bi bi-x-circle me-2"></i> REJECT SEAT
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2
+                                        border border-info border-opacity-50 rounded-3 bg-info bg-opacity-10 px-4 py-3">
+                                <div class="d-flex align-items-center gap-2 text-dark small">
+                                    <i class="bi bi-arrow-up-circle-fill text-info fs-5"></i>
+                                    <span><strong>Want a better preference?</strong> Accept now and still be considered for higher-preference seats in future rounds.</span>
+                                </div>
+                                <button type="button" class="btn btn-info btn-sm fw-bold px-4 text-white flex-shrink-0"
+                                        data-bs-toggle="modal" data-bs-target="#slideUpInfoModal">
+                                    <i class="bi bi-arrow-up-circle me-1"></i> Slide Up
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center py-2" th:if="${allotment.status == 'PENDING_VERIFICATION'}">
+                            <button class="btn btn-secondary w-100 p-3 fs-5 disabled opacity-50">
+                                <i class="bi bi-lock-fill me-2"></i> ACTIONS LOCKED DURING VERIFICATION
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section th:case="'ACCEPTED'">
+
+                <div class="alert alert-success bg-success bg-opacity-10 border-0 shadow-sm d-flex align-items-center p-4 mb-4">
+                    <i class="bi bi-check-circle-fill fs-1 text-success me-4"></i>
+                    <div>
+                        <h4 class="alert-heading h5 fw-bold text-success mb-1">Seat Acceptance Confirmed!</h4>
+                        <p class="mb-0 text-dark">
+                            You have accepted the seat for <strong class="text-success" th:text="${allotment.allottedProgramme}"></strong> at <strong class="text-success" th:text="${allotment.allottedInstitute}"></strong>.<br>
+                            Please complete the final mandatory step below to lock in your subject curriculum.
+                        </p>
+                    </div>
+                </div>
+
+                <form id="subjectPreferenceForm">
+                    <input type="hidden" id="seatAllotmentId" th:value="${allotment.allotmentId}">
+                    <input type="hidden" id="programmeOfferedId" th:value="${programmeOfferedId}">
+                    <input type="hidden" id="fixedShift" th:value="${programmeShift}">
+
+                    <div id="subjectSelectionContainer">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0 h5 fw-bold text-dark"><i class="bi bi-card-checklist me-2 text-primary"></i> Select Subject Combination</h2>
+                                <span class="badge bg-warning text-dark border border-warning rounded-pill px-3"><i class="bi bi-asterisk me-1"></i>Mandatory</span>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <div class="alert alert-secondary border-0 bg-light small mb-4">
+                                    <i class="bi bi-info-circle-fill text-secondary me-2"></i>
+                                    Based on your allotted <strong><span th:text="${allotment.shiftName}"></span></strong> shift, please click the boxes below to select your top <strong>three</strong> subject preferences in order of priority.
+                                </div>
+
+                                <div id="subjectPoolsContainer" class="px-md-3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-success bg-success bg-opacity-10">
+                            <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                <div class="mb-3 mb-md-0 text-success-emphasis">
+                                    <i class="bi bi-shield-lock-fill me-2 fs-5 align-middle"></i>
+                                    <strong>Almost done!</strong> Review your choices carefully before finalizing.
+                                </div>
+                                <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm fw-bold" id="confirmSubjectsBtn" disabled>
+                                    <i class="bi bi-check2-circle me-2"></i>Save Preferences
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </section>
+
+            <section th:case="'NOT_ALLOTTED'">
+                <div class="card shadow-sm border-0 bg-light p-5 text-center">
+                    <i class="bi bi-info-circle text-muted mb-3 allotment-pending-icon"></i>
+                    <h2 class="h4">No Seat Allotted</h2>
+                    <p class="text-muted">You will be considered for the next round automatically.</p>
+                </div>
+            </section>
+
+            <section th:case="'REJECTED'">
+                <div class="card shadow-sm border-danger p-5 text-center">
+                    <i class="bi bi-x-circle-fill fs-1 text-danger mb-3"></i>
+                    <h2 class="h4">Offer Rejected</h2>
+                </div>
+            </section>
+
+            <section th:case="'INSTITUTE_REJECTED'">
+                <div class="card shadow-sm border-danger">
+                    <div class="card-header bg-danger text-white py-3">
+                        <h2 class="mb-0 h5"><i class="bi bi-shield-x me-2"></i> Verification Failed</h2>
+                    </div>
+                    <div class="card-body p-4" th:text="${allotment.verificationRemarks}">Remarks</div>
+                </div>
+            </section>
+
+            <section th:case="*">
+                <div class="card shadow-sm border-0 bg-light text-center p-5">
+                    <i class="bi bi-hourglass-top text-muted mb-3 allotment-pending-icon"></i>
+                    <h2 class="h5">Processing Allotment</h2>
+                    <p class="text-muted">Status: <span th:text="${allotment.status}">Unknown</span>. Please refresh or select a round.</p>
+                    <button class="btn btn-primary btn-sm mt-3" onclick="location.reload()">Refresh Page</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Slide Up Info Modal -->
+    <div class="modal fade" id="slideUpInfoModal" tabindex="-1"
+         aria-labelledby="slideUpInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-info bg-opacity-10 border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3 pt-1 pb-2">
+                        <div class="rounded-circle bg-info bg-opacity-25 d-flex align-items-center justify-content-center"
+                             style="width:52px;height:52px;flex-shrink:0">
+                            <i class="bi bi-arrow-up-circle-fill text-info fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0" id="slideUpInfoModalLabel">Slide Up — What does this mean?</h5>
+                            <p class="text-muted small mb-0">Your current seat is safe.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-3 pb-2 px-4">
+
+                    <div class="alert alert-success border-0 bg-success bg-opacity-10 d-flex gap-3 align-items-start mb-3">
+                        <i class="bi bi-patch-check-fill text-success fs-5 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <div class="fw-semibold text-success-emphasis mb-1">Your seat is already booked.</div>
+                            <div class="small text-dark">
+                                Your accepted seat is <strong>confirmed and reserved</strong> for you. You will not lose it regardless of what happens in future rounds.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-0 bg-info bg-opacity-10 d-flex gap-3 align-items-start mb-3">
+                        <i class="bi bi-arrow-up-circle-fill text-info fs-5 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <div class="fw-semibold text-info-emphasis mb-1">You will still be considered for better options.</div>
+                            <div class="small text-dark">
+                                In future counselling phases, the system will automatically check if any of your <strong>higher-preference programmes</strong> have a seat available for you. If one does, you will be allotted that better option instead.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning border-0 bg-warning bg-opacity-10 d-flex gap-3 align-items-start mb-2">
+                        <i class="bi bi-shield-fill-check text-warning fs-5 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <div class="fw-semibold text-warning-emphasis mb-1">No risk involved.</div>
+                            <div class="small text-dark">
+                                If no better preference is available in any upcoming phase, you simply retain your current allotted seat. <strong>You cannot end up with a worse option than what you currently have.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-info fw-bold px-4 text-white w-100"
+                            id="slide-up-allotment-btn"
+                            data-bs-dismiss="modal">
+                        <i class="bi bi-arrow-up-circle me-2"></i>Yes, Slide Up &amp; Pay Fee
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         Seat Acceptance Fee Modal
+         Triggered by: Accept Seat button (isSlideUp=false)
+                       Slide Up confirm button (isSlideUp=true)
+         ══════════════════════════════════════════════ -->
+    <div class="modal fade" id="seatFeeModal" tabindex="-1" aria-labelledby="seatFeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="seatFeeModalLabel">
+                        <i class="bi bi-cash-coin me-2"></i>Seat Acceptance Fee
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="seatFeeModalBody">
+                    <p class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading fee details...</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="seatFeePayForm" method="post" action="/applicants/payment/initiate-seat-fee">
+                        <input type="hidden" id="seatFeeCsrfParam" name="_csrf"/>
+                        <input type="hidden" name="allotmentId" id="seatFeeAllotmentId"/>
+                        <input type="hidden" name="isSlideUp" id="seatFeeIsSlideUp" value="false"/>
+                        <button type="submit" class="btn btn-success" id="seatFeePayBtn" disabled>
+                            <i class="bi bi-credit-card me-1"></i>Proceed to Pay
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

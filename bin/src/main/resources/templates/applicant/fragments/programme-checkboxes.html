@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="checkboxes">
+  <!-- This provides a message if no programmes are found for the selected institute -->
+  <div th:if="${#lists.isEmpty(availableProgrammes)}" class="form-text">
+    No programmes matching the admission criteria are offered at this institute.
+  </div>
+  <!-- This generates the checkboxes, similar to the main programme-selection page -->
+  <div th:each="programme : ${availableProgrammes}" class="form-check">
+    <input class="form-check-input" type="checkbox"
+           th:id="'programme_' + ${programme.programmeId}"
+           name="programmeIds"
+           th:value="${programme.programmeId}" />
+    <label class="form-check-label" th:for="'programme_' + ${programme.programmeId}" th:text="${programme.programmeName}"></label>
+  </div>
+</div>
+</body>
+</html>

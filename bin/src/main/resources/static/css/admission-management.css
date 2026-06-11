@@ -1,0 +1,64 @@
+:root {
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-info-rgb: 13, 202, 240;
+}
+
+
+.card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.075);
+}
+
+.table thead {
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4em 0.8em;
+    border-radius: 50rem;
+}
+
+.modal-header, .modal-footer {
+    background-color: #f8f9fa;
+}
+
+
+.modal-body hr {
+    margin: 1.5rem 0; 
+    opacity: 0.15;
+}
+
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    border-radius: 50rem;
+    padding: 0.35rem 0.75rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .page-link {
+    font-size: 0.9rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    padding-right: 2rem;
+}
+
+/* Custom Accessible Warning Button */
+.btn-accessible-warning {
+    --bs-btn-color: #B8860B;
+    --bs-btn-border-color: #B8860B;
+    --bs-btn-hover-bg: #B8860B;
+    --bs-btn-hover-border-color: #B8860B;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-active-bg: #B8860B;
+    --bs-btn-active-border-color: #B8860B;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-disabled-color: #B8860B;
+    --bs-btn-disabled-border-color: #B8860B;
+}

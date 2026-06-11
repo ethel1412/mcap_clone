@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Programmes/Majors/Courses Offered - Institute Dashboard</title>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <link th:href="@{/css/institute/my-departments.css}" rel="stylesheet"/>
+    <link th:href="@{/css/institute/programmes-offered.css}" rel="stylesheet"/>
+
+    <main class="container-fluid px-4 py-4">
+
+        <div id="scheduleLockBanner" class="alert shadow-sm mb-4 d-none lock-banner-red">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-lock fs-4 text-danger me-3"></i>
+                <div>
+                    <h6 class="mb-1 fw-bold text-danger">Configuration Locked</h6>
+                    <p class="mb-0 text-secondary small">The Institute Setup phase is currently closed. You can view your programmes but cannot add or modify them.</p>
+                </div>
+            </div>
+        </div>
+	
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 mb-0 text-gray-800 fw-bold">Programmes/Majors/Courses Offered</h2>
+                <p class="text-muted mb-0">Manage degrees and programmes/majors/courses offered by your Institute</p>
+            </div>
+            <button type="button" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm" id="addProgrammeBtnMain">
+                <i class="fas fa-plus me-2"></i>Add Programme/Major/Course
+            </button>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="programmeTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active-content">
+                    <i class="fas fa-check-circle me-2"></i>Active Programmes/Majors/Courses
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending-content">
+                    <i class="fas fa-clock me-2"></i>Pending Requests
+                    <span class="badge bg-warning text-dark ms-2 d-none" id="pendingCountBadge">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="programmeTabsContent">
+
+            <div class="tab-pane fade show active" id="active-content">
+
+                <div id="alertBox" class="alert alert-info py-3 fs-5 rounded shadow-sm d-none">
+                    <i class="fas fa-info-circle me-2"></i>No programmes/majors/courses offered yet.
+                </div>
+
+                <div class="filter-card shadow-sm mb-4">
+                    <div class="card-body py-3 px-4">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-4">
+                                <div class="input-group search-bar-modern">
+                                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="filterSearch" placeholder="Search programme name...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                 <select class="form-select search-bar-modern" id="filterLevel">
+                                        <option value="">Select...</option>
+                                        <option value="FYUG">FYUG</option>
+                                        <option value="UG">UG (Undergraduate)</option>
+                                        <option value="PG">PG (Postgraduate)</option>
+                                        <option value="PHD">Ph.D</option>
+                                        <option value="DIPLOMA">Diploma</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select search-bar-modern" id="filterStream">
+                                    <option value="">All Streams</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-secondary w-100 search-bar-modern" onclick="ProgrammesModule.clearFilters()">Clear Filters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 fw-bold text-primary">Active List</h6>
+                        <span class="badge bg-secondary" id="totalCount">0 programmes/majors/courses</span>
+                    </div>
+
+                    <div class="shift-tabs-wrapper d-none" id="shiftTabsContainer"></div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 align-middle" id="shiftTable">
+                                <thead>
+                                <tr>
+                                	<th>Sl.No</th>
+                                    <th>Programme/Major/Course Details</th>
+                                    <th>Department</th>
+                                    <th>Programme/Major/Course Level</th>
+                                    <th>Stream</th>
+                                    <th>Subjects</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody id="programmesTableBody">
+                                <tr id="loadingRow">
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="spinner-border text-primary"></div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pending-content">
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Requested Programme/Major/Course</th>
+                                <th>Level</th>
+                                <th>Stream</th>
+                                <th>Status</th>
+                                <th>Submitted On</th>
+                            </tr>
+                            </thead>
+                            <tbody id="pendingTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="alert alert-light border small">
+                    <i class="fas fa-info-circle me-1"></i>
+                    These programmes/majors/courses are currently under review by the Controller. Once approved, they will move to the "Active Programmes" tab where you can configure their syllabus.
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addProgrammeModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Programme/Major/Course</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="addProgrammeForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Department <span class="text-danger">*</span></label>
+                                <select class="form-select" id="departmentSelect" name="instituteDepartmentId" required>
+                                    <option value="">Loading departments...</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Search Master Programme/Major/Course List <span class="text-danger">*</span></label>
+                                <input type="text" id="programmeSearchInput" class="form-control mb-2" placeholder="Search available university programmes...">
+
+                                <div id="programmeCheckboxContainer" class="border rounded p-3 mb-2 max-h-200-overflow">
+                                    <div class="text-muted text-center py-3">Loading programmes/majors/courses...</div>
+                                </div>
+                            </div>
+                            <div class="text-end mb-3">
+                                <a href="#" id="switchToRequestModal" class="text-decoration-none fw-bold small">
+                                    Don't see your programme/major/course? Request New Programme/Major/Course
+                                </a>
+                            </div>
+                           	<div class="mb-3">
+							    <label class="form-label">
+							        Select Available Shift <span class="text-danger">*</span>
+							    </label>
+							
+							    <div id="shiftCheckboxGroup">
+							        <div class="form-check">
+							            <input class="form-check-input" type="checkbox" name="shift[]" value="MORNING" id="shiftMorning" disabled>
+							            <label class="form-check-label" for="shiftMorning">Morning</label>
+							        </div>
+							
+							        <div class="form-check">
+							            <input class="form-check-input" type="checkbox" name="shift[]" value="DAY" id="shiftDay" disabled>
+							            <label class="form-check-label" for="shiftDay">Day</label>
+							        </div>
+							
+							        <div class="form-check">
+							            <input class="form-check-input" type="checkbox" name="shift[]" value="EVENING" id="shiftEvening" disabled>
+							            <label class="form-check-label" for="shiftEvening">Evening</label>
+							        </div>
+							
+							        <div class="form-check">
+							            <input class="form-check-input" type="checkbox" name="shift[]" value="NIGHT" id="shiftNight" disabled>
+							            <label class="form-check-label" for="shiftNight">Night</label>
+							        </div>
+							    </div>
+							
+							    <div id="shiftHelpText" class="form-text small">
+							        Choose one or more shifts that are not already running for this programme/major/course.
+							    </div>
+							</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Save Programme/Major/Course</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="requestNewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content border-warning">
+                    <div class="modal-header bg-warning-subtle">
+                        <h5 class="modal-title"><i class="fas fa-paper-plane me-2"></i>Request New Programme/Major/Course</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="requestNewForm">
+                        <div class="modal-body">
+                            <div class="alert alert-info small mb-3">
+                                <i class="fas fa-info-circle me-1"></i>
+                                This request will be sent to the Controller for approval. You can configure syllabus only after approval.
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Programme/Major/Course Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="programmeName" required placeholder="e.g., B.Sc. Robotics">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Operating Department <span class="text-danger">*</span></label>
+                                <select class="form-select" id="requestDepartmentSelect" name="instituteDepartmentId" required></select>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Level <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="programmeLevel" required>
+                                        <option value="">Select...</option>
+                                        <option value="FYUG">FYUG</option>
+                                        <option value="UG">UG (Undergraduate)</option>
+                                        <option value="PG">PG (Postgraduate)</option>
+                                        <option value="PHD">Ph.D</option>
+                                        <option value="DIPLOMA">Diploma</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Stream <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="streamSelect" name="streamId" required></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addProgrammeModal">Back</button>
+                            <button type="submit" class="btn btn-warning">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editProgrammeModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Edit Programme/Major/Course Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="editProgrammeForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Programme/Major/Course Name</label>
+                                <div class="form-control-plaintext bg-light p-2 rounded">
+                                    <strong id="editProgrammeName"></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Department <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="editDepartmentSelect" name="instituteDepartmentId" required></select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+								    <label class="form-label">
+								        Select Available Shift <span class="text-danger">*</span>
+								    </label>
+								
+								    <div id="shiftCheckboxGroup">
+								        <div class="form-check">
+								            <input class="form-check-input" type="checkbox" name="shift[]" value="MORNING" id="shiftMorning">
+								            <label class="form-check-label" for="shiftMorning">Morning</label>
+								        </div>
+								
+								        <div class="form-check">
+								            <input class="form-check-input" type="checkbox" name="shift[]" value="DAY" id="shiftDay">
+								            <label class="form-check-label" for="shiftDay">Day</label>
+								        </div>
+								
+								        <div class="form-check">
+								            <input class="form-check-input" type="checkbox" name="shift[]" value="EVENING" id="shiftEvening">
+								            <label class="form-check-label" for="shiftEvening">Evening</label>
+								        </div>
+								
+								        <div class="form-check">
+								            <input class="form-check-input" type="checkbox" name="shift[]" value="NIGHT" id="shiftNight">
+								            <label class="form-check-label" for="shiftNight">Night</label>
+								        </div>
+								    </div>
+								
+								    <div class="form-text small">
+								        Choose one or more shifts that are not already running for this programme/major/course.
+								    </div>
+								</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="editSubmitBtn">Update Details</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+       <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	
+	            <div class="modal-header text-danger">
+	                <h5 class="modal-title">
+	                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+	                </h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	            </div>
+	
+	            <div class="modal-body">
+	                <p>
+	                    Are you sure you want to remove 
+	                    <strong id="programmeToDelete"></strong>?
+	                </p>
+	
+	                <div class="mt-3">
+	                    <label class="form-label fw-semibold">Delete Option:</label>
+	
+	                    <div class="form-check">
+	                        <input class="form-check-input" type="radio" name="deleteOption" value="single" id="deleteSingle" checked>
+	                        <label class="form-check-label" for="deleteSingle">
+	                            Only this shift (<span id="deleteShiftName"></span>)
+	                        </label>
+	                    </div>
+	
+	                    <div class="form-check">
+	                        <input class="form-check-input" type="radio" name="deleteOption" value="all" id="deleteAll">
+	                        <label class="form-check-label" for="deleteAll">
+	                            All shifts for this programme/major/course
+	                        </label>
+	                    </div>
+	                </div>
+	
+	                <p class="text-muted small mt-3 mb-0">
+	                    This will hide the programme from future admission windows.
+	                </p>
+	            </div>
+	
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+	                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+	            </div>
+	
+	        </div>
+	    </div>
+	</div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="successMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+            <div id="errorToast" class="toast text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="errorMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/js/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/institute/programmes-offered.js}" defer></script>
+</th:block>
+</body>
+</html>

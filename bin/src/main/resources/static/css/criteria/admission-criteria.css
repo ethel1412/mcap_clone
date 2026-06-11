@@ -1,0 +1,128 @@
+/* Admission Criteria Page - minimal enhancements on top of Bootstrap */
+
+/* Layout spacing tweaks */
+.container-fluid {
+    /* keep defaults; adjust page-specific spacing below if needed */
+}
+
+.card {
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Table */
+#criteriaTable th,
+#criteriaTable td {
+    vertical-align: middle;
+}
+
+#criteriaTable thead th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#criteriaTable tbody tr:hover {
+    background-color: rgba(32, 107, 196, 0.04);
+}
+
+/* Badges or status (if you add later) */
+.badge-approved {
+    background-color: #198754;
+}
+.badge-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+.badge-rejected {
+    background-color: #dc3545;
+}
+
+/* Buttons in Actions column */
+#criteriaTable td .btn {
+    min-width: 34px;
+}
+
+/* Alerts */
+#alertBox {
+    margin-bottom: 1rem;
+}
+
+/* Modal form */
+#criteriaModal .form-text,
+#criteriaModal .invalid-feedback {
+    font-size: 0.85rem;
+}
+
+#criteriaModal .modal-body .row > [class^="col-"] label {
+    margin-bottom: 0.25rem;
+}
+
+/* Multi-selects: ensure readable height */
+#criteriaModal select[multiple] {
+    min-height: 150px;
+}
+
+/* Hint area */
+#seatsHint {
+    color: #6c757d;
+}
+
+/* Toasts: lift above content */
+.toast-container {
+    z-index: 1090;
+}
+
+/* Utility: subdued small text inside card footer */
+.card-footer .text-muted.small {
+    opacity: 0.9;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .breadcrumb {
+        font-size: 0.9rem;
+    }
+    #criteriaTable {
+        font-size: 0.95rem;
+    }
+    #criteriaTable .text-end {
+        white-space: nowrap;
+    }
+}
+
+/* Optional: icon color consistency */
+.text-gray-800 {
+    color: #343a40;
+}
+
+/* Spinner sizing for loading row */
+.spinner-border.spinner-border-sm {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-width: .2em;
+}
+.selected-items {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-height: 20px;
+}
+.selected-item {
+    display: inline-block;
+    background: #e7f3ff;
+    border: 1px solid #b8daff;
+    border-radius: 15px;
+    padding: 4px 12px;
+    margin: 2px;
+    font-size: 12px;
+    color: #0c5aa6;
+}
+.remove-item {
+    cursor: pointer;
+    color: #dc3545;
+    margin-left: 6px;
+    font-weight: bold;
+}
+.remove-item:hover {
+    color: #c82333;
+}

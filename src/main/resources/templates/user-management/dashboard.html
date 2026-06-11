@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>User Management Dashboard</title>
+</head>
+<body>
+<th:block th:fragment="main">
+    <section class="container-fluid px-4 py-4">
+        <h1 class="h2 mb-4">User Management</h1>
+
+        <div class="row g-4" id="admin-dashboard-cards">
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm dashboard-tile clickable-card"
+                     data-url="/user-management/get-users" role="button">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Manage Users</h5>
+                        <p class="text-muted">View, lock/unlock, edit users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm dashboard-tile clickable-card"
+                     data-url="/user-management/create-user" role="button">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-plus fa-3x mb-3 text-success"></i>
+                        <h5 class="card-title">Create User</h5>
+                        <p class="text-muted">Add a new user account</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm dashboard-tile clickable-card"
+                     data-url="/user-management/login-activities" role="button">
+                    <div class="card-body text-center">
+                        <i class="fas fa-history fa-3x mb-3 text-warning"></i>
+                        <h5 class="card-title">Login Activities</h5>
+                        <p class="text-muted">View user login history</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</body>
+</html>

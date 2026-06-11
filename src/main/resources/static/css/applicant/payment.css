@@ -1,0 +1,77 @@
+/* Styles for the container of the payment form within the modal */
+.credit-card-form {
+    padding: 10px;
+}
+
+/* Styles for the visual credit card display */
+.card-display {
+    background: linear-gradient(45deg, #2a2a2a, #4a4a4a);
+    color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-display-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* The gold credit card chip */
+.chip {
+    width: 50px;
+    height: 40px;
+    background: linear-gradient(135deg, #ffe082, #ffc107);
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* The area for the card number */
+.card-number {
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    height: 30px; /* Prevents layout shift as user types */
+}
+
+/* Flexbox container for the holder name and expiry date */
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* Styling for the small labels like "Card Holder" and "Expires" */
+.card-details small {
+    font-size: 0.7rem;
+    color: #cccccc;
+    display: block;
+}
+
+.card-holder-name,
+.card-expiry-date {
+    flex-basis: 50%;
+}
+
+.card-expiry-date {
+    text-align: right;
+}
+/* Styling for the Make Payment & Status Pages */
+.payment-full-height {
+    height: 100vh;
+}
+
+.payment-status-icon {
+    font-size: 4rem;
+}
+
+.cashfree-loader {
+    width: 3rem;
+    height: 3rem;
+}

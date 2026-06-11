@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Manage Roles</title>
+    <link rel="stylesheet" th:href="@{/css/role-management/roles.css}">
+</head>
+<body>
+<main>
+    <div class="container-fluid py-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-user-shield me-2"></i>Roles Management
+            </h2>
+            <button class="btn btn-success" id="addRoleBtn" data-bs-toggle="modal" data-bs-target="#addRoleModal">
+                <i class="fas fa-plus me-1"></i> Add Role
+            </button>
+        </div>
+
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+            <tr>
+                <th class="col-1">#</th>
+                <th>Role ID</th>
+                <th>Role Name</th>
+            </tr>
+            </thead>
+            <tbody id="rolesBody">
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <button class="btn btn-secondary" id="prevBtn">&laquo; Prev</button>
+            <span id="pageInfo" class="fw-semibold"></span>
+            <button class="btn btn-secondary" id="nextBtn">Next &raquo;</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="addRoleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addRoleForm" class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="addRoleModalLabel">Add New Role</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="roleIdInput" class="form-label">Role ID</label>
+                        <input type="text" class="form-control" id="roleIdInput" placeholder="Enter unique role ID" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roleNameInput" class="form-label">Role Name</label>
+                        <input type="text" class="form-control" id="roleNameInput" placeholder="Enter role name" required>
+                    </div>
+                    <div id="addRoleError" class="text-danger d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Add Role</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="module" th:src="@{/js/role-management/roles.js}"></script>
+</main>
+</body>
+</html>

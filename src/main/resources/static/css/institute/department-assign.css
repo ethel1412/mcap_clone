@@ -1,0 +1,84 @@
+/* Container & form */
+main.container {
+    max-width: 700px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
+    padding: 2rem;
+    margin: 2rem auto;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+/* Page title */
+.page-title {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #0056b3;
+}
+
+/* Form controls */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #ccd0d5;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 6px #80bdff;
+    outline: none;
+}
+
+/* Multi-select adjustments */
+.multiselect {
+    min-height: 160px;
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Button */
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.75rem;
+    transition: background-color 0.25s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #003d80;
+    border-color: #003d80;
+    outline: none;
+    box-shadow: 0 0 12px #003d80aa;
+}
+
+/* Validation message */
+.invalid-feedback {
+    color: #d9534f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+select:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+/* Alert messages */
+.alert {
+    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}

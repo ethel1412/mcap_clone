@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+    <th:block th:fragment="title">
+        <title>Manage Admissions</title>
+        <link th:href="@{/css/admission-criteria/setup-criteria.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+
+        <div id="alertContainer"></div>
+
+        <div class="card mb-4 border-primary">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <h4 class="mb-2">
+                            <i class="bi bi-mortarboard me-2 text-primary"></i>
+                            <span th:text="${streamName}">Stream Name</span>
+                            <span class="badge ms-2" th:classappend="${programmeLevel} == 'UG' ? 'bg-primary' : 'bg-success'" th:text="${programmeLevel}">UG</span>
+                        </h4>
+
+                        <p class="mb-0 text-muted">
+                            <i class="bi bi-calendar3 me-2"></i> Session: <span th:text="${admissionSession}">2025-2026</span>
+                            <span class="ms-2">·</span>
+                            <span class="badge bg-dark ms-2" th:text="${roundType}">CUET</span>
+                            <span class="badge bg-secondary ms-2" th:text="'Phase ' + ${phaseNo}">Phase 1</span>
+                        </p>
+
+                        <input type="hidden" id="admissionWindowCode" th:value="${admissionWindowCode}">
+                        <input type="hidden" id="programmeLevelHidden" th:value="${programmeLevel}">
+                        <input type="hidden" id="currentRoundType" th:value="${roundType}">
+                        <input type="hidden" id="currentPhaseNo" th:value="${phaseNo}">
+
+                        <input type="hidden" id="isCombinedRoute" th:value="${isCombinedRoute}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="admission-rounds-section">
+
+            <ul class="nav nav-tabs mb-3" id="roundTabs" role="tablist">
+                <li class="nav-item" role="presentation" th:each="rType : ${availableRounds}">
+                    <a class="nav-link" th:classappend="${roundType} == ${rType} ? 'active' : ''"
+                       th:href="@{/controller/admissions/manage(admissionWindowCode=${admissionWindowCode}, roundType=${rType}, phaseNo=1)}"
+                       th:text="${rType == 'NON_CUET' ? 'Non-CUET Round' : rType + ' Round'}">
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" role="tabpanel">
+
+                    <ul class="nav nav-pills mb-3" id="dynamicPhasePills" role="tablist">
+                        <li class="nav-item" role="presentation" th:each="pNo : ${availablePhases}">
+                            <a class="nav-link" th:classappend="${phaseNo} == ${pNo} ? 'active' : ''"
+                               th:href="@{/controller/admissions/manage(admissionWindowCode=${admissionWindowCode}, roundType=${roundType}, phaseNo=${pNo})}"
+                               th:text="'Phase ' + ${pNo}">
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div th:if="${!isPhaseOpen}" class="card mb-4 shadow-sm bg-light border-0 min-h-300-flex-center">
+                        <div class="card-body text-center py-5 text-muted">
+                            <i class="bi bi-lock-fill display-1 mb-3 d-block color-dee2e6"></i>
+                            <h4 class="text-secondary fw-bold">Phase Locked</h4>
+                            <p class="mb-0 fs-5">This phase has not started yet. It is scheduled to begin on <br>
+                                <strong class="text-dark" th:text="${phaseStartTime}"></strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div th:if="${isPhaseOpen}" class="card mb-4 shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-list-check me-2"></i>
+                                    <span th:text="'Programmes — ' + ${roundType} + ' — Phase ' + ${phaseNo}"></span>
+                                </h5>
+
+                                <div class="d-flex gap-2" id="unified-top-actions">
+
+                                    <button type="button" class="btn btn-primary btn-sm d-none fw-medium" id="btn-unified-process">
+                                        <i class="bi bi-play-circle-fill me-1"></i> Run Admission Process
+                                    </button>
+
+                                    <button type="button" class="btn btn-outline-primary btn-sm d-none" id="btn-unified-next-phase">
+                                        Advance to Next Phase <i class="bi bi-arrow-right ms-1"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-success btn-sm d-none" id="btn-unified-go-next-round">
+                                        Start Non-CUET Admissions <i class="bi bi-arrow-right-circle ms-1"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <div th:if="${isAllStreams}" class="px-3 pt-3 pb-2 border-bottom bg-light">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="text-muted small fw-semibold me-1">Filter by stream:</span>
+                                    <button class="btn btn-sm btn-primary stream-filter-btn active" data-stream="all">All Streams</button>
+                                    <button th:each="s : ${distinctStreams}"
+                                            class="btn btn-sm btn-outline-secondary stream-filter-btn"
+                                            th:attr="data-stream=${s['streamId']}"
+                                            th:text="${s['streamName']}">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0" id="unifiedProgrammeTable">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="w-60 ps-3">Programme Name</th>
+                                        <th class="w-40">Status / Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="p : ${programmes}"
+                                        th:attr="data-stream-id=${p['streamId']}">
+                                        <td class="fw-medium text-dark ps-3">
+                                            <span th:text="${p['programmeName']}">Prog</span>
+                                            <span th:if="${isAllStreams}"
+                                                  class="badge bg-light text-secondary border ms-2 small"
+                                                  th:text="${p['streamName']}"></span>
+                                        </td>
+                                        <td>
+                                            <div class="js-phase-action" th:attr="data-programme-id=${p['programmeId']}">
+                                                <span class="spinner-border spinner-border-sm text-secondary"></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="no-programmes-row" class="d-none">
+                                        <td colspan="2" class="text-center text-muted py-4">No programmes in this stream.</td>
+                                    </tr>
+                                    <tr th:if="${programmes == null || programmes.isEmpty()}">
+                                        <td colspan="2" class="text-center text-muted py-4">No programmes found.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/controller/admissions/manage-admissions.js}" defer></script>
+    </main>
+</th:block>
+</body>
+</html>

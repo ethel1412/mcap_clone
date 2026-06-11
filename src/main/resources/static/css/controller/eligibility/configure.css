@@ -1,0 +1,435 @@
+/* ---------------------------
+   Design tokens
+---------------------------- */
+:root {
+  --page: #f7f9fc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --primary: #2563eb;
+  --primary2: #4f46e5;
+
+  --success1: #16a34a;
+  --success2: #22c55e;
+
+  --danger: #dc2626;
+
+  --border: rgba(15, 23, 42, 0.1);
+  --border2: rgba(15, 23, 42, 0.06);
+
+  --shadow: 0 14px 40px rgba(2, 6, 23, 0.08);
+  --shadow2: 0 8px 22px rgba(2, 6, 23, 0.06);
+
+  --r: 16px;
+}
+
+/* ---------------------------
+     Base
+  ---------------------------- */
+body.gov-portal {
+  background: radial-gradient(
+      1000px 600px at 18% -10%,
+      rgba(37, 99, 235, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 600px at 90% 0%,
+      rgba(79, 70, 229, 0.1),
+      transparent 60%
+    ),
+    var(--page);
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.text-muted {
+  color: var(--muted) !important;
+}
+.text-navy {
+  color: var(--text) !important;
+}
+.bg-navy {
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--primary2)
+  ) !important;
+}
+.x-small {
+  font-size: 0.78rem;
+}
+
+/* ---------------------------
+     Buttons
+  ---------------------------- */
+.btn {
+  border-radius: 12px !important;
+  font-weight: 800;
+}
+
+.btn-xs {
+  padding: 6px 10px;
+  font-size: 0.78rem;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--primary2)
+  ) !important;
+  border: none !important;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+}
+
+.btn-success {
+  background: linear-gradient(
+    90deg,
+    var(--success1),
+    var(--success2)
+  ) !important;
+  border: none !important;
+}
+
+.btn-secondary {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+.btn-outline-primary {
+  border-color: rgba(37, 99, 235, 0.35) !important;
+  color: var(--primary) !important;
+}
+
+.btn-outline-primary:hover {
+  background: rgba(37, 99, 235, 0.07) !important;
+}
+
+.btn-outline-danger {
+  border-color: rgba(220, 38, 38, 0.28) !important;
+  color: var(--danger) !important;
+}
+
+.btn-outline-danger:hover {
+  background: rgba(220, 38, 38, 0.06) !important;
+}
+
+/* ---------------------------
+     Inputs
+  ---------------------------- */
+.form-control,
+.form-select {
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(37, 99, 235, 0.55) !important;
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.12) !important;
+}
+
+.form-control-sm,
+.form-select-sm,
+.btn-sm {
+  font-size: 0.86rem;
+}
+
+.input-group-text {
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+  color: var(--muted) !important;
+}
+
+/* Labels */
+.gov-label {
+  font-weight: 900;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+/* ---------------------------
+     Cards / Containers
+  ---------------------------- */
+.gov-card {
+  border-radius: var(--r) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow);
+}
+
+.card {
+  border-radius: var(--r) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow2);
+}
+
+/* ---------------------------
+     Progress / Steps
+  ---------------------------- */
+.steps-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow2);
+  overflow: hidden;
+}
+
+.step-item {
+  flex: 1 1 0;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--muted);
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border2);
+  position: relative;
+}
+
+.step-item.active {
+  color: var(--text);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.16),
+    rgba(79, 70, 229, 0.12)
+  );
+  border-color: rgba(37, 99, 235, 0.22);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
+}
+
+.step-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  width: 10px;
+  height: 2px;
+  transform: translateY(-50%);
+  background: rgba(15, 23, 42, 0.1);
+}
+
+.step-item.active:not(:last-child)::after {
+  background: rgba(37, 99, 235, 0.35);
+}
+
+@media (max-width: 520px) {
+  .steps-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .step-item {
+    flex: 1 1 auto;
+    min-width: 160px;
+  }
+
+  .step-item:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* ---------------------------
+     Sections
+  ---------------------------- */
+.rule-section {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--card);
+  box-shadow: var(--shadow2);
+  overflow: hidden;
+  margin-bottom: 16px !important;
+}
+
+.section-title {
+  margin: 0;
+  padding: 14px;
+  font-weight: 950;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.1),
+    rgba(79, 70, 229, 0.08)
+  );
+  border-bottom: 1px solid var(--border2);
+}
+
+.rule-section .px-2,
+.rule-section .row.g-2 {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+.rule-section .pb-3 {
+  padding-bottom: 14px !important;
+}
+
+/* ---------------------------
+     Subpanel (Section 1)
+  ---------------------------- */
+.subpanel {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 12px;
+  box-shadow: var(--shadow2);
+}
+
+/* Relaxation rows */
+.relax-row {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 12px;
+  transition: 0.12s ease;
+}
+
+.relax-row:hover {
+  border-color: rgba(37, 99, 235, 0.22);
+  box-shadow: 0 10px 18px rgba(2, 6, 23, 0.08);
+}
+
+/* Toast */
+.toast {
+  border-radius: 16px !important;
+  box-shadow: var(--shadow);
+}
+
+/* Utility */
+.border-dashed {
+  border-style: dashed !important;
+  border-width: 2px !important;
+  border-color: rgba(37, 99, 235, 0.25) !important;
+}
+
+/* ---------------------------------------------------
+     CHOICES.JS OVERRIDES (For Searchable Dropdowns)
+---------------------------------------------------- */
+.choices__list--dropdown .choices__list {
+    max-height: 350px !important; /* Shows much more data without scrolling */
+    overscroll-behavior: contain;
+}
+
+.choices__inner {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+}
+
+.choices[data-type*="select-multiple"] .choices__inner {
+    padding-bottom: 2px;
+}
+
+.choices__placeholder {
+    opacity: 1 !important;
+    color: var(--muted) !important;
+    font-weight: 600 !important;
+}
+
+/* Style the selected chips inside Choices.js */
+.choices__list--multiple .choices__item {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-weight: 600;
+}
+
+.choices__list--multiple .choices__item[data-deletable] {
+    padding-right: 10px;
+}
+
+.choices__button {
+    border-left: none;
+    margin-left: 8px;
+    opacity: 0.6;
+}
+
+.choices__button:hover {
+    opacity: 1;
+}
+
+/* Style the Group Headers for CUET */
+.choices__heading {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.85rem;
+    background-color: var(--page);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: rgba(37, 99, 235, 0.08);
+    color: var(--text);
+}
+/* --- FIX 1: Allow Dropdowns to Escape their Cards --- */
+.rule-section,
+.gov-card,
+.card,
+.condition-card,
+.subpanel {
+  overflow: visible !important;
+}
+
+/* Ensure the Choices dropdown always floats on top of everything */
+.choices__list--dropdown {
+  z-index: 10000 !important;
+}
+
+.choices__list--dropdown .choices__list {
+    max-height: 350px !important;
+    overscroll-behavior: contain;
+}
+
+.choices__inner {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+}
+/* =========================================
+   CSP-Safe Utility Classes
+   ========================================= */
+.fs-10px { font-size: 10px !important; }
+.fs-1-2rem { font-size: 1.2rem !important; }
+.fs-0-95rem { font-size: 0.95rem !important; }
+.p-5px { padding: 5px !important; }
+.w-35px { width: 35px !important; }
+.h-18px { height: 18px !important; }
+.icon-box-32 { width: 32px !important; height: 32px !important; flex-shrink: 0 !important; }
+
+.cuet-panel-custom {
+    background: white;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.path-panel-custom {
+    max-height: 220px;
+    overflow-y: auto;
+}

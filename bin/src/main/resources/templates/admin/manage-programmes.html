@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+    <title>Manage Programmes</title>
+</head>
+
+<body>
+<main>
+    <div class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">
+                <i class="fas fa-book me-2"></i>Manage Programmes & Streams
+            </h1>
+            <button type="button" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i>Add New Programme
+            </button>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Under Construction</h4>
+                    <p>
+                        This section will allow administrators to define academic streams (e.g., Arts, Science, Commerce) and manage the specific programmes offered within each stream. This is a prerequisite for creating admission windows.
+                    </p>
+                    <hr>
+                    <p class="mb-0">
+                        Functionality will include creating, editing, and deleting programmes and streams.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,242 @@
+/* ==========================================================================
+   Create Schedule Specific Styles
+   ========================================================================== */
+
+/* Step Badges for Section Headers */
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #0ea5e9;
+    color: white;
+    font-size: 1.1rem;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+}
+
+/* Admission Window Cards */
+.window-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.2s ease-in-out;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.window-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #bae6fd;
+}
+
+.window-badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.badge-upcoming { background-color: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; }
+
+.window-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.window-dates {
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.date-item {
+    font-size: 0.85rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.date-item:last-child { margin-bottom: 0; }
+.date-item i { color: #64748b; margin-right: 0.5rem; font-size: 1rem; }
+
+.window-progress { margin-bottom: 1.5rem; }
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+}
+.progress-mini {
+    height: 6px;
+    background-color: #e2e8f0;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.select-window-btn { width: 100%; font-weight: 600; }
+
+/* ==========================================================================
+   Visual Steps Roadmap (Vertical Flow)
+   ========================================================================== */
+.steps-container {
+    position: relative;
+    padding: 1rem 0 1rem 2rem;
+}
+
+.steps-container::before {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+/* Category & Phase Headers */
+.roadmap-header {
+    position: relative;
+    margin: 2rem 0 1.5rem -1rem;
+    padding-left: 3rem;
+    z-index: 2;
+}
+
+.roadmap-header span {
+    background: #f1f5f9;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Individual Step Items */
+.step-item {
+    position: relative;
+    padding-left: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.step-header {
+    position: absolute;
+    left: -1.25rem;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.step-icon { display: none; font-size: 1.2rem; }
+
+.step-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: #334155;
+}
+
+.step-status {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.step-dates {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #475569;
+    display: inline-block;
+}
+
+.step-dates div { display: flex; align-items: center; gap: 0.5rem; }
+.step-dates div:first-child { margin-bottom: 0.25rem; }
+
+/* Constraints Info Box */
+.step-constraint {
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    padding: 0.75rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    color: #92400e;
+    margin-top: 0.5rem;
+}
+.step-constraint-title { font-weight: 700; margin-bottom: 0.25rem; }
+.step-constraint-item { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.2rem;}
+
+/* --- States --- */
+.step-item.completed .step-header { background: #10b981; border-color: #10b981; color: white; }
+.step-item.completed .step-number { display: none; }
+.step-item.completed .step-icon { display: block; }
+.step-item.completed .step-status { background: #d1fae5; color: #166534; }
+
+.step-item.active .step-header { background: #0ea5e9; border-color: #0ea5e9; color: white; box-shadow: 0 0 0 4px #e0f2fe; }
+.step-item.active .step-title { color: #0284c7; }
+.step-item.active .step-status { background: #e0f2fe; color: #0369a1; }
+
+.step-item.locked { opacity: 0.6; }
+.step-item.locked .step-status { background: #f1f5f9; color: #64748b; }
+
+.step-create-btn {
+    margin-top: 0.75rem;
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.step-create-btn:hover { background: #0284c7; }
+
+/* Highlight Animation when scrolling to form */
+.form-highlight {
+    animation: highlightPulse 1.5s ease-out;
+}
+@keyframes highlightPulse {
+    0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(14, 165, 233, 0); border-color: #0ea5e9;}
+    100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
+/* --- CSP Compliance Utility Classes --- */
+.alert-guide { background-color: #f0fdf4; border-left: 4px solid #16a34a; }
+.progress-custom { height: 6px; }
+.form-sticky { top: 1.5rem; z-index: 10; }
+.step-label { font-size: 0.8rem; }
+.constraint-alert { border-left: 4px solid #f59e0b; }
+.icon-large { font-size: 3rem; }
+.z-1080 { z-index: 1080 !important; }
+.anchor-item-custom { padding-left: 2.5rem; margin: 2rem 0; }
+.bg-slate-700 { background-color: #475569; border-color: #475569; color: white; }
+.bg-dashed-slate { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 2px dashed #94a3b8 !important; }

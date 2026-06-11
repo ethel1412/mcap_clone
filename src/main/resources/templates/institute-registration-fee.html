@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Institute Registration Fee Management</title>
+    <!-- CSRF Token Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+<body>
+    <div class="container-fluid mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3><i class="fa fa-credit-card"></i>Registration Fee Management</h3>
+                <p class="text-muted small">Set registration fees for different caste categories</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFeeModal">
+                <i class="fa-solid fa-plus me-2"></i>Add New Fee
+            </button>
+        </div>
+
+        <!-- Alert Messages -->
+        <div class="col-12" id="alertContainer"></div>
+
+        <!-- Add/Edit Fee Modal -->
+        <div class="modal fade" id="addFeeModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="fa-solid fa-plus me-2"></i><span id="modalTitle">Add Registration Fee</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="feeForm">
+                            <input type="hidden" id="feeId" name="feeId">
+
+                            <div class="form-group mb-3">
+                                <label for="caste" class="form-label">Caste Category <span class="text-danger">*</span></label>
+                                <select id="caste" name="caste" class="form-select" required>
+                                    <option value="">-- Select Caste Category --</option>
+                                    <option th:each="c : ${casteOptions}" th:value="${c}" th:text="${c.displayName}"></option>
+                                </select>
+                                <div class="error-text text-danger small mt-1" id="casteError"></div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="amount" class="form-label">Registration Fee Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                                    <input type="number" id="amount" name="amount" class="form-control" 
+                                           placeholder="Enter amount" min="0" step="0.01" required>
+                                </div>
+                                <div class="error-text text-danger small mt-1" id="amountError"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-times me-2"></i>Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" id="saveFeeBtn">
+                            <i class="fa-solid fa-save me-2"></i>Save Fee
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fees Summary Cards -->
+        <div class="row mb-4" id="summaryCards">
+            <!-- Summary cards will be populated here -->
+        </div>
+
+        <!-- Fees Table Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fa-solid fa-table me-2"></i>Registered Caste Fees
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="feesTable" class="table table-hover table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Caste Category</th>
+                                <th>Registration Fee</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesTableBody">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="text-center py-5">
+                    <i class="fa-solid fa-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">No registration fees configured yet. Click "Add New Fee" to get started.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-trash me-2"></i>Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the fee for <strong id="deleteCasteName"></strong>?</p>
+                    <p class="text-muted small">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fa-solid fa-trash me-2"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="/js/institute-registration-fee.js"></script>
+</body>
+</html>

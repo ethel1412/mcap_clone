@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Allocated Applicants</title>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4"
+          id="applicants-app-wrapper"
+          th:attr="data-window-code=${admissionWindow?.admissionCode},
+                   data-po-id=${poId},
+                   data-round-type=${roundType},
+                   data-phase-no=${phaseNo}">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h4 mb-1">
+                    <i class="bi bi-person-lines-fill me-2 text-primary"></i>
+                    Allocated Applicants
+                </h1>
+                <p class="text-muted mb-0">
+                    <span id="header-prog-name" class="fw-bold">Loading...</span> ·
+                    <span id="header-inst-name" class="fw-bold text-dark">Loading...</span>
+                    <span id="header-shift-badge" class="badge bg-secondary ms-1"></span>
+                    <br>
+                    Window: <span th:text="${admissionWindow?.session}"></span> ·
+                    <span th:text="${admissionWindow?.stream?.streamName}"></span>
+                    <br>
+                    Round: <span class="badge bg-dark" th:text="${roundType}"></span>
+                    Phase: <span class="badge bg-secondary" th:text="${phaseNo}"></span>
+                </p>
+            </div>
+            <div>
+                <a class="btn btn-outline-secondary disabled" id="btn-back-summary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Programme Summary
+                </a>
+            </div>
+        </div>
+
+        <div class="alert alert-info small mb-3">
+            Total allotted applicants for this shift:
+            <strong id="total-count-display">0</strong>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-check me-2 text-primary"></i> Allotted Applicants
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 60px;">#</th>
+                            <th>Applicant Name</th>
+                            <th>Registration No</th>
+                            <th>Reservation Used</th>
+                            <th class="text-center" style="width: 150px;">Allotment Status</th>
+                        </tr>
+                        </thead>
+                        <tbody id="applicants-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <template id="applicant-row-template">
+            <tr>
+                <td class="text-center text-muted row-index"></td>
+                <td class="fw-bold col-name"></td>
+                <td class="col-reg-no text-muted small"></td>
+                <td><span class="badge border border-secondary text-secondary col-reservation"></span></td>
+                <td class="text-center">
+                    <span class="badge w-100 py-2 col-status"></span>
+                </td>
+            </tr>
+        </template>
+
+        <template id="empty-applicants-template">
+            <tr>
+                <td colspan="5" class="text-center text-muted py-5">
+                    <i class="bi bi-people fs-1 d-block mb-3 opacity-50"></i>
+                    No applicants have been allotted to this specific shift yet.
+                </td>
+            </tr>
+        </template>
+
+    </main>
+
+    <script type="module" th:src="@{/js/seat-allotment/allocated-applicants.js}"></script>
+</th:block>
+</body>
+</html>

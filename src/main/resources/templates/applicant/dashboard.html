@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Applicant Portal | MCAP</title>
+
+    <!-- CSRF Protection Meta Tags -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/css/applicant/applicant.css}" />
+    <link rel="stylesheet" th:href="@{/css/applicant/dashboard.css}" />
+    <link rel="stylesheet" th:href="@{/css/grievance-custom.css}">
+    <link rel="stylesheet" href="/css/choices.min.css" />
+</head>
+<body>
+
+<header class="navbar navbar-light sticky-top main-header flex-md-nowrap p-0">
+    <div class="container-fluid d-flex align-items-center px-3">
+        <button class="navbar-toggler d-md-none me-3" type="button" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand d-none d-md-block col-md-3 col-lg-2 me-0 px-3" href="#">
+            <h1 class="h6 mb-0">Applicant Portal</h1>
+        </a>
+        <div class="navbar-nav ms-auto d-flex flex-row align-items-center gap-2">
+
+            <div class="nav-item dropdown user-dropdown">
+                <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle me-2" aria-hidden="true"></i>
+                    <span th:text="${applicantName}">Applicant Name</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item text-danger" href="#" id="logoutButton">
+                            <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- FIX: Added d-flex flex-column to nav -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar d-flex flex-column" th:attr="data-active-id=${activeApplicationId}">
+            <!-- FIX: Added flex-grow-1 and calculated min-height so it never cuts off -->
+            <div class="sidebar-sticky d-flex flex-column flex-grow-1" style="min-height: calc(100vh - 60px);">
+
+                <div class="profile-header">
+                    <div class="icon"><i class="bi bi-person-badge" aria-hidden="true"></i></div>
+                    <h6 class="name" th:text="${applicantName}">Applicant Name</h6>
+                    <small class="applicant-no" th:text="${applicantNo}">APPLICANT-NO</small>
+                </div>
+
+                <!-- MAIN MENU: mb-auto pushes everything below this list to the bottom -->
+                <ul class="nav flex-column pt-3 sidebar-menu mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-loader active" href="#" data-url="/applicants/fragments/dashboard" aria-current="page">
+                            <i class="bi bi-house-door-fill"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="#applicationSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="applicationSubmenu">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            <span>Application Form</span>
+                            <i class="bi bi-chevron-down submenu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="applicationSubmenu">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link nav-loader disabled" href="#" data-url="/applicants/fragments/personal-details" aria-disabled="true"><span>Personal Details</span></a></li>
+                                <li class="nav-item"><a class="nav-link nav-loader disabled" href="#" data-url="/applicants/fragments/academic-details" aria-disabled="true"><span>Academic Details</span></a></li>
+                                <li class="nav-item"><a class="nav-link nav-loader disabled" href="#" data-url="/applicants/fragments/programme-selection" aria-disabled="true"><span>Programme Preference</span></a></li>
+                                <li class="nav-item"><a class="nav-link nav-loader disabled" href="#" data-url="/applicants/fragments/document-upload" aria-disabled="true"><span>Documents Upload</span></a></li>
+                                <li class="nav-item"><a class="nav-link nav-loader disabled" href="#" data-url="/applicants/payment/show-details" aria-disabled="true"><span>Payment</span></a></li>
+                                <li class="nav-item" id="print-link-wrapper"><a class="nav-link disabled" href="#" id="printApplicationLink" aria-disabled="true"><i class="bi bi-printer"></i><span>Print Application</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item d-none" id="counseling-menu-item">
+                        <a class="nav-link collapsed" href="#counselingSubmenu" data-bs-toggle="collapse" aria-expanded="true" aria-controls="counselingSubmenu">
+                            <i class="bi bi-diagram-3-fill"></i>
+                            <span>Seat Allotment</span>
+                            <i class="bi bi-chevron-down submenu-arrow"></i>
+                        </a>
+                        <div class="collapse show" id="counselingSubmenu">
+                            <ul class="nav flex-column sub-menu" id="counseling-rounds-list">
+                                <!-- populated dynamically by refreshSidebarCounseling() -->
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- BOTTOM MENU: Separated from the main list so it anchors to the bottom -->
+                <ul class="nav flex-column sidebar-menu pb-3">
+                    <li class="nav-item border-top border-secondary border-opacity-25 pt-2">
+                        <a class="nav-link text-info" href="#" data-bs-toggle="modal" data-bs-target="#grievanceModal">
+                            <i class="bi bi-headset"></i>
+                            <span>Helpdesk & Grievances</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <div class="sidebar-overlay d-md-none d-none"></div>
+        <main class="col-md-9 ms-sm-auto col-lg-10 main-content"><div id="main-content-area"></div></main>
+    </div>
+
+    <!-- Application Preview PDF Modal -->
+    <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfPreviewModalLabel">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i>Application Preview
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pdf-preview-body p-0" id="pdfPreviewModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmDownloadBtn">
+                        <i class="bi bi-download me-2"></i>Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     Grievance Submission Modal
+     ══════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="grievanceModal" tabindex="-1" aria-labelledby="grievanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="grievanceModalLabel">
+                    <i class="bi bi-chat-square-text-fill me-2"></i>Submit a Grievance
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Success state -->
+                <div id="grievance-success" class="d-none text-center py-4">
+                    <i class="bi bi-check-circle-fill text-success fs-1 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-success">Grievance Submitted!</h5>
+                    <p class="text-muted mb-1">Your ticket code is:</p>
+                    <p class="font-monospace fw-bold fs-5 text-primary" id="grievance-ticket-code"></p>
+                    <p class="text-muted small">Please keep this code for your reference.</p>
+                </div>
+
+                <!-- Form state -->
+                <div id="grievance-form-area">
+                    <p class="text-muted small mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Please describe your issue. We will forward it to the concerned authority.
+                    </p>
+
+                    <div class="mb-3">
+                        <label for="griev-category" class="form-label fw-semibold">
+                            Category <span class="text-danger">*</span>
+                        </label>
+                        <!-- Hardcoded options removed. Populated dynamically via grievance-modal.js -->
+                        <select id="griev-category" class="form-select">
+                            <option value="">-- Select a category --</option>
+                        </select>
+                    </div>
+
+                    <!-- Institute dropdown — shown only for institute specific queries -->
+                    <div class="mb-3 d-none" id="griev-institute-wrapper">
+                        <label for="griev-institute" class="form-label fw-semibold">
+                            Concerned Institute <span class="text-danger">*</span>
+                        </label>
+                        <select id="griev-institute" class="form-select">
+                            <option value="">-- Select Institute --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="griev-message" class="form-label fw-semibold">
+                            Your Message <span class="text-danger">*</span>
+                        </label>
+                        <textarea id="griev-message" class="form-control" rows="5"
+                                  maxlength="800"
+                                  placeholder="Describe your issue clearly (max ~100 words)..."></textarea>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-danger d-none" id="griev-word-warn">
+                                Message exceeds ~100 words.
+                            </small>
+                            <small class="text-muted ms-auto" id="griev-word-count">0 words</small>
+                        </div>
+                    </div>
+
+                    <div id="griev-error" class="alert alert-danger d-none py-2"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" id="grievance-modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="griev-cancel-btn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="griev-submit-btn">
+                    <i class="bi bi-send me-1"></i>Submit Grievance
+                </button>
+                <!-- Hidden by default, shown on success -->
+                <button type="button" class="btn btn-success d-none" data-bs-dismiss="modal" id="griev-done-btn">Done</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- External JavaScript Libraries -->
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/axios.min.js"></script>
+<script src="/js/Sortable.min.js"></script>
+<script src="/js/choices.min.js"></script>
+
+<!-- Application Module Scripts -->
+<script type="module" th:src="@{/js/applicant/applicant-detail-success.js}"></script>
+<script type="module" th:src="@{/js/applicant/dashboard.js}"></script>
+<script type="module" th:src="@{/js/applicant/applicant.js}"></script>
+
+<!-- Externalized Grievance Script -->
+<script type="module" th:src="@{/js/applicant/grievance-modal.js}"></script>
+
+</body>
+</html>

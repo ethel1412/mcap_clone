@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+  <title>Admin Dashboard - MCAP</title>
+</head>
+
+<body>
+<th:block th:fragment="main">
+<section class="container-fluid px-4 py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">
+          <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+        </h2>
+        <div class="text-muted">
+          <i class="fas fa-clock me-2"></i>
+          <span id="last-updated">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4" id="stats-container">
+    <!-- Loading spinner -->
+    <div class="col-12 text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading statistics...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white py-3">
+          <h6 class="m-0 fw-bold">
+            <i class="fas fa-bolt me-2"></i>Quick Actions
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <a href="/user-management/create-user" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                <i class="fas fa-user-plus me-2"></i>Create User
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a href="/user-management/dashboard" class="btn btn-info w-100 d-flex align-items-center justify-content-center">
+                <i class="fas fa-users me-2"></i>Manage Users
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a href="/admin/institutes-list" class="btn btn-success w-100 d-flex align-items-center justify-content-center">
+                <i class="fas fa-university me-2"></i>Manage Institutes
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a href="/admin/admission-management" class="btn btn-warning w-100 d-flex align-items-center justify-content-center">
+                <i class="fas fa-door-open me-2"></i>Admission Windows
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 fw-bold">
+            <i class="fas fa-history me-2"></i>Recent Activity
+          </h6>
+          <span class="badge bg-light text-dark" id="activity-count">0</span>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0" id="recent-activity-table">
+              <thead class="table-light">
+                <tr>
+                  <th width="15%">Time</th>
+                  <th width="25%">User</th>
+                  <th width="40%">Action</th>
+                  <th width="20%">Status</th>
+                </tr>
+              </thead>
+              <tbody id="activity-tbody">
+                <tr>
+                  <td colspan="4" class="text-center py-4">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2 text-muted">Loading recent activity...</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</th:block>
+</body>
+</html>

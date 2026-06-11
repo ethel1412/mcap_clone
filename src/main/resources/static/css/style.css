@@ -1,0 +1,134 @@
+
+.center {
+	margin-top: 3mm;
+   text-align: center;
+  border: 1px solid green;
+}
+
+    /* Custom Card Styles */
+    .card-custom {
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card-custom:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body-custom {
+      padding: 20px;
+      color: #fff;
+    }
+
+    .card-title-custom {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .card-number {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+    }
+    
+    .img-custom
+    {
+    	max-height: 380px;
+    }
+
+    
+/* --- Sidebar custom styling --- */
+
+.nav-custom nav#sidebar {
+    background-color: #f8f9fa;
+    width: 260px;
+    border-right: 1px solid #dee2e6; /* subtle border */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers children horizontally */
+    min-height: 100vh; /* full viewport height */
+}
+
+/* Logo container full width with centered content */
+.nav-custom nav#sidebar > div > div.w-100.my-3 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-custom .nav-pills {
+    /* The sidebarMenu ul */
+    padding-left: 40px !important; /* Remove left padding */
+    width: 200px; /* Fixed width for menu items, narrower than sidebar */
+}
+
+.nav-custom .nav-link {
+    color: #333;
+    padding: 10px 15px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-custom .nav-link:hover,
+.nav-custom .nav-link:focus {
+    background-color: #e9ecef;
+    color: #0d6efd; /* Bootstrap primary color */
+    text-decoration: none;
+}
+
+.nav-custom .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.nav-custom .dropdown-menu {
+    background-color: #fff;
+    min-width: 220px;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.nav-custom .dropdown-item {
+    color: #212529;
+}
+
+.nav-custom .dropdown-item:hover,
+.nav-custom .dropdown-item:focus {
+    background-color: #f1f3f5;
+    color: #0d6efd;
+    cursor: pointer;
+}
+
+.nav-custom .dropdown-item.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.nav-custom i {
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Responsive adjustment */
+@media (max-width: 576px) {
+    .nav-custom nav#sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+}

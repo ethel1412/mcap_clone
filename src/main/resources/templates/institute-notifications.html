@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Institute Notifications</title>
+    </th:block>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/department.css}">
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+    <div class="container-fluid p-4">
+        <!-- Modern Header with Icon -->
+        <div class="notification-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div>
+                    <h2 class="mb-1">Schedule Notifications</h2>
+                    <p class="text-muted mb-0">Stay informed about important deadlines and schedule updates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row">
+            <div class="stat-card all-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="statAllCount">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+            <div class="stat-card urgent-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="statUrgentCount">0</div>
+                    <div class="stat-label">Urgent</div>
+                </div>
+            </div>
+            <div class="stat-card active-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="statActiveCount">0</div>
+                    <div class="stat-label">Active</div>
+                </div>
+            </div>
+            <div class="stat-card upcoming-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value" id="statUpcomingCount">0</div>
+                    <div class="stat-label">Upcoming</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="filter-section">
+            <ul class="nav nav-pills custom-pills" id="notificationTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" 
+                            data-bs-target="#all-notifications" type="button" 
+                            role="tab" aria-controls="all-notifications" aria-selected="true">
+                        <i class="fa-solid fa-inbox me-2"></i>All Notifications
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link urgent-pill" id="urgent-tab" data-bs-toggle="tab" 
+                            data-bs-target="#urgent-notifications" type="button" 
+                            role="tab" aria-controls="urgent-notifications" aria-selected="false">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>Urgent
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active-pill" id="active-tab" data-bs-toggle="tab" 
+                            data-bs-target="#active-notifications" type="button" 
+                            role="tab" aria-controls="active-notifications" aria-selected="false">
+                        <i class="fa-solid fa-circle-check me-2"></i>Active
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link upcoming-pill" id="upcoming-tab" data-bs-toggle="tab" 
+                            data-bs-target="#upcoming-notifications" type="button" 
+                            role="tab" aria-controls="upcoming-notifications" aria-selected="false">
+                        <i class="fa-solid fa-clock me-2"></i>Upcoming
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="notificationTabsContent">
+            <!-- All Notifications -->
+            <div class="tab-pane fade show active" id="all-notifications" 
+                 role="tabpanel" aria-labelledby="all-tab">
+                <div id="allNotificationsList" class="notifications-container">
+                    <div class="loading-state">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-3 text-muted">Loading notifications...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urgent Notifications -->
+            <div class="tab-pane fade" id="urgent-notifications" 
+                 role="tabpanel" aria-labelledby="urgent-tab">
+                <div id="urgentNotificationsList" class="notifications-container"></div>
+            </div>
+
+            <!-- Active Notifications -->
+            <div class="tab-pane fade" id="active-notifications" 
+                 role="tabpanel" aria-labelledby="active-tab">
+                <div id="activeNotificationsList" class="notifications-container"></div>
+            </div>
+
+            <!-- Upcoming Notifications -->
+            <div class="tab-pane fade" id="upcoming-notifications" 
+                 role="tabpanel" aria-labelledby="upcoming-tab">
+                <div id="upcomingNotificationsList" class="notifications-container"></div>
+            </div>
+        </div>
+
+        <!-- Empty State Template -->
+        <template id="emptyStateTemplate">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+                <h4 class="mt-3">All caught up!</h4>
+                <p class="text-muted">No notifications to display at this time.</p>
+            </div>
+        </template>
+    </div>
+    <script th:src="@{/js/institute-notifications.js}"></script>
+</main>
+</th:block>
+</body>
+</html>

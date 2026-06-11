@@ -1,0 +1,66 @@
+<div th:fragment="sidebar" class="nav-custom" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div>
+        <nav id="sidebar" class="d-flex flex-column align-items-center px-3 pt-2 min-vh-100 bg-light">
+
+            <div class="w-100 my-3 d-flex justify-content-center">
+                <img th:src="@{/images/logo.png}" alt="Govt of Meghalaya logo" width="100" />
+            </div>
+
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0" id="sidebarMenu" class="sidebar-nav">
+
+                <li th:each="menu : ${menus}" class="nav-item" th:classappend="${#lists.isEmpty(menu.children)} ? '' : 'dropdown'">
+
+                    <!-- 1. Menu item WITHOUT submenu -->
+                    <!-- Added data-page-url attribute -->
+                    <a th:if="${#lists.isEmpty(menu.children)}"
+                       class="nav-link d-flex align-items-center sidebar-link-item"
+                       th:href="@{${menu.pageUrl}}"
+                       th:data-page-url="${menu.pageUrl}"
+                       role="menuitem"
+                       th:classappend="${menu.pageUrl == currentUrl} ? ' active'">
+                        <i th:if="${menu.iconClass != null}" th:class="${menu.iconClass} + ' me-2'"></i>
+                        <span th:text="${menu.menuName}"></span>
+
+                        <!-- THE BADGE PLACEHOLDER -->
+                        <span class="d-none badge bg-danger ms-auto notification-badge">0</span>
+                    </a>
+
+                    <!-- 2. Menu item WITH submenu (Parent) -->
+                    <a th:if="${!#lists.isEmpty(menu.children)}"
+                       href="#"
+                       class="nav-link dropdown-toggle d-flex align-items-center"
+                       id="dropdownMenuLink__${menu.menuId}"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                       aria-haspopup="true"
+                       th:classappend="${menu.pageUrl == currentUrl} ? ' active'">
+                        <i th:if="${menu.iconClass != null}" th:class="${menu.iconClass} + ' me-2'"></i>
+                        <span th:text="${menu.menuName}"></span>
+                        <!-- Usually parents don't have badges, but if you want one, add it here -->
+                    </a>
+
+                    <!-- 3. Dropdown submenu Items -->
+                    <ul th:if="${!#lists.isEmpty(menu.children)}"
+                        class="dropdown-menu rounded-0 border-0 shadow"
+                        aria-labelledby="dropdownMenuLink__${menu.menuId}">
+                        <li th:each="child : ${menu.children}">
+                            <!-- Added data-page-url attribute -->
+                            <a class="dropdown-item d-flex align-items-center sidebar-link-item"
+                               th:href="@{${child.pageUrl}}"
+                               th:data-page-url="${child.pageUrl}"
+                               role="menuitem"
+                               th:classappend="${child.pageUrl == currentUrl} ? ' active'">
+                                <i th:if="${child.iconClass != null}" th:class="${child.iconClass} + ' me-2'" class="sidebar-icon"></i>
+                                <span th:text="${child.menuName}"></span>
+
+                                <!-- THE BADGE PLACEHOLDER -->
+                                <span class="d-none badge bg-danger ms-auto notification-badge">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

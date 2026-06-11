@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>My Departments - Institute Dashboard</title>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <link th:href="@{/css/institute/my-departments.css}" rel="stylesheet"/>
+    <main class="container-fluid px-4 py-4">
+
+        <div id="scheduleLockBanner" class="alert shadow-sm mb-4 d-none lock-banner">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-lock fs-4 text-danger me-3"></i>
+                <div>
+                    <h6 class="mb-1 fw-bold text-danger">Configuration Locked</h6>
+                    <p class="mb-0 text-secondary small">The Institute Setup phase is currently closed. You can view your departments but cannot add or modify them.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h3 mb-0 text-gray-800 fw-bold">Departments</h2>
+                <p class="text-muted mb-0">Manage operational departments in your institute</p>
+            </div>
+            <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold" id="addDeptBtnMain">  
+                <i class="fas fa-plus me-2"></i>Add Department
+            </button>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="departmentTabs">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#active-content">
+                    <i class="fas fa-check-circle me-2"></i>Active Departments
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pending-content">
+                    <i class="fas fa-clock me-2"></i>Pending Requests
+                    <span class="badge bg-warning text-dark ms-2 d-none" id="pendingBadge">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <div id="alertBox" class="alert alert-info py-3 fs-5 rounded shadow-sm d-none">
+            <i class="fas fa-info-circle me-2"></i>No departments assigned yet.
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="active-content">
+
+                <div class="card shadow-sm mb-4 border-0 bg-white">
+                    <div class="card-body py-3 px-4 border-bottom">
+                        <div class="input-group search-bar-modern w-50">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 bg-transparent" id="filterSearchDept" placeholder="Search by department name or code...">
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead>
+                                <tr>
+                                    <th class="text-center w-50px">#</th>
+                                    <th>Department Info</th>
+                                    <th>Code</th>
+                                    <th>HOD & Contact</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody id="departmentsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="spinner-border text-primary"></div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pending-content">
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Requested Department</th>
+                                <th>Code</th>
+                                <th>HOD Name</th>
+                                <th>Date</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody id="pendingTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addDepartmentModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Department</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="addDepartmentForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Select Department <span class="text-danger">*</span></label>
+                                <select class="form-select" id="departmentSelect" name="departmentId" required></select>
+                                <div id="selectedDeptCode" class="mt-2 text-primary small fw-bold d-none"></div>
+                            </div>
+                            <div class="text-end mb-3">
+                                <a href="#" class="text-decoration-none small fw-bold" id="requestDeptLink">
+                                    Request New Department
+                                </a>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label class="form-label">HOD Name</label>
+                                <input type="text" class="form-control" name="hodName">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" name="phone">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" name="active">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="requestDepartmentModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content border-warning">
+                    <div class="modal-header bg-warning-subtle">
+                        <h5 class="modal-title"><i class="fas fa-paper-plane me-2"></i>Request New Department</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="requestDepartmentForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="newDepartmentName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Code</label>
+                                <input type="text" class="form-control text-uppercase" name="newDepartmentCode">
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label class="form-label">HOD Name</label>
+                                <input type="text" class="form-control" name="hodName">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="backToAddDeptBtn">Back</button>
+                            <button type="submit" class="btn btn-warning">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editDepartmentModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Edit Department</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="editDepartmentForm">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-control-plaintext bg-light p-2 rounded fw-bold" id="editDepartmentName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">HOD Name</label>
+                                <input type="text" class="form-control" id="editHodName" name="hodName">
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" name="email">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="editPhone" name="phone">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="editActive" name="active">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-danger">
+                        <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Remove</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove <strong id="departmentToDelete"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="successMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+            <div id="errorToast" class="toast text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="errorMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <script th:src="@{/js/institute/my-departments.js}"></script>
+</th:block>
+</body>
+</html>

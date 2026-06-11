@@ -1,0 +1,975 @@
+-- Master Reference Data - States, Districts, Blocks, and other reference tables
+-- Generated from data.sql
+-- Date: 2024-09-23
+
+-- STATES
+INSERT INTO mcap.state (state_code, state_name) VALUES (35, 'Andaman And Nicobar Islands');
+INSERT INTO mcap.state (state_code, state_name) VALUES (28, 'Andhra Pradesh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (12, 'Arunachal Pradesh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (18, 'Assam');
+INSERT INTO mcap.state (state_code, state_name) VALUES (10, 'Bihar');
+INSERT INTO mcap.state (state_code, state_name) VALUES (4, 'Chandigarh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (22, 'Chhattisgarh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (7, 'Delhi');
+INSERT INTO mcap.state (state_code, state_name) VALUES (30, 'Goa');
+INSERT INTO mcap.state (state_code, state_name) VALUES (24, 'Gujarat');
+INSERT INTO mcap.state (state_code, state_name) VALUES (6, 'Haryana');
+INSERT INTO mcap.state (state_code, state_name) VALUES (2, 'Himachal Pradesh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (1, 'Jammu And Kashmir');
+INSERT INTO mcap.state (state_code, state_name) VALUES (20, 'Jharkhand');
+INSERT INTO mcap.state (state_code, state_name) VALUES (29, 'Karnataka');
+INSERT INTO mcap.state (state_code, state_name) VALUES (32, 'Kerala');
+INSERT INTO mcap.state (state_code, state_name) VALUES (37, 'Ladakh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (31, 'Lakshadweep');
+INSERT INTO mcap.state (state_code, state_name) VALUES (23, 'Madhya Pradesh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (27, 'Maharashtra');
+INSERT INTO mcap.state (state_code, state_name) VALUES (14, 'Manipur');
+INSERT INTO mcap.state (state_code, state_name) VALUES (17, 'Meghalaya');
+INSERT INTO mcap.state (state_code, state_name) VALUES (15, 'Mizoram');
+INSERT INTO mcap.state (state_code, state_name) VALUES (13, 'Nagaland');
+INSERT INTO mcap.state (state_code, state_name) VALUES (21, 'Odisha');
+INSERT INTO mcap.state (state_code, state_name) VALUES (34, 'Puducherry');
+INSERT INTO mcap.state (state_code, state_name) VALUES (3, 'Punjab');
+INSERT INTO mcap.state (state_code, state_name) VALUES (8, 'Rajasthan');
+INSERT INTO mcap.state (state_code, state_name) VALUES (11, 'Sikkim');
+INSERT INTO mcap.state (state_code, state_name) VALUES (33, 'Tamil Nadu');
+INSERT INTO mcap.state (state_code, state_name) VALUES (36, 'Telangana');
+INSERT INTO mcap.state (state_code, state_name) VALUES (38, 'The Dadra And Nagar Haveli And Daman And Diu');
+INSERT INTO mcap.state (state_code, state_name) VALUES (16, 'Tripura');
+INSERT INTO mcap.state (state_code, state_name) VALUES (5, 'Uttarakhand');
+INSERT INTO mcap.state (state_code, state_name) VALUES (9, 'Uttar Pradesh');
+INSERT INTO mcap.state (state_code, state_name) VALUES (19, 'West Bengal');
+
+
+
+-- DISTRICTS
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (603, 'Nicobars', 35);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (632, 'North And Middle Andaman', 35);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (602, 'South Andamans', 35);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (745, 'Alluri Sitharama Raju', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (744, 'Anakapalli', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (502, 'Ananthapuramu', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (753, 'Annamayya', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (750, 'Bapatla', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (503, 'Chittoor', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (747, 'Dr. B.R. Ambedkar Konaseema', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (505, 'East Godavari', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (748, 'Eluru', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (506, 'Guntur', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (746, 'Kakinada', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (510, 'Krishna', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (511, 'Kurnool', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (755, 'Nandyal', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (749, 'Ntr', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (751, 'Palnadu', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (743, 'Parvathipuram Manyam', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (517, 'Prakasam', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (519, 'Srikakulam', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (515, 'Sri Potti Sriramulu Nellore', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (754, 'Sri Sathya Sai', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (752, 'Tirupati', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (520, 'Visakhapatnam', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (521, 'Vizianagaram', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (523, 'West Godavari', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (504, 'Y.S.R. Kadapa', 28);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (628, 'Anjaw', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (787, 'Bichom', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (229, 'Changlang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (230, 'Dibang Valley', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (231, 'East Kameng', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (232, 'East Siang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (718, 'Kamle', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (786, 'Keyi Panyor', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (677, 'Kra Daadi', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (233, 'Kurung Kumey', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (724, 'Leparada', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (234, 'Lohit', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (666, 'Longding', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (235, 'Lower Dibang Valley', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (719, 'Lower Siang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (236, 'Lower Subansiri', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (678, 'Namsai', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (723, 'Pakke Kessang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (237, 'Papum Pare', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (725, 'Shi Yomi', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (679, 'Siang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (238, 'Tawang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (239, 'Tirap', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (240, 'Upper Siang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (241, 'Upper Subansiri', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (242, 'West Kameng', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (243, 'West Siang', 12);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (739, 'Bajali', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (616, 'Baksa', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (280, 'Barpeta', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (705, 'Biswanath', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (281, 'Bongaigaon', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (282, 'Cachar', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (708, 'Charaideo', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (612, 'Chirang', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (283, 'Darrang', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (284, 'Dhemaji', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (285, 'Dhubri', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (286, 'Dibrugarh', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (299, 'Dima Hasao', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (287, 'Goalpara', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (288, 'Golaghat', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (289, 'Hailakandi', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (709, 'Hojai', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (290, 'Jorhat', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (291, 'Kamrup', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (618, 'Kamrup Metro', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (292, 'Karbi Anglong', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (294, 'Kokrajhar', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (295, 'Lakhimpur', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (706, 'Majuli', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (296, 'Marigaon', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (297, 'Nagaon', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (298, 'Nalbari', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (300, 'Sivasagar', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (301, 'Sonitpur', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (707, 'South Salmara Mancachar', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (293, 'Sribhumi', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (756, 'Tamulpur', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (302, 'Tinsukia', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (617, 'Udalguri', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (710, 'West Karbi Anglong', 18);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (188, 'Araria', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (611, 'Arwal', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (189, 'Aurangabad', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (190, 'Banka', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (191, 'Begusarai', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (192, 'Bhagalpur', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (193, 'Bhojpur', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (194, 'Buxar', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (195, 'Darbhanga', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (196, 'Gaya', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (197, 'Gopalganj', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (198, 'Jamui', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (199, 'Jehanabad', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (200, 'Kaimur (Bhabua)', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (201, 'Katihar', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (202, 'Khagaria', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (203, 'Kishanganj', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (204, 'Lakhisarai', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (205, 'Madhepura', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (206, 'Madhubani', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (207, 'Munger', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (208, 'Muzaffarpur', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (209, 'Nalanda', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (210, 'Nawada', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (211, 'Pashchim Champaran', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (212, 'Patna', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (213, 'Purbi Champaran', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (214, 'Purnia', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (215, 'Rohtas', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (216, 'Saharsa', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (217, 'Samastipur', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (218, 'Saran', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (219, 'Sheikhpura', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (220, 'Sheohar', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (221, 'Sitamarhi', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (222, 'Siwan', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (223, 'Supaul', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (224, 'Vaishali', 10);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (44, 'Chandigarh', 4);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (646, 'Balod', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (644, 'Balodabazar-Bhatapara', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (649, 'Balrampur-Ramanujganj', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (374, 'Bastar', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (650, 'Bemetara', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (636, 'Bijapur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (375, 'Bilaspur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (376, 'Dakshin Bastar Dantewada', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (377, 'Dhamtari', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (378, 'Durg', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (645, 'Gariyaband', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (734, 'Gaurela-Pendra-Marwahi', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (379, 'Janjgir-Champa', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (380, 'Jashpur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (382, 'Kabeerdham', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (759, 'Khairagarh-Chhuikhadan-Gandai', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (643, 'Kondagaon', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (383, 'Korba', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (384, 'Korea', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (385, 'Mahasamund', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (760, 'Manendragarh-Chirmiri-Bharatpur(M C B)', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (761, 'Mohla-Manpur-Ambagarh Chouki', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (647, 'Mungeli', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (637, 'Narayanpur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (386, 'Raigarh', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (387, 'Raipur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (388, 'Rajnandgaon', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (762, 'Sakti', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (763, 'Sarangarh-Bilaigarh', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (642, 'Sukma', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (648, 'Surajpur', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (389, 'Surguja', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (381, 'Uttar Bastar Kanker', 22);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (77, 'Central', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (78, 'East', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (79, 'New Delhi', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (80, 'North', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (81, 'North East', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (82, 'North West', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (671, 'Shahdara', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (83, 'South', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (670, 'South East', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (84, 'South West', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (85, 'West', 7);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (551, 'North Goa', 30);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (552, 'South Goa', 30);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (438, 'Ahmedabad', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (439, 'Amreli', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (440, 'Anand', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (672, 'Arvalli', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (441, 'Banas Kantha', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (442, 'Bharuch', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (443, 'Bhavnagar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (676, 'Botad', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (668, 'Chhotaudepur', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (445, 'Dahod', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (444, 'Dangs', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (674, 'Devbhumi Dwarka', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (446, 'Gandhinagar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (675, 'Gir Somnath', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (447, 'Jamnagar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (448, 'Junagadh', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (449, 'Kachchh', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (450, 'Kheda', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (451, 'Mahesana', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (669, 'Mahisagar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (673, 'Morbi', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (452, 'Narmada', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (453, 'Navsari', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (454, 'Panch Mahals', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (455, 'Patan', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (456, 'Porbandar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (457, 'Rajkot', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (458, 'Sabar Kantha', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (459, 'Surat', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (460, 'Surendranagar', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (641, 'Tapi', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (461, 'Vadodara', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (462, 'Valsad', 24);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (58, 'Ambala', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (59, 'Bhiwani', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (701, 'Charkhi Dadri', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (60, 'Faridabad', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (61, 'Fatehabad', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (62, 'Gurugram', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (63, 'Hisar', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (64, 'Jhajjar', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (65, 'Jind', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (66, 'Kaithal', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (67, 'Karnal', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (68, 'Kurukshetra', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (69, 'Mahendragarh', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (604, 'Nuh', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (619, 'Palwal', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (70, 'Panchkula', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (71, 'Panipat', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (72, 'Rewari', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (73, 'Rohtak', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (74, 'Sirsa', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (75, 'Sonipat', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (76, 'Yamunanagar', 6);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (15, 'Bilaspur', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (16, 'Chamba', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (17, 'Hamirpur', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (18, 'Kangra', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (19, 'Kinnaur', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (20, 'Kullu', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (21, 'Lahaul And Spiti', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (22, 'Mandi', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (23, 'Shimla', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (24, 'Sirmaur', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (25, 'Solan', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (26, 'Una', 2);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (1, 'Anantnag', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (623, 'Bandipora', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (3, 'Baramulla', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (2, 'Budgam', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (4, 'Doda', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (626, 'Ganderbal', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (5, 'Jammu', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (7, 'Kathua', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (620, 'Kishtwar', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (622, 'Kulgam', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (8, 'Kupwara', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (10, 'Poonch', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (11, 'Pulwama', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (12, 'Rajouri', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (621, 'Ramban', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (627, 'Reasi', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (624, 'Samba', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (625, 'Shopian', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (13, 'Srinagar', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (14, 'Udhampur', 1);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (322, 'Bokaro', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (323, 'Chatra', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (324, 'Deoghar', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (325, 'Dhanbad', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (326, 'Dumka', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (327, 'East Singhbum', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (328, 'Garhwa', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (329, 'Giridih', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (330, 'Godda', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (331, 'Gumla', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (332, 'Hazaribagh', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (333, 'Jamtara', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (606, 'Khunti', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (334, 'Koderma', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (335, 'Latehar', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (336, 'Lohardaga', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (337, 'Pakur', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (338, 'Palamu', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (607, 'Ramgarh', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (339, 'Ranchi', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (340, 'Sahebganj', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (341, 'Saraikela Kharsawan', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (342, 'Simdega', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (343, 'West Singhbhum', 20);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (524, 'Bagalkote', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (528, 'Ballari', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (527, 'Belagavi', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (526, 'Bengaluru Rural', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (631, 'Bengaluru South', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (525, 'Bengaluru Urban', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (529, 'Bidar', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (531, 'Chamarajanagar', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (630, 'Chikkaballapura', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (532, 'Chikkamagaluru', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (533, 'Chitradurga', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (534, 'Dakshina Kannada', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (535, 'Davanagere', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (536, 'Dharwad', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (537, 'Gadag', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (539, 'Hassan', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (540, 'Haveri', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (538, 'Kalaburagi', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (541, 'Kodagu', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (542, 'Kolar', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (543, 'Koppal', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (544, 'Mandya', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (545, 'Mysuru', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (546, 'Raichur', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (547, 'Shivamogga', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (548, 'Tumakuru', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (549, 'Udupi', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (550, 'Uttara Kannada', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (738, 'Vijayanagara', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (530, 'Vijayapura', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (635, 'Yadgir', 29);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (554, 'Alappuzha', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (555, 'Ernakulam', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (556, 'Idukki', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (557, 'Kannur', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (558, 'Kasaragod', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (559, 'Kollam', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (560, 'Kottayam', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (561, 'Kozhikode', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (562, 'Malappuram', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (563, 'Palakkad', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (564, 'Pathanamthitta', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (565, 'Thiruvananthapuram', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (566, 'Thrissur', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (567, 'Wayanad', 32);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (6, 'Kargil', 37);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (9, 'Leh Ladakh', 37);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (553, 'Lakshadweep District', 31);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (667, 'Agar-Malwa', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (639, 'Alirajpur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (390, 'Anuppur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (391, 'Ashoknagar', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (392, 'Balaghat', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (393, 'Barwani', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (394, 'Betul', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (395, 'Bhind', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (396, 'Bhopal', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (397, 'Burhanpur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (398, 'Chhatarpur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (399, 'Chhindwara', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (400, 'Damoh', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (401, 'Datia', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (402, 'Dewas', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (403, 'Dhar', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (404, 'Dindori', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (406, 'Guna', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (407, 'Gwalior', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (408, 'Harda', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (410, 'Indore', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (411, 'Jabalpur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (412, 'Jhabua', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (413, 'Katni', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (405, 'Khandwa (East Nimar)', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (414, 'Khargone (West Nimar)', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (784, 'Maihar', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (415, 'Mandla', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (416, 'Mandsaur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (766, 'MAUGANJ', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (417, 'Morena', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (409, 'Narmadapuram', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (418, 'Narsimhapur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (419, 'Neemuch', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (722, 'Niwari', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (785, 'Pandhurna', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (420, 'Panna', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (421, 'Raisen', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (422, 'Rajgarh', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (423, 'Ratlam', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (424, 'Rewa', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (425, 'Sagar', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (426, 'Satna', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (427, 'Sehore', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (428, 'Seoni', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (429, 'Shahdol', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (430, 'Shajapur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (431, 'Sheopur', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (432, 'Shivpuri', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (433, 'Sidhi', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (638, 'Singrauli', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (434, 'Tikamgarh', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (435, 'Ujjain', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (436, 'Umaria', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (437, 'Vidisha', 23);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (466, 'Ahilyanagar', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (467, 'Akola', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (468, 'Amravati', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (470, 'Beed', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (471, 'Bhandara', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (472, 'Buldhana', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (473, 'Chandrapur', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (469, 'Chhatrapati Sambhajinagar', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (488, 'Dharashiv', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (474, 'Dhule', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (475, 'Gadchiroli', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (476, 'Gondia', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (477, 'Hingoli', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (478, 'Jalgaon', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (479, 'Jalna', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (480, 'Kolhapur', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (481, 'Latur', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (482, 'Mumbai', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (483, 'Mumbai Suburban', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (484, 'Nagpur', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (485, 'Nanded', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (486, 'Nandurbar', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (487, 'Nashik', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (665, 'Palghar', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (489, 'Parbhani', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (490, 'Pune', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (491, 'Raigad', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (492, 'Ratnagiri', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (493, 'Sangli', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (494, 'Satara', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (495, 'Sindhudurg', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (496, 'Solapur', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (497, 'Thane', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (498, 'Wardha', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (499, 'Washim', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (500, 'Yavatmal', 27);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (252, 'Bishnupur', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (253, 'Chandel', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (254, 'Churachandpur', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (255, 'Imphal East', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (256, 'Imphal West', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (713, 'Jiribam', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (711, 'Kakching', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (717, 'Kamjong', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (712, 'Kangpokpi', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (714, 'Noney', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (715, 'Pherzawl', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (257, 'Senapati', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (258, 'Tamenglong', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (716, 'Tengnoupal', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (259, 'Thoubal', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (260, 'Ukhrul', 14);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (740, 'Eastern West Khasi Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (273, 'East Garo Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (657, 'East Jaintia Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (274, 'East Khasi Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (656, 'North Garo Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (276, 'Ri Bhoi', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (277, 'South Garo Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (663, 'South West Garo Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (658, 'South West Khasi Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (278, 'West Garo Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (275, 'West Jaintia Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (279, 'West Khasi Hills', 17);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (261, 'Aizawl', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (262, 'Champhai', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (726, 'Hnahthial', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (728, 'Khawzawl', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (263, 'Kolasib', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (264, 'Lawngtlai', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (265, 'Lunglei', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (266, 'Mamit', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (727, 'Saitual', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (268, 'Serchhip', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (267, 'Siaha', 15);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (758, 'Chumoukedima', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (244, 'Dimapur', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (614, 'Kiphire', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (245, 'Kohima', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (615, 'Longleng', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (788, 'Meluri', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (246, 'Mokokchung', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (247, 'Mon', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (764, 'Niuland', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (736, 'Noklak', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (613, 'Peren', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (248, 'Phek', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (765, 'Shamator', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (757, 'Tseminyu', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (249, 'Tuensang', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (250, 'Wokha', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (251, 'Zunheboto', 13);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (344, 'Anugul', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (345, 'Balangir', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (346, 'Baleshwar', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (347, 'Bargarh', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (348, 'Bhadrak', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (349, 'Boudh', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (350, 'Cuttack', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (351, 'Deogarh', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (352, 'Dhenkanal', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (353, 'Gajapati', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (354, 'Ganjam', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (355, 'Jagatsinghapur', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (356, 'Jajapur', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (357, 'Jharsuguda', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (358, 'Kalahandi', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (359, 'Kandhamal', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (360, 'Kendrapara', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (361, 'Kendujhar', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (362, 'Khordha', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (363, 'Koraput', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (364, 'Malkangiri', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (365, 'Mayurbhanj', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (366, 'Nabarangpur', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (367, 'Nayagarh', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (368, 'Nuapada', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (369, 'Puri', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (370, 'Rayagada', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (371, 'Sambalpur', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (372, 'Sonepur', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (373, 'Sundargarh', 21);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (598, 'Karaikal', 34);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (600, 'Puducherry', 34);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (27, 'Amritsar', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (605, 'Barnala', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (28, 'Bathinda', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (29, 'Faridkot', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (30, 'Fatehgarh Sahib', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (651, 'Fazilka', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (31, 'Ferozepur', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (32, 'Gurdaspur', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (33, 'Hoshiarpur', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (34, 'Jalandhar', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (35, 'Kapurthala', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (36, 'Ludhiana', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (737, 'Malerkotla', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (37, 'Mansa', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (38, 'Moga', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (662, 'Pathankot', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (41, 'Patiala', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (42, 'Rupnagar', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (43, 'Sangrur', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (608, 'S.A.S Nagar', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (40, 'Shahid Bhagat Singh Nagar', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (39, 'Sri Muktsar Sahib', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (609, 'Tarn Taran', 3);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (86, 'Ajmer', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (87, 'Alwar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (775, 'Balotra', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (88, 'Banswara', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (89, 'Baran', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (90, 'Barmer', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (774, 'Beawar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (91, 'Bharatpur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (92, 'Bhilwara', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (93, 'Bikaner', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (94, 'Bundi', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (95, 'Chittorgarh', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (96, 'Churu', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (97, 'Dausa', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (767, 'Deeg', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (98, 'Dholpur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (768, 'Didwana-Kuchaman', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (99, 'Dungarpur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (100, 'Ganganagar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (101, 'Hanumangarh', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (102, 'Jaipur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (103, 'Jaisalmer', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (104, 'Jalore', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (105, 'Jhalawar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (106, 'Jhunjhunu', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (107, 'Jodhpur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (108, 'Karauli', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (770, 'Khairthal-Tijara', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (109, 'Kota', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (782, 'Kotputli-Behror', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (110, 'Nagaur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (111, 'Pali', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (772, 'Phalodi', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (629, 'Pratapgarh', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (112, 'Rajsamand', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (777, 'Salumbar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (113, 'Sawai Madhopur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (114, 'Sikar', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (115, 'Sirohi', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (116, 'Tonk', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (117, 'Udaipur', 8);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (225, 'Gangtok', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (228, 'Gyalshing', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (226, 'Mangan', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (227, 'Namchi', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (741, 'Pakyong', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (742, 'Soreng', 11);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (610, 'Ariyalur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (730, 'Chengalpattu', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (568, 'Chennai', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (569, 'Coimbatore', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (570, 'Cuddalore', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (571, 'Dharmapuri', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (572, 'Dindigul', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (573, 'Erode', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (729, 'Kallakurichi', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (574, 'Kancheepuram', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (575, 'Kanniyakumari', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (576, 'Karur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (577, 'Krishnagiri', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (578, 'Madurai', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (735, 'Mayiladuthurai', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (579, 'Nagapattinam', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (580, 'Namakkal', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (581, 'Perambalur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (582, 'Pudukkottai', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (583, 'Ramanathapuram', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (731, 'Ranipet', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (584, 'Salem', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (585, 'Sivaganga', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (733, 'Tenkasi', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (586, 'Thanjavur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (588, 'Theni', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (587, 'The Nilgiris', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (589, 'Thiruvallur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (590, 'Thiruvarur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (594, 'Thoothukkudi', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (591, 'Tiruchirappalli', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (592, 'Tirunelveli', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (732, 'Tirupathur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (634, 'Tiruppur', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (593, 'Tiruvannamalai', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (595, 'Vellore', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (596, 'Viluppuram', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (597, 'Virudhunagar', 33);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (501, 'Adilabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (690, 'Bhadradri Kothagudem', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (686, 'Hanumakonda', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (507, 'Hyderabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (681, 'Jagitial', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (689, 'Jangoan', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (687, 'Jayashankar Bhupalapally', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (695, 'Jogulamba Gadwal', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (685, 'Kamareddy', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (508, 'Karimnagar', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (509, 'Khammam', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (699, 'Kumuram Bheem Asifabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (688, 'Mahabubabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (512, 'Mahabubnagar', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (684, 'Mancherial', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (513, 'Medak', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (700, 'Medchal Malkajgiri', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (720, 'Mulugu', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (694, 'Nagarkurnool', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (514, 'Nalgonda', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (721, 'Narayanpet', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (680, 'Nirmal', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (516, 'Nizamabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (682, 'Peddapalli', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (683, 'Rajanna Sircilla', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (518, 'Ranga Reddy', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (691, 'Sangareddy', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (692, 'Siddipet', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (696, 'Suryapet', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (698, 'Vikarabad', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (693, 'Wanaparthy', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (522, 'Warangal', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (697, 'Yadadri Bhuvanagiri', 36);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (465, 'Dadra And Nagar Haveli', 38);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (463, 'Daman', 38);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (464, 'Diu', 38);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (269, 'Dhalai', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (654, 'Gomati', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (652, 'Khowai', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (270, 'North Tripura', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (653, 'Sepahijala', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (271, 'South Tripura', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (655, 'Unakoti', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (272, 'West Tripura', 16);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (45, 'Almora', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (46, 'Bageshwar', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (47, 'Chamoli', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (48, 'Champawat', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (49, 'Dehradun', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (50, 'Haridwar', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (51, 'Nainital', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (52, 'Pauri Garhwal', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (53, 'Pithoragarh', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (54, 'Rudraprayag', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (55, 'Tehri Garhwal', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (56, 'Udham Singh Nagar', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (57, 'Uttarkashi', 5);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (118, 'Agra', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (119, 'Aligarh', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (121, 'Ambedkar Nagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (640, 'Amethi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (154, 'Amroha', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (122, 'Auraiya', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (140, 'Ayodhya', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (123, 'Azamgarh', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (124, 'Baghpat', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (125, 'Bahraich', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (126, 'Ballia', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (127, 'Balrampur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (128, 'Banda', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (129, 'Bara Banki', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (130, 'Bareilly', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (131, 'Basti', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (179, 'Bhadohi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (132, 'Bijnor', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (133, 'Budaun', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (134, 'Bulandshahr', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (135, 'Chandauli', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (136, 'Chitrakoot', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (137, 'Deoria', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (138, 'Etah', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (139, 'Etawah', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (141, 'Farrukhabad', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (142, 'Fatehpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (143, 'Firozabad', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (144, 'Gautam Buddha Nagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (145, 'Ghaziabad', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (146, 'Ghazipur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (147, 'Gonda', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (148, 'Gorakhpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (149, 'Hamirpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (661, 'Hapur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (150, 'Hardoi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (163, 'Hathras', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (151, 'Jalaun', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (152, 'Jaunpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (153, 'Jhansi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (155, 'Kannauj', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (156, 'Kanpur Dehat', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (157, 'Kanpur Nagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (633, 'Kasganj', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (158, 'Kaushambi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (159, 'Kheri', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (160, 'Kushinagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (161, 'Lalitpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (162, 'Lucknow', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (165, 'Mahoba', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (164, 'Mahrajganj', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (166, 'Mainpuri', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (167, 'Mathura', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (168, 'Mau', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (169, 'Meerut', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (170, 'Mirzapur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (171, 'Moradabad', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (172, 'Muzaffarnagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (173, 'Pilibhit', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (174, 'Pratapgarh', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (120, 'Prayagraj', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (175, 'Rae Bareli', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (176, 'Rampur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (177, 'Saharanpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (659, 'Sambhal', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (178, 'Sant Kabir Nagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (180, 'Shahjahanpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (660, 'Shamli', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (181, 'Shrawasti', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (182, 'Siddharthnagar', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (183, 'Sitapur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (184, 'Sonbhadra', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (185, 'Sultanpur', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (186, 'Unnao', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (187, 'Varanasi', 9);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (664, 'Alipurduar', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (305, 'Bankura', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (307, 'Birbhum', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (308, 'Cooch Behar', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (310, 'Dakshin Dinajpur', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (309, 'Darjeeling', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (312, 'Hooghly', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (313, 'Howrah', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (314, 'Jalpaiguri', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (703, 'Jhargram', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (702, 'Kalimpong', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (315, 'Kolkata', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (316, 'Malda', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (319, 'Murshidabad', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (320, 'Nadia', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (303, 'North 24 Parganas', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (704, 'Paschim Bardhaman', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (318, 'Paschim Medinipur', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (306, 'Purba Bardhaman', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (317, 'Purba Medinipur', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (321, 'Purulia', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (304, 'South 24 Parganas', 19);
+INSERT INTO mcap.district (district_code, district_name, state_code) VALUES (311, 'Uttar Dinajpur', 19);
+
+
+
+-- block --
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2483, 'MAIRANG', 740);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2486, 'MAWTHADRAISHAN', 740);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2450, 'DAMBO RONGJENG', 273);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2453, 'SAMANDA', 273);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2454, 'SONGSAK', 273);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7525, 'Lumshnong', 657);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2466, 'SAIPUNG', 657);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2464, 'WAPUNG', 657);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2455, 'KHADARSHNONG-LAITKROH', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2456, 'MAWKYNREW', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7185, 'MAWLAI', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7186, 'MAWPAT', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2457, 'MAWPHLANG', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2458, 'MAWRYNGKNENG', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2459, 'MAWSYNRAM', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2460, 'MYLLIEM', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2461, 'PYNURSLA', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2462, 'SHELLA BHOLAGANJ', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7183, 'SOHIONG', 274);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7522, 'Adokgre', 656);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7184, 'BAJENGDOBA', 656);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2451, 'KHARKUTTA', 656);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2452, 'RESUBELPARA', 656);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7182, 'BHOIRYMBONG', 276);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2468, 'JIRANG', 276);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2469, 'UMLING', 276);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2470, 'UMSNING', 276);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2471, 'BAGHMARA', 277);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2472, 'CHOKPOT', 277);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2473, 'GASUAPARA', 277);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2474, 'RONGARA', 277);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7520, 'Siju', 277);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2475, 'BETASING', 663);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7180, 'RERAPARA', 663);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2482, 'ZIKZAK', 663);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2484, 'MAWKYRWAT', 658);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2488, 'RANIKOR', 658);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7527, 'Batabari', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2476, 'DADENGGIRI', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2477, 'DALU', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7181, 'DEMDEMA', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2478, 'GAMBEGRE', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2479, 'RONGRAM', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2480, 'SALSELLA', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2481, 'TIKRIKILLA', 278);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2463, 'AMLAREM', 275);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2465, 'LASKEIN', 275);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7523, 'Namdong', 275);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2467, 'THADLASKEIN', 275);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2485, 'MAWSHYNRUT', 279);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (2487, 'NONGSTOIN', 279);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7521, 'Rambrai', 279);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7524, 'Ri-Muliang', 279);
+INSERT INTO mcap.block (block_code, block_name, district_code) VALUES (7526, 'Shallang', 279);
+
+
+-- COMMUNITY CATEGOTY
+INSERT INTO mcap.community_category (category_code, category_name) VALUES
+                                                                       ('GEN', 'General'),
+                                                                       ('OBC', 'Other Backward Class'),
+                                                                       ('SC', 'Scheduled Caste'),
+                                                                       ('ST', 'Scheduled Tribe');
+
+
+-- COUNTRY
+INSERT INTO mcap.country (country_code, country_name, phone_code) VALUES
+                                                                      (356, 'India', '+91'),
+                                                                      (50, 'Bangladesh', '+880'),
+                                                                      (64, 'Bhutan', '+975'),
+                                                                      (156, 'China', '+86'),
+                                                                      (524, 'Nepal', '+977'),
+                                                                      (586, 'Pakistan', '+92'),
+                                                                      (144, 'Sri Lanka', '+94');
+
+
+-- GENDER
+INSERT INTO mcap.gender (gender_code, gender_name) VALUES
+                                                       ('M', 'Male'),
+                                                       ('F', 'Female'),
+                                                       ('O', 'Others');
+
+
+-- MARITAL STATUS
+INSERT INTO mcap.marital_status (status_code, status_name) VALUES
+                                                               ('U', 'Unmarried'),
+                                                               ('M', 'Married'),
+                                                               ('W', 'Widowed'),
+                                                               ('D', 'Divorced'),
+                                                               ('S', 'Separated');
+
+
+-- RELIGION
+INSERT INTO mcap.religion (religion_code, religion_name) VALUES
+                                                             ('HIN', 'Hinduism'),
+                                                             ('ISL', 'Islam'),
+                                                             ('CHR', 'Christianity'),
+                                                             ('SIK', 'Sikhism'),
+                                                             ('BUD', 'Buddhism'),
+                                                             ('JAI', 'Jainism'),
+                                                             ('OTH', 'Other');
+
+
+-- RELATIONSHIP
+INSERT INTO mcap.relationship (relationship_code, value) VALUES
+                                                             (2, 'Spouse'),
+                                                             (3, 'Father'),
+                                                             (4, 'Mother'),
+                                                             (5, 'Son'),
+                                                             (6, 'Daughter'),
+                                                             (7, 'Brother'),
+                                                             (8, 'Sister'),
+                                                             (9, 'Father-In-Law'),
+                                                             (10, 'Mother-In-Law'),
+                                                             (11, 'Brother-In-Law'),
+                                                             (12, 'Sister-In-Law'),
+                                                             (13, 'Nephew'),
+                                                             (14, 'Niece'),
+                                                             (15, 'Grandson'),
+                                                             (16, 'Granddaughter'),
+                                                             (17, 'Grandfather'),
+                                                             (18, 'Grandmother'),
+                                                             (19, 'Other'),
+                                                             (20, 'Daughter-In-Law'),
+                                                             (21, 'Son-In-Law');
+
+
+-- ADDRESSES
+INSERT INTO mcap.address (address_id, address_line1, pincode, state_code, district_code, block_code, address_type, user_type) VALUES
+                                                                                                                                  (1, 'Laitumkhrah', '793003', 17, 274, 2460, 'Permanent', 'Institute'),
+                                                                                                                                  (2, 'Dhankheti', '793001', 17, 274, 2460, 'Permanent', 'Institute');
+
+
+-- AFFLIATION TYPE
+INSERT INTO mcap.affiliation_type (affiliation_type_name) VALUES
+                                                              ('State University'),
+                                                              ('Central University'),
+                                                              ('Constituent College'),
+                                                              ('Autonomous'),
+                                                              ('Private University');
+
+
+
+-- MANAGEMENT TYPE
+INSERT INTO mcap.management_type (management_type_name) VALUES
+                                                            ('Government'),
+                                                            ('Government Aided'),
+                                                            ('State Government'),
+                                                            ('Private Unaided'),
+                                                            ('Local Body');

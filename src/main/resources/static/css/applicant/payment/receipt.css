@@ -1,0 +1,121 @@
+/* Professional Invoice Styling for PDF Generation */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+.invoice-box {
+    max-width: 800px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+
+.header-table td {
+    padding: 5px;
+    vertical-align: top;
+}
+
+.header-table td.title {
+    font-size: 28px;
+    line-height: 35px;
+    color: #0c82a5;
+    font-weight: bold;
+}
+
+.header-table td.invoice-details {
+    text-align: right;
+}
+
+.invoice-details strong {
+    color: #555;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #198754;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.info-table {
+    width: 100%;
+    margin-bottom: 40px;
+    border-collapse: collapse;
+}
+
+.info-table td {
+    padding: 5px 0;
+}
+
+.info-table td:nth-child(1),
+.info-table td:nth-child(3) {
+    font-weight: bold;
+    color: #555;
+    width: 20%;
+}
+
+.info-table td:nth-child(2),
+.info-table td:nth-child(4) {
+    width: 30%;
+    color: #333;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+
+.items-table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px;
+    text-align: left;
+    color: #495057;
+    font-weight: bold;
+}
+
+.items-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.items-table th.align-right,
+.items-table td.align-right {
+    text-align: right;
+}
+
+.total-row td {
+    font-weight: bold;
+    font-size: 16px;
+    border-top: 2px solid #333;
+    background-color: #f8f9fa;
+}
+
+.footer {
+    margin-top: 50px;
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}

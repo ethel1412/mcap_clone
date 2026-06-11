@@ -1,0 +1,94 @@
+{
+  "user": {
+    "label": "User",
+    "class": "fa-solid fa-user"
+  },
+  "users": {
+    "label": "Users",
+    "class": "fa-solid fa-users"
+  },
+  "user-graduate": {
+    "label": "Graduate",
+    "class": "fa-solid fa-user-graduate"
+  },
+  "user-shield": {
+    "label": "User Shield",
+    "class": "fa-solid fa-user-shield"
+  },
+  "school": {
+    "label": "School / Institute",
+    "class": "fa-solid fa-school"
+  },
+  "building-columns": {
+    "label": "University / Dept.",
+    "class": "fa-solid fa-building-columns"
+  },
+  "building": {
+    "label": "Building",
+    "class": "fa-solid fa-building"
+  },
+  "chalkboard": {
+    "label": "Chalkboard",
+    "class": "fa-solid fa-chalkboard"
+  },
+  "chalkboard-user": {
+    "label": "Chalkboard Teacher",
+    "class": "fa-solid fa-chalkboard-user"
+  },
+  "book": {
+    "label": "Book",
+    "class": "fa-solid fa-book"
+  },
+  "book-open": {
+    "label": "Book Open",
+    "class": "fa-solid fa-book-open"
+  },
+  "layer-group": {
+    "label": "Subject Combination",
+    "class": "fa-solid fa-layer-group"
+  },
+  "stream": {
+    "label": "Stream",
+    "class": "fa-solid fa-stream"
+  },
+  "calendar-days": {
+    "label": "Admission Window",
+    "class": "fa-solid fa-calendar-days"
+  },
+  "map-marker-alt": {
+    "label": "District",
+    "class": "fa-solid fa-map-marker-alt"
+  },
+  "flag": {
+    "label": "Country / State Flag",
+    "class": "fa-solid fa-flag"
+  },
+  "venus-mars": {
+    "label": "Gender",
+    "class": "fa-solid fa-venus-mars"
+  },
+  "ring": {
+    "label": "Marital Status",
+    "class": "fa-solid fa-ring"
+  },
+  "place-of-worship": {
+    "label": "Religion",
+    "class": "fa-solid fa-place-of-worship"
+  },
+  "bars": {
+    "label": "Menu",
+    "class": "fa-solid fa-bars"
+  },
+  "link": {
+    "label": "Page URL",
+    "class": "fa-solid fa-link"
+  },
+  "sign-in-alt": {
+    "label": "Login Activity",
+    "class": "fa-solid fa-sign-in-alt"
+  },
+  "th-large": {
+    "label": "Block",
+    "class": "fa-solid fa-th-large"
+  }
+}

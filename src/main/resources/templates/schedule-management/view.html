@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>View Schedules - Schedule Management</title>
+        <link th:href="@{/css/schedule/view-schedule.css}" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard" class="text-decoration-none">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/schedule-management/list" class="text-decoration-none">Schedule Management</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">View Schedules</li>
+                    </ol>
+                </nav>
+                <p class="text-muted mb-0">View complete schedule roadmap for this admission window</p>
+            </div>
+            <a th:href="@{/schedule-management/list}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <div id="alert-box"></div>
+
+        <div class="card mb-4 border-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="mb-2" id="window-name">-</h4>
+                        <p class="mb-1 text-muted">
+                            <i class="bi bi-calendar-range me-2"></i>
+                            <span id="window-dates">-</span>
+                        </p>
+                    </div>
+                    <span class="badge bg-success" style="font-size: 14px;">
+                        <i class="bi bi-check-circle me-1"></i>All Steps Completed
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-state" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading schedule roadmap...</p>
+        </div>
+
+        <div id="roadmap-container" class="card" style="display: none;">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3 me-2"></i>Complete Schedule Roadmap
+                </h5>
+                <span class="badge bg-primary" id="steps-count">0 Steps</span>
+            </div>
+            <div class="card-body">
+                <div id="steps-roadmap" class="steps-container">
+                </div>
+            </div>
+        </div>
+
+        <div id="no-schedules" class="alert alert-warning" style="display: none;">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            No schedules found for this admission window.
+        </div>
+    </main>
+
+    <script src="/js/axios.min.js"></script>
+    <script th:src="@{/js/schedule/view-schedule.js}" defer></script>
+
+</th:block>
+</body>
+</html>

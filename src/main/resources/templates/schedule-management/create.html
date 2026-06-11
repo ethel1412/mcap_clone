@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Create Schedule - Schedule Management</title>
+</head>
+<body>
+<th:block th:fragment="content">
+
+    <link th:href="@{/css/schedule/create-schedule.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/flatpickr.min.css}">
+    <link rel="stylesheet" th:href="@{/css/material_blue.css}">
+
+    <main class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="/dashboard" class="text-decoration-none">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/schedule-management/list" class="text-decoration-none">Schedule Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Schedule</li>
+                    </ol>
+                </nav>
+                <h4 class="mb-0 text-gray-800"><i class="bi bi-calendar-plus text-primary me-2"></i>Initialize Schedule</h4>
+            </div>
+            <a th:href="@{/schedule-management/list}" class="btn btn-outline-secondary shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <div class="alert shadow-sm mb-4 alert-guide" role="alert">
+            <h5 class="alert-heading text-success fw-bold mb-2"><i class="bi bi-info-circle-fill me-2"></i>Controller of Admissions Guide</h5>
+            <p class="mb-2 text-secondary">Use this page to assign real-world dates to the Master Roadmap for an upcoming admission cycle. Please ensure the following:</p>
+            <ul class="text-secondary small mb-0">
+                <li><strong>Overlapping Dates:</strong> Schedule steps <em>can</em> overlap with each other, giving you flexibility to run multiple tasks simultaneously.</li>
+                <li><strong>The Window Partition:</strong> Steps cannot overlap with the Student Application Window itself.</li>
+                <li><strong>Pre-Admission Limits:</strong> Institute setup and controller approval steps must be completed <em>before</em> the application window opens.</li>
+                <li><strong>Counselling Limits:</strong> Seat allotment and payment rounds cannot begin until <em>after</em> the application window closes.</li>
+            </ul>
+        </div>
+
+        <div id="alert-box"></div>
+
+        <div id="window-selection-section">
+            <div class="section-header mb-4">
+                <h5 class="fw-bold text-dark mb-1"><span class="step-badge">1</span>Select Target Window</h5>
+                <p class="text-muted small ms-5">Choose the <strong>Upcoming</strong> admission window you want to initialize.</p>
+            </div>
+
+            <div id="windows-loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+                <p class="mt-3 text-muted fw-bold">Loading upcoming windows...</p>
+            </div>
+
+            <div id="windows-grid" class="row g-4 d-none"></div>
+
+            <div id="no-windows" class="alert alert-info shadow-sm border-info d-none">
+                <i class="bi bi-info-circle-fill me-2"></i><strong>No upcoming admission windows found.</strong> Please ensure an admission window is created and in 'Upcoming' status before generating schedules.
+            </div>
+        </div>
+
+        <div id="schedule-creation-section" class="d-none">
+            <div class="section-header mb-4 border-top pt-4">
+                <h5 class="fw-bold text-dark mb-1"><span class="step-badge">2</span>Assign Dates to Roadmap</h5>
+            </div>
+
+            <div class="card mb-4 border-primary shadow-sm">
+                <div class="card-body bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-primary mb-2">Selected Window</span>
+                            <h5 class="card-title fw-bold text-dark mb-1" id="selected-window-name">-</h5>
+                            <p class="mb-0 text-secondary fw-semibold">
+                                <i class="bi bi-calendar-range me-2 text-primary"></i><span id="selected-window-dates">-</span>
+                            </p>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary bg-white shadow-sm" id="change-window-btn">
+                            <i class="bi bi-arrow-left me-1"></i>Switch Window
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-7 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 fw-bold"><i class="bi bi-diagram-3 text-primary me-2"></i>Schedule Roadmap</h6>
+                                <span class="text-muted small fw-bold" id="progress-text">0 of 0 steps completed</span>
+                            </div>
+                            <div class="progress mt-3 progress-custom">
+                                <div id="progress-bar" class="progress-bar bg-success" role="progressbar"></div>
+                            </div>
+                        </div>
+                        <div class="card-body bg-light p-4">
+                            <div id="steps-roadmap" class="steps-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 mb-4">
+                    <div class="card shadow-sm border-0 sticky-top form-sticky" id="schedule-form-card">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-plus me-2"></i>Configure Active Step</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div id="completion-message" class="text-center py-4 d-none">
+                                <i class="bi bi-check-circle-fill text-success icon-large"></i>
+                                <h5 class="mt-3 fw-bold text-success">Roadmap Initialized!</h5>
+                                <p class="text-muted mb-0">All steps for this window have been configured.</p>
+                                <a href="/schedule-management/list" class="btn btn-outline-success mt-3 rounded-pill px-4">Finish & Return</a>
+                            </div>
+
+                            <form id="createScheduleForm" novalidate>
+                                <input type="hidden" id="admissionCode" name="admissionCode" />
+                                <input type="hidden" id="stepOrder" name="stepOrder" />
+                                <input type="hidden" id="stepName" name="stepName" />
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-secondary text-uppercase step-label">Current Step</label>
+                                    <div class="form-control bg-light border-0 fw-bold text-primary fs-5" id="stepNameDisplay">-</div>
+                                </div>
+
+                                <div class="alert alert-warning shadow-sm mb-4 d-none constraint-alert" id="date-constraint-info">
+                                    <div class="d-flex">
+                                        <i class="bi bi-exclamation-triangle-fill text-warning fs-4 me-3"></i>
+                                        <div id="date-constraint-text" class="small text-dark"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label fw-bold">Start Date & Time <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white"><i class="bi bi-calendar-play text-primary"></i></span>
+                                        <input type="text" class="form-control datetime-picker" id="startDate" name="startDate" placeholder="Select Start Date..." required />
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="endDate" class="form-label fw-bold">End Date & Time <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white"><i class="bi bi-calendar-x text-danger"></i></span>
+                                        <input type="text" class="form-control datetime-picker" id="endDate" name="endDate" placeholder="Select End Date..." required />
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description" class="form-label fw-bold">Controller Notes <span class="text-muted fw-normal">(Optional)</span></label>
+                                    <textarea class="form-control shadow-sm" id="description" rows="2" placeholder="Internal notes regarding this specific date window..."></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 shadow-sm rounded-pill fw-bold py-2" id="submitBtn">
+                                    <i class="bi bi-save me-2"></i>Save Step & Continue
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/flatpickr.js}"></script>
+        <script th:src="@{/js/schedule/create-schedule.js}" defer></script>
+    </main>
+
+</th:block>
+</body>
+</html>

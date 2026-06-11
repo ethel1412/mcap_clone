@@ -1,0 +1,9 @@
+/* Extracts inline styles */
+.grievance-btn-size {
+    width: 34px;
+    height: 34px;
+}
+
+.text-pre-wrap {
+    white-space: pre-wrap;
+}

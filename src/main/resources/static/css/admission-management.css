@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Admission Management Specific Styles
+   ========================================================================== */
+
+/* Status Badges */
+.status-badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.badge-extended {
+    font-size: 0.75rem;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    cursor: help;
+}
+
+/* Action Buttons Hover Effect */
+.table-action-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.table-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Paused / Inactive Window Row Highlight */
+.paused-row td {
+    background-color: #fffbeb !important;
+    color: #92400e;
+}
+
+/* Instruction Panel Styling */
+.instruction-panel {
+    background-color: #f8fafc;
+    border-left: 4px solid #0ea5e9;
+}
+
+/* ==========================================================================
+   Flatpickr Modal Overrides & Fixes
+   ========================================================================== */
+
+/* CRITICAL: Fixes for Flatpickr calendar appearing behind Bootstrap Modals */
+.flatpickr-calendar {
+    z-index: 1060 !important; /* Bootstrap modals use 1055 */
+}
+
+/* Prevents the readonly date input from looking grayed out/disabled */
+.flatpickr-input[readonly] {
+    background-color: #fff !important;
+    cursor: pointer !important;
+}
+.cursor-pointer { cursor: pointer; }

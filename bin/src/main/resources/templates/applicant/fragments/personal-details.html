@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary"><i class="bi bi-person-vcard me-2"></i>My Profile</h1>
+    </div>
+
+    <div class="alert alert-info d-flex align-items-center small" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <div>
+            Your details are shown below. Edit the fields and click "Save Changes" to update your profile. Grey fields cannot be changed.
+        </div>
+    </div>
+
+    <!-- Main Form for ALL Personal Details -->
+    <form id="personal-details-form" th:action="@{/applicants/personal/update}" th:object="${personalDetailsDTO}" method="post">
+        
+        <!-- Basic Information Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light"><h5 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>Basic Information</h5></div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- UNEDITABLE FIELDS -->
+                    <div class="col-md-4">
+                        <label class="form-label">Applicant No.</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.applicantNo}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.firstName + ' ' + (applicant.middleName ?: '') + ' ' + applicant.lastName}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="text" class="form-control-plaintext" th:value="${#temporals.format(applicant.dateOfBirth, 'dd-MMM-yyyy')}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Gender</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.gender?.genderName}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Community</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.communityCategory?.categoryName}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Religion</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.religion?.religionName}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Country Phone Code</label>
+                        <input type="text" class="form-control-plaintext" th:value="${applicant.countryPhoneCode + ' (' + applicant.countryOfOrigin.countryName + ')'}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"
+                            th:maxlength="${#strings.contains(applicant.countryPhoneCode, '91') ? '10' : '15'}"
+                            th:pattern="${#strings.contains(applicant.countryPhoneCode, '91') ? '[0-9]{10}' : '[0-9]{15}'}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" th:field="*{email}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="maritalStatus" class="form-label">Marital Status</label>
+                        <select id="maritalStatus" class="form-select" th:field="*{maritalStatusCode}">
+                            <option value="">-- Select --</option>
+                            <option th:each="status : ${maritalStatuses}" th:value="${status.statusCode}" th:text="${status.statusName}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guardian Details Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light"><h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Guardian Details</h5></div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label for="guardianPrefix" class="form-label">Prefix</label>
+                        <select id="guardianPrefix" name="guardianPrefix" class="form-select">
+                            <option value="">-- Select --</option>
+                            <option th:each="p : ${prefixes}"
+                                    th:value="${p}"
+                                    th:text="${p}"
+                                    th:selected="${personalDetailsDTO.guardianPrefix != null && #strings.trim(personalDetailsDTO.guardianPrefix) == p}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="guardianName" class="form-label">Guardian Name</label>
+                        <input type="text" id="guardianName" class="form-control" th:field="*{guardianName}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="guardianRelationship" class="form-label">Relationship</label>
+                        <select id="guardianRelationship" class="form-select" th:field="*{guardianRelationshipCode}">
+                            <option value="">-- Select --</option>
+                             <option th:each="rel : ${relationships}" th:value="${rel.relationshipCode}" th:text="${rel.value}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Details Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light"><h5 class="mb-0"><i class="bi bi-geo-alt-fill me-2"></i>Address Details</h5></div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- Permanent Address -->
+                    <div class="col-lg-6 border-end-lg">
+                        <h6 class="mb-3 text-secondary">Permanent Address</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 1</label>
+                            <input type="text" class="form-control" th:field="*{permanentAddress.addressLine1}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" th:field="*{permanentAddress.addressLine2}">
+                        </div>
+                         <div class="mb-3">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" class="form-control" th:field="*{permanentAddress.pincode}" maxlength="6" pattern="[0-9]{6}" title="Pincode must be 6 digits.">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control-plaintext" th:value="${permanentAddressForDisplay.state?.stateName}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control-plaintext" th:value="${permanentAddressForDisplay.district?.districtName}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                 <label class="form-label">Block</label>
+                                 <input type="text" class="form-control-plaintext" th:value="${permanentAddressForDisplay.block?.blockName}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Address -->
+                    <div class="col-lg-6">
+                        <h6 class="mb-3 text-secondary">Communication Address</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 1</label>
+                            <input type="text" class="form-control" th:field="*{communicationAddress.addressLine1}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" th:field="*{communicationAddress.addressLine2}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" class="form-control" th:field="*{communicationAddress.pincode}" maxlength="6" pattern="[0-9]{6}" title="Pincode must be 6 digits.">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control-plaintext" th:value="${communicationAddressForDisplay.state?.stateName}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control-plaintext" th:value="${communicationAddressForDisplay.district?.districtName}" readonly>
+                            </div>
+                             <div class="col-md-6">
+                                 <label class="form-label">Block</label>
+                                 <input type="text" class="form-control-plaintext" th:value="${communicationAddressForDisplay.block?.blockName}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Button Footer -->
+        <div class="mt-4 text-end">
+             <button type="submit" class="btn btn-lg btn-success">
+                <i class="bi bi-check-circle-fill me-2"></i>Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

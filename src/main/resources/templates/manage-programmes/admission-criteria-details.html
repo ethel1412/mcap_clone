@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Admission Criteria Details</title>
+        <link th:href="@{/css/criteria/admission-criteria-details.css}" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4"
+          th:attr="data-admission-window-id=${admissionId},
+                   data-programme-offered-id=${programmeOfferedId},
+                   data-programme-level=${programmeLevel},
+                   data-stream-name=${programmeStreamName}">
+
+        <!-- Alert box -->
+        <div id="alert-box"
+             style="position: fixed; top: 10px; right: 10px; width: 320px; z-index: 1050;"></div>
+
+        <!-- Breadcrumb -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">
+                        <a href="/dashboard" class="text-decoration-none">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/admission-criteria/institute" class="text-decoration-none">
+                            Admission Criteria
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/admission-criteria/institute/window/{id}(id=${admissionId})}"
+                           class="text-decoration-none">
+                            Window [[${admissionId}]]
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        [[${programmeName}]]
+                    </li>
+                </ol>
+            </nav>
+
+            <a th:href="@{/admission-criteria/institute/window/{id}(id=${admissionId})}"
+               class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back to Programmes/Majors/Courses
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-3">
+            <h2 class="h4 mb-1">
+                <i class="bi bi-list-check me-2 text-primary"></i>
+                Admission Criteria – [[${programmeName}]]
+            </h2>
+            <p class="text-muted mb-0">
+                Define previous qualification, preferred streams or programmes, and minimum scores / percentages
+                for this programme in this admission window.
+            </p>
+        </div>
+
+        <!-- Programme summary -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body d-flex flex-wrap gap-3 align-items-center">
+                <div>
+                    <div class="text-muted small">Window</div>
+                    <div class="fw-semibold">[[${admissionId}]]</div>
+                </div>
+                <div>
+                    <div class="text-muted small">Programme/Major/Course</div>
+                    <div class="fw-semibold">[[${programmeName}]]</div>
+                </div>
+                <div>
+                    <div class="text-muted small">Level</div>
+                    <div class="fw-semibold">[[${programmeLevel}]]</div>
+                </div>
+                <div th:if="${programmeStreamName != null}">
+                    <div class="text-muted small">Stream</div>
+                    <div class="fw-semibold">[[${programmeStreamName}]]</div>
+                </div>
+                <div th:if="${totalSeats != null}">
+                    <div class="text-muted small">Total Seats</div>
+                    <span class="badge bg-info">
+                        [[${totalSeats}]]
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Existing criteria (professional list / table) -->
+        <section class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="h5 mb-0">Defined Criteria</h3>
+                <button id="add-criterion-btn"
+                        type="button"
+                        class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Add Criterion
+                </button>
+            </div>
+            <p class="text-muted small mb-2">
+                Each row represents one criterion (combination of previous qualification, preferred stream /
+                programme/Major/Course and minimum scores / percentages).
+            </p>
+
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width: 18%">Previous Qualification</th>
+                                <th style="width: 18%">Preferred Stream / Programme / Major/ Course</th>
+                                <th style="width: 12%">Min. Percentage</th>
+                                <th style="width: 10%">Min. CUET</th>
+                                <th style="width: 10%">Min. JEE</th>
+                                <th style="width: 10%">Min. GATE</th>
+                                <th style="width: 10%">Min. NET</th>
+                                <th style="width: 12%" class="text-end">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="criteria-body">
+                            <!-- Filled dynamically by JS using /criteria-data/... endpoints -->
+                            <tr id="criteria-empty-row">
+                                <td colspan="8" class="text-center text-muted py-3">
+                                    No criteria defined yet. Click “Add Criterion” to create one.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Helper note for stream‑specific behaviour -->
+        <section class="mb-4">
+            <div class="alert alert-info small mb-0">
+                <strong>Stream‑specific behaviour:</strong>
+                For UG, previous qualification is typically Class XII with stream‑based preferred streams;
+                for PG, required programmes/majors/courses (UG) are used; for PhD, previous qualification is a PG programme.
+                Optional CUET / JEE / GATE / NET scores can be attached depending on stream and level.
+            </div>
+        </section>
+    <!-- ========== MODALS (Add / Edit criterion) ========== -->
+
+    <div class="modal fade" id="criterionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="criterionModalTitle">
+                        <i class="bi bi-list-check me-2"></i>
+                        <span>Criterion</span>
+                    </h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="criterionForm">
+                        <input type="hidden" id="criterionId">
+
+                        <!-- Previous Qualification (dynamic based on level/stream) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Previous Qualification *
+                            </label>
+
+                            <!-- UG: Class XII and stream‑based logic -->
+                            <div id="prev-qual-ug" class="d-none">
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-2">Default</span>
+                                    Class XII
+                                </div>
+
+                                <!-- Preferred stream choices – radio/checkbox as per stream -->
+                                <div id="preferred-stream-ug-science" class="d-none">
+                                    <div class="form-text mb-1">
+                                        Science stream (default).
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="preferredStreamUgScience"
+                                               id="ugScienceOnly"
+                                               value="SCIENCE"
+                                               checked>
+                                        <label class="form-check-label" for="ugScienceOnly">
+                                            Science
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="preferred-stream-ug-commerce" class="d-none">
+                                    <div class="form-text mb-1">
+                                        Select preferred stream(s) for Commerce applicants.
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="preferredStreamUgCommerce"
+                                               id="ugCommSci"
+                                               value="SCIENCE">
+                                        <label class="form-check-label" for="ugCommSci">
+                                            Science
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="preferredStreamUgCommerce"
+                                               id="ugCommComm"
+                                               value="COMMERCE">
+                                        <label class="form-check-label" for="ugCommComm">
+                                            Commerce
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="radio"
+                                               name="preferredStreamUgCommerce"
+                                               id="ugCommBoth"
+                                               value="SCIENCE_COMMERCE">
+                                        <label class="form-check-label" for="ugCommBoth">
+                                            Science + Commerce
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="preferred-stream-ug-arts" class="d-none">
+                                    <div class="form-text mb-1">
+                                        Select preferred stream combination(s) for Arts applicants.
+                                    </div>
+                                    <!-- For flexibility, treat as multiple checkboxes -->
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="ugArtsArts"
+                                               value="ARTS">
+                                        <label class="form-check-label" for="ugArtsArts">
+                                            Arts
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="ugArtsSci"
+                                               value="SCIENCE">
+                                        <label class="form-check-label" for="ugArtsSci">
+                                            Science
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="ugArtsComm"
+                                               value="COMMERCE">
+                                        <label class="form-check-label" for="ugArtsComm">
+                                            Commerce
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Engineering UG: Class XII Science / Diploma -->
+                                <div id="prev-qual-ug-engineering" class="d-none mt-2">
+                                    <label class="form-label fw-bold small mb-1">
+                                        For Engineering (UG)
+                                    </label>
+                                    <select id="ugEngPrevQualSelect"
+                                            class="form-select form-select-sm"
+                                            multiple>
+                                        <option value="CLASS_XII_SCIENCE">
+                                            Class XII – Science
+                                        </option>
+                                        <option value="DIPLOMA">
+                                            Diploma
+                                        </option>
+                                    </select>
+                                    <div class="form-text">
+                                        Hold Ctrl / Cmd to select both if allowed.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PG: Required programme(s) from Programme table -->
+                            <div id="prev-qual-pg" class="d-none">
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-2">Default</span>
+                                    <span id="pgDefaultProgrammeName">
+                                        <!-- Filled by JS from model data -->
+                                    </span>
+                                </div>
+                                <label class="form-label small mb-1">
+                                    Additional acceptable UG programmes/majors/courses
+                                </label>
+                                <select id="pgAdditionalProgrammes"
+                                        class="form-select form-select-sm"
+                                        multiple>
+                                    <!-- options loaded via JS from /programme-data or a dedicated endpoint -->
+                                </select>
+                                <div class="form-text">
+                                    Select other UG programmes/Major/Course (if any) that qualify for this PG programme.
+                                </div>
+                            </div>
+
+                            <!-- PhD: Previous qualification is PG programme -->
+                            <div id="prev-qual-phd" class="d-none">
+                                <label class="form-label small mb-1">
+                                    Acceptable PG programmes / majors /courses
+                                </label>
+                                <select id="phdPrevProgrammes"
+                                        class="form-select form-select-sm"
+                                        multiple>
+                                    <!-- PG programmes loaded via JS -->
+                                </select>
+                                <div class="form-text">
+                                    Select one or more PG programmes/majors/courses required as previous qualification.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Minimum percentage (per preferred stream / programme) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Minimum Percentage *
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="minPercentageInput"
+                                   min="0" max="100" step="0.1"
+                                   placeholder="Enter minimum percentage required">
+                            <div class="form-text">
+                                For each preferred stream / programme / major / course selected, the same minimum percentage
+                                will be applied (advanced per‑item editing can be added later if needed).
+                            </div>
+                        </div>
+
+                        <!-- Optional score criteria (CUET / JEE / GATE / NET) -->
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
+                                    Minimum CUET Score
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="minCuetInput"
+                                       min="0"
+                                       placeholder="Optional">
+                                <div class="form-text">
+                                    Optional (not for Engineering stream). Can mirror Seat Reservations if set.
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
+                                    Minimum JEE Score
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="minJeeInput"
+                                       min="0"
+                                       placeholder="Optional">
+                                <div class="form-text">
+                                    For UG Engineering. Optional; can mirror Seat Reservations.
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
+                                    Minimum GATE Score
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="minGateInput"
+                                       min="0"
+                                       placeholder="Optional">
+                                <div class="form-text">
+                                    For PG Engineering. Optional; can mirror Seat Reservations.
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
+                                    Minimum NET Score
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="minNetInput"
+                                       min="0"
+                                       placeholder="Optional">
+                                <div class="form-text">
+                                    For PhD (PG as previous qualification). Optional.
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            id="saveCriterionBtn">
+                        <i class="bi bi-check-circle me-1"></i>Save Criterion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="/js/axios.min.js"></script>
+    <script th:src="@{/js/criteria/admission-criteria-details.js}"></script>
+    </main>
+</th:block>
+
+
+</body>
+</html>

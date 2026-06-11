@@ -1,0 +1,83 @@
+/* Vertical Timeline Dashboard Styling */
+.timeline {
+    position: relative;
+    padding-left: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    height: 100%;
+    width: 3px;
+    background: #e9ecef;
+    border-radius: 3px;
+}
+
+.timeline-step {
+    position: relative;
+    margin-bottom: 2rem;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    transition: all 0.2s ease-in-out;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -3rem;
+    top: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    z-index: 2;
+}
+
+/* Completed Step Styling */
+.timeline-step.completed { 
+    border-left: 4px solid #198754; 
+}
+.timeline-step.completed .timeline-icon { 
+    background: #198754; 
+    border-color: #198754; 
+    color: white; 
+}
+
+/* Active Current Step Styling */
+.timeline-step.active { 
+    border-left: 4px solid #0d6efd; 
+    border-color: #0d6efd; 
+    transform: scale(1.02); 
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); 
+    z-index: 5;
+}
+.timeline-step.active .timeline-icon { 
+    background: #0d6efd; 
+    border-color: #0d6efd; 
+    color: white; 
+    box-shadow: 0 0 0 0.3rem rgba(13, 110, 253, 0.25); 
+}
+
+/* Locked/Future Step Styling */
+.timeline-step.locked { 
+    opacity: 0.6; 
+    background: #f8f9fa; 
+}
+.timeline-step.locked .timeline-icon { 
+    background: #e9ecef; 
+    color: #6c757d; 
+}
+/* CSP Fixes for Utils.js */
+.z-max { z-index: 9999 !important; }
+.z-toast { z-index: 1060 !important; }

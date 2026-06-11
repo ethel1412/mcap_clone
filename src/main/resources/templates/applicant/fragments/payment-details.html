@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Application Payment</h1>
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden payment-notice-card">
+        <div class="card-body p-5 text-center">
+
+            <!-- TEMPORARY NOTICE
+            <div class="alert alert-info py-4 mx-auto shadow-sm" style="max-width: 600px; background-color: #e0f7fa; border-color: #b8daff;">
+                <i class="bi bi-info-circle-fill text-primary d-block mb-3" style="font-size: 2.5rem;"></i>
+			      <h4 class="mb-2 text-primary" style="color: #0c5460 !important; font-weight: bold;">
+			    Final Form Submission & Payment Not Available Yet
+			</h4>
+			<p class="mb-0 text-dark fs-5">
+			    Final form submission and payment will be enabled after the CUET UG results are announced.
+			</p>
+            </div>
+            -->
+            <!-- ========================================== -->
+            <!-- ALL PAYMENT LOGIC TEMPORARILY COMMENTED OUT-->
+            <!-- ========================================== -->
+
+            <div class="mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle shadow-sm payment-icon-container" style="width: 80px; height: 80px;">
+                    <i class="bi" th:classappend="${isPaymentComplete} ? 'bi-check-circle-fill text-success' : 'bi-credit-card-fill text-primary'" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+
+            <div th:unless="${isPaymentComplete}">
+                <h3 class="fw-bold mb-3 text-dark">Complete Your Application</h3>
+                <p class="text-muted mx-auto mb-4 payment-notice-text">
+                    Your application details have been saved successfully. Please proceed to pay the application fee to finalize your submission.
+                </p>
+
+                <div class="alert alert-info py-3 mb-4 mx-auto" style="max-width: 400px; background-color: #d1f0f9; border-color: #bee5eb;">
+                    <h4 class="mb-0 text-primary" style="color: #0c82a5 !important;">Total Payable Amount: <span class="fw-bold" th:text="'₹ ' + ${payableAmount}">₹ 0</span></h4>
+                </div>
+
+                <form th:action="@{/applicants/payment/initiate-application-fee}" method="post" id="payment-initiation-form">
+                    <input type="hidden" name="applicationId" th:value="${applicationId}" />
+
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <button type="submit" class="btn btn-success px-4 py-2 fw-semibold shadow-sm" style="background-color: #198754; border-color: #198754;">
+                            <i class="bi bi-shield-lock-fill me-2"></i>Pay Application Fee
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div th:if="${isPaymentComplete}">
+                <h3 class="fw-bold mb-3 text-success">Payment Completed Successfully</h3>
+                <p class="text-muted mx-auto mb-4 payment-notice-text">
+                    Your application fee has been paid and your application is successfully submitted.
+                </p>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a th:href="@{/applicants/payment/receipt/{id}(id=${applicationId})}" target="_blank" class="btn btn-outline-primary px-4 py-2 fw-semibold shadow-sm bg-white">
+                        <i class="bi bi-receipt me-2"></i>View Receipt
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

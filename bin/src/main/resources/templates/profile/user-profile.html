@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title},~{::main})}">
+<head>
+  <title>User Profile</title>
+</head>
+<body>
+<th:block th:fragment="main">
+<section class="container-fluid py-4">
+  <!-- Wrapper holds the userCode as a data attribute -->
+  <div id="profileWrapper" th:data-usercode="${userCode}">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="card shadow-sm border-0 rounded">
+          <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">My Profile</h5>
+            <i class="fas fa-user-circle fa-2x"></i>
+          </div>
+          <div class="card-body py-4 px-5">
+            <div class="mb-3 row">
+              <label class="col-sm-4 fw-semibold text-muted">Username:</label>
+              <div class="col-sm-8">
+                <span id="username" class="fs-5">-</span>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label class="col-sm-4 fw-semibold text-muted">Role:</label>
+              <div class="col-sm-8">
+                <span id="role" class="fs-5 text-capitalize">-</span>
+              </div>
+            </div>
+            <div class="mb-4 row">
+              <label class="col-sm-4 fw-semibold text-muted">Date Joined:</label>
+              <div class="col-sm-8">
+                <span id="dateJoined" class="fs-5">-</span>
+              </div>
+            </div>
+            <div id="accountStatus" class="mt-2"></div>
+
+            <div class="d-flex justify-content-end gap-3 mt-4">
+              <a th:href="@{/user-management/update-profile}" class="btn btn-outline-warning px-4">
+                <i class="fas fa-user-edit me-2"></i> Update Profile
+              </a>
+              <a th:href="@{/user-management/change-password}" class="btn btn-outline-danger px-4">
+                <i class="fas fa-key me-2"></i> Change Password
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script th:src="@{/js/profile/user-profile.js}" defer></script>
+</th:block>
+</body>
+</html>

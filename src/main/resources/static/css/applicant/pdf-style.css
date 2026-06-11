@@ -1,0 +1,180 @@
+@page {
+    size: A4;
+    margin: 1.5cm;
+}
+body {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.main-container {
+    position: relative; 
+}
+
+
+header.header {
+    text-align: left;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+    padding-right: 2.8cm; 
+    min-height: 3.6cm;
+}
+header.header h1 {
+    margin: 6px 0 0;
+    font-size: 18pt;
+    font-weight: 700;
+}
+header.header p {
+    margin: 4px 0 6px;
+    font-size: 11pt;
+    color: #555;
+}
+
+.applicant-photo {
+    position: absolute;
+    top: 0.6cm;
+    right: 0.6cm;
+    width: 2.2cm;
+    height: 2.8cm;
+    border: 1.2px solid #333;
+    padding: 2px;
+    background-color: #fff;
+    box-sizing: border-box;
+    z-index: 10;
+}
+.applicant-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;
+}
+
+main {
+    margin-top: 10px;
+}
+
+.section-title {
+    background-color: #e9ecef;
+    padding: 6px 10px;
+    font-weight: 700;
+    font-size: 12pt;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    border-radius: 3px;
+    page-break-after: avoid;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    page-break-inside: avoid;
+    table-layout: auto; 
+}
+.details-table th, .details-table td {
+    padding: 8px 6px;
+    border: 1px solid #dee2e6;
+    vertical-align: top; 
+    text-align: left;
+    word-break: break-word; 
+    white-space: normal; 
+    box-sizing: border-box;
+}
+.details-table th {
+    background-color: #f8f9fa;
+    font-weight: 700;
+    font-size: 10pt;
+}
+
+
+.details-table .label {
+    font-weight: 700;
+    width: 20%; 
+    background-color: #f8f9fa;
+    white-space: normal;
+}
+
+
+.details-table.small-text td, .details-table.small-text th {
+    padding: 6px 5px;
+    font-size: 9pt;
+}
+
+
+.details-table .sub-header {
+    background-color: #f8f9fa;
+    font-weight: 700;
+    text-align: center;
+    font-size: 9pt;
+}
+
+
+.declaration {
+    margin-top: 22px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    font-size: 9pt;
+    text-align: justify;
+    page-break-inside: avoid;
+}
+.declaration h4 {
+    margin: 0 0 8px 0;
+    text-align: center;
+    font-weight: 700;
+}
+
+.footer-section {
+    margin-top: 18px;
+    page-break-inside: avoid;
+    overflow: visible;
+}
+.signature-container {
+    text-align: right;           
+    margin-right: 0.5cm;
+}
+.signature-box {
+    display: inline-block;
+    border: 1px solid #ccc;
+    height: 48px;  
+    width: 180px;   
+    margin-bottom: 6px;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+    vertical-align: middle;
+}
+.signature-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.signature-label {
+    font-weight: 700;
+    font-size: 10pt;
+    margin: 0;
+    display: block;
+    text-align: right; 
+}
+
+.footer-section:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media print {
+    .applicant-photo { top: 0.4cm; right: 0.4cm; }
+}
+
+
+.main-container .applicant-photo,
+.main-container .applicant-photo img {
+}
+
+.details-table td, .details-table th { line-height: 1.3; }

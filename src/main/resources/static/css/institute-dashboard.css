@@ -1,0 +1,342 @@
+
+
+/* Dashboard Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.header-icon {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.institute-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.institute-meta {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.institute-meta .badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* UNIFIED STAT CARD STYLES - Works for both .institute-stat-card and .stat-card */
+.institute-stat-card,
+.stats-section .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+
+.institute-stat-card::before,
+.stats-section .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    opacity: 0.1;
+    transform: translate(30%, -30%);
+}
+
+/* Color-specific backgrounds for ::before pseudo-elements */
+.purple-card::before {
+    background: #8b5cf6;
+}
+
+.blue-card::before {
+    background: #3b82f6;
+}
+
+.green-card::before {
+    background: #10b981;
+}
+
+.orange-card::before {
+    background: #f59e0b;
+}
+
+.institute-stat-card:hover,
+.stats-section .stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+/*stat icon styles */
+
+.institute-stat-card .stat-icon,
+.stats-section .stat-card .stat-icon {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+    color: white;
+}
+
+.purple-card .stat-icon {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.blue-card .stat-icon {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.green-card .stat-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.orange-card .stat-icon {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+
+/*stat content styles */
+.institute-stat-card .stat-content,
+.stats-section .stat-card .stat-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.institute-stat-card .stat-value,
+.stats-section .stat-card .stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.institute-stat-card .stat-label,
+.stats-section .stat-card .stat-label {
+    color: #64748b;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+
+/*details card styles */
+.details-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 1.25rem 1.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.card-body-custom {
+    padding: 2rem;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.detail-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.detail-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.detail-value {
+    font-size: 1.05rem;
+    color: #1e293b;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.detail-value a {
+    color: #6366f1;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.detail-value a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+
+/*empty state styles */
+.empty-state-dashboard {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.empty-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-icon i {
+    font-size: 3.5rem;
+    color: white;
+}
+
+.empty-state-dashboard h3 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-top: 2rem;
+}
+
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 2rem 1.5rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .institute-name {
+        font-size: 1.75rem;
+    }
+
+    .institute-meta {
+        justify-content: center;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+}

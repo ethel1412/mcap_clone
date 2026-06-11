@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Institute Application Status</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/institute-status.css}">
+    
+</head>
+<body>
+<div class="container">
+    <div class="status-container">
+        <h2 class="text-center mb-4"><i class="fa-solid fa-search me-2"></i>Check Institute Application Status</h2>
+
+        <form th:action="@{/institute/status}" method="post">
+            <div class="mb-3">
+                <label for="identifier" class="form-label">Enter Institute Email ID or AISHE ID</label>
+                <input type="text" class="form-control" id="identifier" name="identifier" th:value="${identifier}" required placeholder="e.g., institute@example.com or U-12345">
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-check-circle me-2"></i>Check Status</button>
+            </div>
+        </form>
+
+        <!-- Display messages from controller -->
+        <div th:if="${errorMessage}" class="alert alert-danger mt-4" role="alert">
+            <h4 class="alert-heading"><i class="fa-solid fa-exclamation-circle me-2"></i>Error!</h4>
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- THIS IS THE SUCCESS MESSAGE BLOCK. It should NOT interfere with statusResult card display -->
+        <div th:if="${successMessage}" class="alert alert-success mt-4" role="alert">
+            <h4 class="alert-heading">
+                <span th:if="${correctionSubmitted ?: false}"> 
+                    <i class="fa-solid fa-check-circle me-2"></i>Status: Submitted for Review
+                </span>
+                <span th:unless="${correctionSubmitted ?: false}">
+                    <i class="fa-solid fa-check-circle me-2"></i>Status: Approved!
+                </span>
+            </h4>
+            <p th:text="${successMessage}"></p>
+        </div>
+
+        <!-- Priority 3: Other status messages from the database -->
+        <!-- Removed condition `#vars.successMessage == null` here to allow these alerts to show with a successMessage -->
+        <div th:if="${#vars.errorMessage == null}"> 
+            <div th:if="${warningMessage}" class="alert alert-warning mt-4" role="alert">
+                <h4 class="alert-heading"><i class="fa-solid fa-exclamation-triangle me-2"></i>Status: Rejected</h4>
+                <p th:text="${warningMessage}"></p>
+            </div>
+            
+            <div th:if="${statusResult.status == 'PENDING' and (statusResult.isCorrectionPendingReview ?: false)}" class="alert alert-info mt-4" role="alert">
+                <h4 class="alert-heading"><i class="fa-solid fa-rotate-right me-2"></i>Status: Corrections Under Review</h4>
+                <p th:text="${statusResult.message}"></p>
+                <p class="card-text">The administrator will review your submitted corrections shortly.</p>
+            </div>
+
+            <div th:if="${statusResult.status == 'PENDING' and not (statusResult.isCorrectionPendingReview ?: false)}" class="alert alert-info mt-4" role="alert">
+                <h4 class="alert-heading"><i class="fa-solid fa-info-circle me-2"></i>Status: Pending Initial Review</h4>
+                <p th:text="${statusResult.message}"></p>
+            </div>
+            
+            <div th:if="${correctionMessage}" class="alert alert-warning mt-4" role="alert">
+                <h4 class="alert-heading"><i class="fa-solid fa-edit me-2"></i>Status: Correction Required</h4>
+                <p th:text="${correctionMessage}"></p>
+                
+            </div>
+        </div>
+        
+        <!-- Display Detailed Status Result Card -->
+        <!-- Removed condition `#vars.successMessage == null` here so the card shows even if successMessage is present -->
+        <div th:if="${statusResult.status != null and statusResult.status != 'NOT_FOUND' and #vars.errorMessage == null}"
+             th:classappend="${statusResult.status == 'PENDING' and (statusResult.isCorrectionPendingReview ?: false) ? 'status-pending-correction' : 
+                             (statusResult.status == 'PENDING' and not (statusResult.isCorrectionPendingReview ?: false) ? 'status-pending' :
+                             (statusResult.status == 'ACCEPTED' ? 'status-accepted' :
+                             (statusResult.status == 'REJECTED' ? 'status-rejected' : 'status-not-found')))}" 
+             class="card status-result-card mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <!-- Dynamic Icons for different statuses (null-safe checks) -->
+                    <span th:if="${statusResult.status == 'PENDING' and (statusResult.isCorrectionPendingReview ?: false)}" class="status-icon text-info"><i class="fa-solid fa-rotate-right"></i></span>
+                    <span th:if="${statusResult.status == 'PENDING' and not (statusResult.isCorrectionPendingReview ?: false)}" class="status-icon text-warning"><i class="fa-solid fa-hourglass-half"></i></span>
+                    <span th:if="${statusResult.status == 'ACCEPTED'}" class="status-icon text-success"><i class="fa-solid fa-check-double"></i></span>
+                    <span th:if="${statusResult.status == 'REJECTED'}" class="status-icon text-danger"><i class="fa-solid fa-ban"></i></span>
+                    <span th:if="${statusResult.status == 'CORRECTION_REQUIRED'}" class="status-icon text-warning"><i class="fa-solid fa-edit"></i></span>
+                    
+                    <span class="status-text">Application Status: 
+                        <span th:if="${statusResult.status == 'PENDING' and (statusResult.isCorrectionPendingReview ?: false)}">Corrections Under Review</span>
+                        <span th:if="${statusResult.status == 'PENDING' and not (statusResult.isCorrectionPendingReview ?: false)}">Pending Initial Review</span>
+                        <span th:if="${statusResult.status == 'ACCEPTED'}">Approved</span>
+                        <span th:if="${statusResult.status == 'REJECTED'}">Rejected</span>
+                        <span th:if="${statusResult.status == 'CORRECTION_REQUIRED'}">Correction Required</span>
+                    </span>
+                </h5>
+                <hr>
+                <p class="card-text"><span class="status-detail-label">Institute Name:</span> <span th:text="${statusResult.instituteName}"></span></p>
+
+                <div th:if="${statusResult.status == 'REJECTED'}">
+                    <p class="card-text text-danger"><span class="status-detail-label">Reason for Rejection:</span> <span th:text="${statusResult.rejectionReason}"></span></p>
+                    <p class="card-text">If you believe this is an error, please contact support.</p>
+                </div>
+
+                <!-- REVISED 'ACCEPTED' BLOCK -->
+                <div th:if="${statusResult.status == 'ACCEPTED'}" class="mt-3">
+                    <!-- ALWAYS display username if available in DTO -->
+                    <p th:if="${statusResult.username != null}" class="card-text text-success">
+                        <span class="status-detail-label">Your Username:</span> <code class="fw-bold fs-5" th:text="${statusResult.username}"></code>
+                    </p>
+                    <p th:unless="${statusResult.username != null}" class="card-text text-danger">
+                        <span class="status-detail-label">Your Username:</span> <code class="fw-bold fs-5">Not available. Contact support.</code>
+                    </p>
+                    
+                    <!-- Display temporary password only if it's explicitly available and requires reset -->
+                    <div th:if="${statusResult.requiresPasswordReset and statusResult.temporaryPassword != null}">
+                        <p class="card-text text-success">
+                            <span class="status-detail-label">Your Temporary Password:</span> <code class="fw-bold fs-5" th:text="${statusResult.temporaryPassword}"></code>
+                        </p>
+                        <p class="card-text text-info">Please use the above credentials to log in. You will be prompted to set a new password.</p>
+                    </div>
+                    
+                    <!-- Display generic message about login/password reset if temp password is gone but reset is still required -->
+                    <div th:if="${statusResult.requiresPasswordReset and statusResult.temporaryPassword == null}">
+                         <p class="card-text text-info">Your login details are ready. Use your username to log in. If you haven't set a permanent password, please use the 'Forgot Password' link to set it.</p>
+                    </div>
+
+                    <!-- Display simple login message if no reset required (permanent password set) -->
+                    <div th:if="${not statusResult.requiresPasswordReset}">
+                         <p class="card-text text-info">Your account is ready. You have already set your permanent password. Please proceed to the login page.</p>
+                    </div>
+                    
+                    <a th:href="@{/login}" class="btn btn-success mt-3"><i class="fa-solid fa-sign-in-alt me-2"></i>Go to Login Page</a>
+                </div>
+
+                <!-- Body text for different PENDING states (null-safe checks) -->
+                <div th:if="${statusResult.status == 'PENDING' and (statusResult.isCorrectionPendingReview ?: false)}">
+                    <p class="card-text" th:text="${statusResult.message}"></p>
+                </div>
+                
+                <div th:if="${statusResult.status == 'PENDING' and not (statusResult.isCorrectionPendingReview ?: false)}">
+                    <p class="card-text">Your application is currently under initial review. We will notify you once a decision has been made.</p>
+                </div>
+
+                <div th:if="${statusResult.status == 'CORRECTION_REQUIRED'}">
+                    <p class="card-text text-warning"><span class="status-detail-label">Reason for Correction:</span> <span th:text="${statusResult.rejectionReason}"></span></p>
+                    <p class="card-text">Please review the feedback above and update your application details.</p>
+                    <div class="mt-3">
+                        <a th:href="@{/institute/correction/{id}(id=${statusResult.instituteId})}"
+                            class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>Update Your Application
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

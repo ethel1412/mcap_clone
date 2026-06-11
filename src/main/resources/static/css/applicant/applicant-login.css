@@ -1,0 +1,165 @@
+/* CSS Variables for easier theme management and vibrant colors */
+:root {
+    --primary-color-main: #217FF7; /* A more vibrant, energetic blue */
+    --primary-color-dark: #1A6DD9; /* Darker blue for hover states */
+    --success-color-main: #4CAF50; /* A richer, pleasant green */
+    --success-color-dark: #3F9A43; /* Darker green for hover states */
+    --secondary-text-color: #6c757d;
+    --light-bg-start: #e3f2fd; /* Light blue for gradient start */
+    --light-bg-end: #e8f5e9;   /* Light green for gradient end (or #ede7f6 for light purple) */
+    --card-bg: #ffffff;
+    --text-color: #343a40;
+    --heading-color: #212529;
+    --shadow-color: rgba(0,0,0,0.1); /* Softer shadow */
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background: linear-gradient(135deg, var(--light-bg-start) 0%, var(--light-bg-end) 100%); /* Inviting gradient background */
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure gradient covers full viewport height */
+    display: flex;
+    align-items: center; /* Vertically center content */
+  }
+
+  .container.min-vh-100 {
+      padding-top: 3.5rem; /* Generous top/bottom padding */
+      padding-bottom: 3.5rem;
+  }
+
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 1.5rem 4rem var(--shadow-color); /* More prominent, soft shadow for a floating effect */
+    border: none;
+    background-color: var(--card-bg);
+    transition: all 0.3s ease; /* Smooth transition for potential future card effects */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    color: var(--heading-color);
+    font-weight: 700; /* Bold for headings */
+  }
+
+  h1.display-5 { /* Using Bootstrap's display-5 for a significant, modern title */
+    font-weight: 800; /* Extra bold for the main title */
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+
+  .department-name {
+      font-size: 0.95rem;
+      color: var(--primary-color-main); /* Give department name a color accent */
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.9;
+  }
+
+  .text-muted {
+      color: var(--secondary-text-color) !important;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      opacity: 0.9;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: var(--heading-color);
+    margin-bottom: 0.6rem;
+  }
+
+  .form-control-lg {
+      padding: 0.85rem 1.25rem; /* More padding for a softer, modern look */
+      border-radius: 0.65rem; /* More rounded inputs */
+      border: 1px solid #dee2e6; /* Softer border */
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  .form-control-lg:focus {
+      border-color: var(--primary-color-main);
+      box-shadow: 0 0 0 0.25rem rgba(33, 127, 247, 0.25); /* Primary color focus ring */
+  }
+
+  .btn {
+    border-radius: 0.65rem; /* Consistent rounded buttons */
+    font-weight: 600;
+    padding: 0.85rem 2.5rem; /* Generous button padding */
+    transition: all 0.25s ease-in-out; /* Smooth transition for hover effects */
+    letter-spacing: 0.02em;
+  }
+  .btn-primary {
+    background-color: var(--primary-color-main);
+    border-color: var(--primary-color-main);
+  }
+  .btn-primary:hover {
+    background-color: var(--primary-color-dark);
+    border-color: var(--primary-color-dark);
+    transform: translateY(-2px); /* Subtle lift effect on hover */
+    box-shadow: 0 0.35rem 0.75rem rgba(33, 127, 247, 0.25); /* Colored shadow on hover */
+  }
+  .btn-success {
+    background-color: var(--success-color-main);
+    border-color: var(--success-color-main);
+  }
+  .btn-success:hover {
+    background-color: var(--success-color-dark);
+    border-color: var(--success-color-dark);
+    transform: translateY(-2px); /* Subtle lift effect on hover */
+    box-shadow: 0 0.35rem 0.75rem rgba(76, 175, 80, 0.25); /* Colored shadow on hover */
+  }
+
+  .alert {
+    border-radius: 0.65rem; /* Rounded alerts */
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem; /* More space below alerts */
+  }
+
+  /* Custom horizontal rule for a cleaner, modern look */
+  .hr-divider {
+    border: 0;
+    height: 2px; /* Slightly thicker */
+    background: #e0e0e0; /* A soft gray */
+    margin-top: 4rem; /* Increased vertical spacing */
+    margin-bottom: 4rem;
+    opacity: 0.6;
+  }
+
+  .footer-text {
+    font-size: 0.875rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+
+  .register-link-container {
+      padding-top: 1.5rem; /* Space above register link */
+  }
+  .register-link-container a {
+      color: var(--primary-color-main); /* Use the vibrant primary color */
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease, text-decoration 0.2s ease;
+  }
+  .register-link-container a:hover {
+      text-decoration: underline;
+      color: var(--primary-color-dark);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+      .card-body {
+          padding: 2.5rem !important;
+      }
+      .container {
+          padding-top: 2rem;
+          padding-bottom: 2rem;
+      }
+      .btn {
+          width: 100%; /* Full width buttons on mobile */
+          padding: 0.75rem 1.5rem;
+      }
+  }

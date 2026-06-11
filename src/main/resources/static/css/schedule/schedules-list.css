@@ -1,0 +1,182 @@
+/* ==========================================================================
+   Schedule List Styles
+   ========================================================================== */
+
+/* Accordion Styling */
+.accordion-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem !important;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.accordion-button {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    background-color: #f8fafc;
+    padding: 1.25rem 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #0369a1;
+    background-color: #e0f2fe;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+}
+
+.accordion-button::after {
+    background-size: 1.25rem; /* Make the collapse arrow a bit larger */
+}
+
+.window-header-info {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Timeline Layout */
+.schedule-timeline {
+    position: relative;
+    padding: 1.5rem 0 1.5rem 2rem;
+}
+
+.schedule-timeline::before {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+/* Category & Phase Headers */
+.roadmap-header {
+    position: relative;
+    margin: 2rem 0 1.5rem -1rem;
+    padding-left: 3rem;
+    z-index: 2;
+}
+
+.roadmap-header span {
+    background: #f1f5f9;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Schedule Cards */
+.schedule-card {
+    position: relative;
+    padding-left: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.schedule-header-wrapper {
+    position: absolute;
+    left: -1.25rem;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0ea5e9;
+    color: #0ea5e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    z-index: 2;
+}
+
+.schedule-content {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    border-left: 5px solid #0ea5e9;
+}
+
+/* State: Pending / Unmapped */
+.schedule-card.pending .schedule-header-wrapper {
+    border-color: #cbd5e1;
+    color: #94a3b8;
+    background: #f8fafc;
+}
+.schedule-card.pending .schedule-content {
+    border-left-color: #cbd5e1;
+    background: #f8fafc;
+    opacity: 0.8;
+}
+.schedule-card.pending .schedule-title {
+    color: #64748b;
+}
+
+.schedule-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.schedule-dates {
+    display: flex;
+    gap: 1.5rem;
+    background: #f8fafc;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    color: #475569;
+    margin-bottom: 0.75rem;
+}
+
+.schedule-card.pending .schedule-dates {
+    background: #fff;
+    border: 1px dashed #cbd5e1 !important;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.schedule-description {
+    font-size: 0.85rem;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    border-left: 2px solid #cbd5e1;
+}
+
+/* Modals */
+.modal-header {
+    border-bottom: 1px solid #e2e8f0;
+}
+.modal-footer {
+    border-top: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+}
+/* --- CSP Compliance Utility Classes --- */
+.icon-xl { font-size: 4rem; }
+.step-circle { width: 40px; height: 40px; border: 2px solid #0dcaf0; }
+.fs-09rem { font-size: 0.9rem; }
+.fs-07rem { font-size: 0.7rem; }
+.my-2-5rem { margin: 2.5rem 0; }
+.bg-slate-700 { background-color: #475569; border-color: #475569; color: white; }
+.bg-dashed-slate { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 2px dashed #94a3b8 !important; }
+.bg-e9ecef { background-color: #e9ecef !important; }
+.cursor-not-allowed { cursor: not-allowed !important; }

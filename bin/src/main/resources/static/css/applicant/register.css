@@ -1,0 +1,208 @@
+:root {
+    --primary: #3a86ff;
+    --secondary: #8338ec;
+    --success: #06d6a0;
+    --light: #f8f9fa;
+    --dark: #212529;
+}
+
+.registration-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.registration-header {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.registration-header h1 {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.registration-card {
+    background: white;
+    padding: 2rem;
+}
+
+.progress-container {
+    position: relative;
+    margin: 2rem 0 3rem;
+}
+
+.progress-line {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #e9ecef;
+    z-index: 1;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    height: 4px;
+    background: var(--primary);
+    z-index: 2;
+    transition: width 0.3s ease;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: #6c757d;
+    border: 3px solid white;
+}
+
+.progress-step.active .step-icon {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.2);
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    text-align: center;
+}
+
+.progress-step.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.form-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.address-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.address-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    background: #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.address-tab.active {
+    background: white;
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.address-tab i {
+    margin-right: 8px;
+}
+
+.address-panel {
+    display: none;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.address-panel.active {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+    .registration-card {
+        padding: 1.5rem;
+    }
+    
+    .progress-step {
+        flex: 1;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+}

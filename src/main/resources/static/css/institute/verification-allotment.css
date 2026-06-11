@@ -1,0 +1,94 @@
+/* --- DARKER DASHBOARD CARDS --- */
+
+/* Pending: Deep Orange to Red */
+.card-gradient-pending {
+    background: linear-gradient(135deg, #e65c00 0%, #F9D423 100%) !important;
+    background: linear-gradient(135deg, #d35400 0%, #c0392b 100%) !important; /* Overridden for darker look */
+    color: white !important;
+}
+
+/* Verified: Deep Green to Teal */
+.card-gradient-verified {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+    background: linear-gradient(135deg, #0f9b0f 0%, #000000 100%) !important; /* Fallback */
+    background: linear-gradient(135deg, #134E5E 0%, #71B280 100%) !important; /* Dark Teal-Green */
+    color: white !important;
+}
+
+/* Rejected: Deep Burgundy to Dark Red */
+.card-gradient-rejected {
+    background: linear-gradient(135deg, #870000 0%, #190a05 100%) !important; /* Very Dark Red */
+    background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%) !important;
+    background: linear-gradient(135deg, #642B73 0%, #C6426E 100%) !important; /* Purple-Red mix */
+    /* Let's pick a standard dark red gradient */
+    background: linear-gradient(135deg, #8E0E00 0%, #1F1C18 100%) !important;
+    color: white !important;
+}
+
+/* Hover Effects for Cards */
+.stats-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border: none;
+    overflow: hidden;
+    color: #fff;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.35) !important; /* Darker shadow */
+}
+
+/* Icon opacity in cards */
+.stats-card i {
+    opacity: 0.4; /* Slightly more visible on dark backgrounds */
+    transition: opacity 0.2s;
+}
+.stats-card:hover i {
+    opacity: 0.8;
+}
+
+/* Tab Navigation Styling */
+.nav-tabs .nav-link {
+    color: #495057;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #0d6efd;
+    isolation: isolate;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+    background: transparent;
+}
+
+/* Action Button Group */
+.action-btn-group .btn {
+    border-radius: 50px;
+    margin: 0 2px;
+}
+
+/* Table Enhancements */
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+/* --- Document Viewer Modal Styles --- */
+.viewer-modal-z {
+    z-index: 1080;
+}
+
+.viewer-body-height {
+    height: 80vh;
+}
+
+.viewer-img-fit {
+    max-height: 100%;
+    object-fit: contain;
+}

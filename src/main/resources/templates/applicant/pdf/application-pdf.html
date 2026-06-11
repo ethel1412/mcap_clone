@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Application Form</title>
+    <link rel="stylesheet" th:href="@{css/applicant/pdf-style.css}" />
+</head>
+<body>
+<div class="main-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Application Form</h1>
+            <p>Meghalaya Common Admission Portal | MCAP</p>
+        </div>
+    </header>
+
+    <!-- Applicant photo -->
+    <div class="applicant-photo" th:if="${applicantPhotoBase64}">
+        <img th:src="'data:image/jpeg;base64,' + ${applicantPhotoBase64}" alt="Applicant Photo"/>
+    </div>
+
+    <main>
+        <!-- Personal Details -->
+        <div class="section-title">Personal Details</div>
+        <table class="details-table">
+            <tr>
+                <td class="label">Application No.</td>
+                <td><b th:text="${applicant?.applicantNo}"></b></td>
+                <td class="label">Full Name</td>
+                <td th:text="${applicant?.firstName + ' ' + (applicant?.middleName ?: '') + ' ' + applicant?.lastName}"></td>
+            </tr>
+            <tr>
+                <td class="label">Date of Birth</td>
+                <td th:text="${applicant?.dateOfBirth != null ? #temporals.format(applicant.dateOfBirth, 'dd-MMM-yyyy') : ''}"></td>
+                <td class="label">Gender</td>
+                <td th:text="${applicant?.gender?.genderName}"></td>
+            </tr>
+            <tr>
+                <td class="label">Community Category</td>
+                <td th:text="${applicant?.communityCategory?.categoryName}"></td>
+                <td class="label">Religion</td>
+                <td th:text="${applicant?.religion?.religionName}"></td>
+            </tr>
+            <tr>
+                <td class="label">Email Address</td>
+                <td th:text="${applicant?.email}"></td>
+                <td class="label">Contact Number</td>
+                <td th:text="${applicant?.phoneNumber}"></td>
+            </tr>
+            <tr>
+                <td class="label">Guardian's Name</td>
+                <td th:text="${(applicant?.guardianPrefix ?: '') + ' ' + (applicant?.guardianName ?: '')}"></td>
+                <td class="label">Relationship</td>
+                <td th:text="${applicant?.guardianRelationship?.value}"></td>
+            </tr>
+        </table>
+
+        <!-- Other Details -->
+        <div class="section-title">Other Details</div>
+        <table class="details-table small-text">
+            <tr>
+                <td class="label">Domicile Certificate?</td>
+                <td th:text="${applicant?.hasDomicileCertificate ? 'Yes' : 'No'}"></td>
+                <td class="label">Differently Abled?</td>
+                <td th:text="${applicant?.isDifferentlyAbled ? 'Yes' : 'No'}"></td>
+            </tr>
+            <tr>
+                <td class="label">NCC Certificate?</td>
+                <td th:text="${applicant?.hasNccCertificate ? 'Yes' : 'No'}"></td>
+                <td class="label">NSS Certificate?</td>
+                <td th:text="${applicant?.hasNssCertificate ? 'Yes' : 'No'}"></td>
+            </tr>
+            <tr>
+                <td class="label">Backward Area Certificate?</td>
+                <td th:text="${applicant?.hasBackwardAreaCertificate ? 'Yes' : 'No'}"></td>
+                <td class="label">Other Relevant Certificate?</td>
+                <td th:text="${applicant?.hasAnyOtherRelevantCertificate ? 'Yes' : 'No'}"></td>
+            </tr>
+        </table>
+
+        <!-- Address Details -->
+        <div class="section-title">Address Details</div>
+        <table class="details-table">
+            <tr>
+                <td class="label">Permanent Address</td>
+                <td>
+                    <th:block th:if="${permanentAddress}">
+                        <span th:text="${permanentAddress.addressLine1}"></span>
+                        <span th:if="${permanentAddress.addressLine2 != null and !permanentAddress.addressLine2.isEmpty()}" th:text="', ' + ${permanentAddress.addressLine2}"></span>
+                        <span th:if="${permanentAddress.block?.blockName != null}" th:text="', ' + ${permanentAddress.block.blockName}"></span>
+                        <span th:if="${permanentAddress.district?.districtName != null}" th:text="', ' + ${permanentAddress.district.districtName}"></span>
+                        <span th:if="${permanentAddress.state?.stateName != null}" th:text="', ' + ${permanentAddress.state.stateName}"></span>
+                        <span th:if="${permanentAddress.pincode != null}" th:text="' - ' + ${permanentAddress.pincode}"></span>
+                    </th:block>
+                    <th:block th:if="${permanentAddress == null}">N/A</th:block>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Communication Address</td>
+                <td>
+                    <th:block th:if="${communicationAddress}">
+                        <span th:text="${communicationAddress.addressLine1}"></span>
+                        <span th:if="${communicationAddress.addressLine2 != null and !communicationAddress.addressLine2.isEmpty()}" th:text="', ' + ${communicationAddress.addressLine2}"></span>
+                        <span th:if="${communicationAddress.block?.blockName != null}" th:text="', ' + ${communicationAddress.block.blockName}"></span>
+                        <span th:if="${communicationAddress.district?.districtName != null}" th:text="', ' + ${communicationAddress.district.districtName}"></span>
+                        <span th:if="${communicationAddress.state?.stateName != null}" th:text="', ' + ${communicationAddress.state.stateName}"></span>
+                        <span th:if="${communicationAddress.pincode != null}" th:text="' - ' + ${communicationAddress.pincode}"></span>
+                    </th:block>
+                    <th:block th:if="${communicationAddress == null}">N/A</th:block>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Academic Details -->
+        <div class="section-title">Academic Details</div>
+        <table class="details-table">
+            <thead>
+            <tr>
+                <th>Qualification</th>
+                <th>Board / University</th>
+                <th>Institution</th>
+                <th>Stream / Major</th>
+                <th>Date of Passing</th>
+                <th>Percentage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="record : ${academicRecords}">
+                <td th:text="${record?.qualificationLevel}"></td>
+                <td th:text="${record?.boardOrUniversity}"></td>
+                <td th:text="${record?.schoolOrCollege}"></td>
+                <td th:text="${record?.streamOrMajor}"></td>
+                <td th:text="${record?.dateOfPassing}"></td>
+                <td th:text="${record?.percentage != null ? #numbers.formatDecimal(record.percentage, 1, 2) + '%' : ''}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Entrance Exam Details -->
+        <div th:if="${applicant.jeeScore != null or (applicant.cuetScore != null and applicant.cuetScore.applicationNumber != null)}">
+            <div class="section-title">Entrance Exam Details</div>
+            <table class="details-table" th:if="${applicant.jeeScore != null and applicant.jeeScore.applicationNumber != null}">
+                <tr><td colspan="6" class="sub-header">JEE (Main) Score Details</td></tr>
+                <tr>
+                    <td class="label">Application No.</td><td th:text="${applicant.jeeScore.applicationNumber}"></td>
+                    <td class="label">Roll No.</td><td th:text="${applicant.jeeScore.rollNumber}"></td>
+                    <td class="label">Year of Exam</td><td th:text="${applicant.jeeScore.yearOfExam}"></td>
+                </tr>
+                <tr>
+                    <td class="label">Session Appeared</td><td th:text="${applicant.jeeScore.sessionAppeared}"></td>
+                    <td class="label">Best NTA Score</td><td th:text="${applicant.jeeScore.bestNtaScore}"></td>
+                    <td class="label">All India Rank</td><td th:text="${applicant.jeeScore.allIndiaRank}"></td>
+                </tr>
+            </table>
+            <table class="details-table" th:if="${applicant.cuetScore != null and applicant.cuetScore.applicationNumber != null}">
+                <tr><td colspan="4" class="sub-header">CUET Score Details</td></tr>
+                <tr>
+                    <td class="label">Application No.</td><td th:text="${applicant.cuetScore.applicationNumber}"></td>
+                    <td class="label">Year of Exam</td><td th:text="${applicant.cuetScore.yearOfExam}"></td>
+                </tr>
+                <tr>
+                    <td class="label">Overall Percentile</td><td colspan="3" th:text="${applicant.cuetScore.overallPercentile}"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Programme Preferences -->
+        <div class="section-title">Programme Preferences</div>
+        <table class="details-table">
+            <thead>
+            <tr>
+                <th>Preference Order</th>
+                <th>Programme Name</th>
+                <th>Institute Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pref : ${preferences}">
+                <td th:text="${pref?.preferenceOrder}"></td>
+                <!-- THE FIX: Removed the intermediate ?.programme and ?.institute -->
+                <td th:text="${pref?.programmeName}"></td>
+                <td th:text="${pref?.instituteName}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- THE FIX: Commented out the missing NEP data block to prevent Thymeleaf crash -->
+        <!--
+        <div th:each="pref : ${preferences}" th:if="${pref.isNep()}">
+            <div class="section-title">NEP Subject Combination Details</div>
+            <table class="details-table small-text">
+                <tr>
+                    <td class="label">Minor Preferences</td>
+                    <td th:text="${#strings.listJoin(pref.confirmedMinorCourses, ', ')}"></td>
+                </tr>
+                <tr>
+                    <td class="label">MDC Preferences</td>
+                    <td th:text="${#strings.listJoin(pref.confirmedMdcCourses, ', ')}"></td>
+                </tr>
+                <tr>
+                    <td class="label">AEC Preferences</td>
+                    <td th:text="${#strings.listJoin(pref.confirmedAecCourses, ', ')}"></td>
+                </tr>
+                <tr>
+                    <td class="label">SEC Preferences</td>
+                    <td th:text="${#strings.listJoin(pref.confirmedSecCourses, ', ')}"></td>
+                </tr>
+                <tr>
+                    <td class="label">Value Added Course (VAC)</td>
+                    <td th:text="${pref.confirmedVacCourse}"></td>
+                </tr>
+            </table>
+        </div>
+        -->
+
+        <div class="section-title">Documents Submitted</div>
+        <table class="details-table">
+            <thead class="centered-header">
+            <tr>
+                <th>Document Type</th>
+                <th>Filename</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="doc : ${uploadedDocuments}">
+                <td th:text="${doc.documentType}"></td>
+                <td th:text="${doc.fileName}"></td>
+                <td style="text-align: center; color: green; font-weight: bold;">✓ Submitted</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(uploadedDocuments)}">
+                <td colspan="3" style="text-align: center;">No documents have been submitted.</td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Declaration -->
+        <div class="declaration">
+            <h4>Declaration</h4>
+            <p>
+                I, <b th:text="${#strings.capitalizeWords(applicant?.firstName + ' ' + (applicant?.middleName ?: '') + ' ' + applicant?.lastName)}"></b>, hereby declare that all the statements made in this application are true, complete, and correct to the best of my knowledge and belief. I understand that in the event of any information being found false or incorrect, my candidature is liable to be cancelled or terminated without any notice. I have read and understood all the provisions and agree to abide by them.
+            </p>
+        </div>
+
+        <div class="footer-section">
+            <div class="signature-container">
+                <div class="signature-box">
+                    <img th:if="${applicantSignatureBase64}" th:src="'data:image/png;base64,' + ${applicantSignatureBase64}" alt="Applicant Signature"/>
+                </div>
+                <p class="signature-label">Signature of Applicant:</p>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

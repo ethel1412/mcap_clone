@@ -1,0 +1,319 @@
+/* Semester Cards */
+.semester-card {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.semester-card:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Semester Header */
+.semester-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+}
+
+.semester-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.semester-title i {
+    font-size: 1.1rem;
+    margin-right: 8px;
+}
+
+.semester-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.semester-actions .btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.semester-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Subject Table */
+.subjects-table {
+    margin: 0;
+    background: #fff;
+}
+
+.subjects-table thead th {
+    background-color: #f8f9fa;
+    border-top: none;
+    border-bottom: 2px solid #e9ecef;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.subjects-table tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+    background: #fff;
+    transition: background-color 0.2s ease;
+}
+
+.subjects-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.subjects-table tbody tr:hover td {
+    background-color: #f8f9fa;
+}
+
+/* Subject Information */
+.subject-name {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.subject-description {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 2px;
+    font-style: italic;
+}
+
+.subject-code {
+    font-size: 0.85rem;
+    color: #495057;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    font-weight: 500;
+}
+
+/* Row Numbers */
+.row-number {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e9ecef;
+}
+
+/* Action Buttons */
+.action-btn {
+    padding: 6px 8px;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Empty States */
+.empty-semester {
+    padding: 50px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    margin: 16px;
+}
+
+.empty-semester i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    color: #6c757d;
+    opacity: 0.5;
+}
+
+.empty-semester h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.empty-semester p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.empty-semester .btn {
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 500;
+}
+
+/* Loading States */
+.loading-subjects {
+    padding: 30px 20px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.loading-subjects .spinner-border {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+/* Error States */
+.error-subjects {
+    padding: 20px;
+    text-align: center;
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    margin: 16px;
+}
+
+.error-subjects i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .semester-header {
+        padding: 16px 20px;
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .semester-title {
+        font-size: 1.1rem;
+    }
+
+    .subjects-table {
+        font-size: 0.875rem;
+    }
+
+    .subjects-table thead th,
+    .subjects-table tbody td {
+        padding: 12px 8px;
+    }
+
+    .subject-name {
+        font-size: 0.9rem;
+    }
+
+    .subject-code {
+        font-size: 0.8rem;
+        padding: 2px 6px;
+    }
+
+    .empty-semester {
+        padding: 30px 16px;
+        margin: 12px;
+    }
+
+    .empty-semester i {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .subjects-table thead th:nth-child(3),
+    .subjects-table tbody td:nth-child(3) {
+        display: none;
+    }
+
+    .subjects-table thead th:nth-child(4),
+    .subjects-table tbody td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.semester-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.subjects-table tbody tr {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Table Responsive Wrapper */
+.table-responsive {
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+}
+
+/* Scroll Styling */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

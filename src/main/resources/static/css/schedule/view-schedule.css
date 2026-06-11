@@ -1,0 +1,124 @@
+/* Steps Container */
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Step Card */
+.step-item {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 5px solid #28a745;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.step-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: #28a745;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.step-icon {
+    font-size: 24px;
+    color: #28a745;
+}
+
+.step-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+    flex: 1;
+}
+
+.step-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #d4edda;
+    color: #155724;
+}
+
+.step-dates {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e9ecef;
+}
+
+.step-dates > div {
+    padding: 8px 0;
+    color: #495057;
+    font-size: 14px;
+}
+
+.step-dates i {
+    color: #6c757d;
+    margin-right: 8px;
+}
+
+.step-description {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Round Separator */
+.round-separator {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.round-title {
+    display: inline-block;
+    padding: 8px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .steps-container {
+        padding: 10px 0;
+    }
+
+    .step-item {
+        padding: 15px;
+    }
+
+    .step-header {
+        flex-wrap: wrap;
+    }
+}

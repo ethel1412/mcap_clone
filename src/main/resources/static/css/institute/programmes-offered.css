@@ -1,0 +1,55 @@
+/* Inherits modern aesthetic variables from my-departments.css */
+.filter-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.programme-name {
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+}
+
+/* Custom Styling for the Dynamic Shift Tabs */
+.shift-tabs-wrapper {
+    background-color: #f8fafc;
+    padding: 10px 20px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.shift-tabs-wrapper .nav-tabs {
+    border-bottom: none;
+}
+
+.shift-tabs-wrapper .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 20px;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease-in-out;
+}
+
+.shift-tabs-wrapper .nav-link:hover {
+    color: #2563eb;
+    background-color: #f1f5f9;
+    border-radius: 6px 6px 0 0;
+}
+
+.shift-tabs-wrapper .nav-link.active {
+    color: #2563eb;
+    background: transparent;
+    border-bottom: 3px solid #2563eb;
+}
+
+/* Soft Badges for Table Elements */
+.badge-soft-primary {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.badge-soft-info {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}

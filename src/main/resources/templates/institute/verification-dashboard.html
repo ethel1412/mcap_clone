@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title th:text="'Verification Dashboard - ' + ${instituteName}">Verification Dashboard</title>
+</head>
+<body>
+<div id="content">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/css/institute/verification-allotment.css}">
+
+    <header class="d-flex justify-content-between align-items-center pt-3 pb-3 mb-4 border-bottom">
+        <div>
+            <h1 class="h3 fw-bold text-primary mb-0">Verification Dashboard</h1>
+            <small class="text-muted">Institute: <span th:text="${instituteName}">Institute Name</span></small>
+        </div>
+    </header>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card stats-card card-gradient-pending shadow-sm h-100" data-tab-id="tab-pending-btn">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="fw-bold text-uppercase mb-1 small opacity-75">Pending Reviews</h6>
+                        <h2 class="mb-0 fw-bold display-6" id="stats-pending">0</h2>
+                    </div>
+                    <i class="bi bi-hourglass-split fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card stats-card card-gradient-verified shadow-sm h-100" data-tab-id="tab-verified-btn">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="fw-bold text-uppercase mb-1 small opacity-75">Verified Candidates</h6>
+                        <h2 class="mb-0 fw-bold display-6" id="stats-verified">0</h2>
+                    </div>
+                    <i class="bi bi-patch-check-fill fs-1"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card stats-card card-gradient-rejected shadow-sm h-100" data-tab-id="tab-rejected-btn">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="fw-bold text-uppercase mb-1 small opacity-75">Rejected Candidates</h6>
+                        <h2 class="mb-0 fw-bold display-6" id="stats-rejected">0</h2>
+                    </div>
+                    <i class="bi bi-x-octagon-fill fs-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-5">
+            <label for="programmeFilter" class="form-label fw-bold text-muted small mb-1"><i class="bi bi-funnel-fill me-1"></i>Filter by Programme</label>
+            <select id="programmeFilter" class="form-select border-primary shadow-sm">
+                <option value="">All Programmes</option>
+                <option th:each="prog : ${instituteProgrammes}"
+                        th:value="${prog.programmeId}"
+                        th:text="${prog.programmeName}"></option>
+            </select>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="verificationTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active fw-bold" id="tab-pending-btn" data-bs-toggle="tab" data-bs-target="#tab-pending" type="button">Pending</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="tab-verified-btn" data-bs-toggle="tab" data-bs-target="#tab-verified" type="button">Verified</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold" id="tab-rejected-btn" data-bs-toggle="tab" data-bs-target="#tab-rejected" type="button">Rejected</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="verification-tab-content">
+
+        <div class="tab-pane fade show active" id="tab-pending" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-uppercase x-small text-muted">
+                            <tr>
+                                <th>#</th>
+                                <th>Applicant</th>
+                                <th>Details</th>
+                                <th>Category</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="pending-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="pending-pagination"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-verified" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-uppercase x-small text-muted">
+                            <tr>
+                                <th>Applicant</th>
+                                <th>Programme</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th class="text-center">Docs</th>
+                            </tr>
+                            </thead>
+                            <tbody id="verified-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="verified-pagination"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-rejected" role="tabpanel">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-uppercase x-small text-muted">
+                            <tr>
+                                <th>Applicant</th>
+                                <th>Programme</th>
+                                <th>Reason</th>
+                                <th class="text-center">Docs</th>
+                            </tr>
+                            </thead>
+                            <tbody id="rejected-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="rejected-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rejectionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-x-octagon-fill me-2"></i>Reject Allotment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Confirm rejection for: <strong id="reject-applicant-name"></strong></p>
+                    <div class="mb-3">
+                        <label for="rejectionRemarks" class="form-label">Reason for Rejection</label>
+                        <textarea class="form-control" id="rejectionRemarks" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-rejection-btn">Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="verificationConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-check-circle-fill me-2"></i>Verify Applicant?</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Approve documents for: <strong id="verify-applicant-name"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="confirm-verify-btn">Yes, Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="documentReviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Documents - <span id="review-applicant-name"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="documentReviewBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade viewer-modal-z" id="documentViewerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0">
+                <div class="modal-header bg-dark text-white py-2">
+                    <h6 class="modal-title" id="viewer-filename">Viewer</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 bg-secondary bg-opacity-10 viewer-body-height">
+                    <div id="image-viewer-container" class="h-100 w-100 d-none text-center p-3">
+                        <img src="" id="full-res-image" class="img-fluid viewer-img-fit">
+                    </div>
+                    <iframe id="pdf-viewer-frame" class="h-100 w-100 d-none border-0" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/axios.min.js"></script>
+    <script th:src="@{/js/institute/verification.js}"></script>
+
+</div>
+</body>
+</html>

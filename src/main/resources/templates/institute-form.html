@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <title th:text="${correctionMode} ? 'Update Your Application' : 'Institute Registration'">Institute Registration</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/institute-form.css}">
+    <link rel="stylesheet" th:href="@{/css/css2.css}">
+    <link rel="stylesheet" th:href="@{/css/sweetalert2.min.css}">
+    <link rel="stylesheet" th:href="@{/css/institute-multistep-form.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+
+<body th:attr="data-submission-success=${submissionSuccess == true ? 'true' : null}">
+
+<!-- Header -->
+<header class="main-header sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/images/emblem-logo.png" alt="Emblem Logo" class="header-logo me-2">
+                <div class="brand-text">
+                    <h1 class="mb-0">Meghalaya Common Admission Portal</h1>
+                    <p class="mb-0 tagline">Government of Meghalaya</p>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="instituteDropdown" role="button" data-bs-toggle="dropdown">
+                            Institute
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/institute-form">Registration</a></li>
+                            <li><a class="dropdown-item" href="/institute/status">Registration Status</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-lock"></i>
+                            Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container my-4">
+    <!-- Correction banner -->
+    <div th:if="${correctionMode}" class="alert alert-warning mb-4">
+        <i class="fas fa-edit me-2"></i>
+        <span th:text="${infoMessage}">Please update your application details.</span>
+    </div>
+
+    <form id="instituteForm" th:action="@{/submit}" th:object="${institute}" method="post" novalidate>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <!-- Hidden field for existing institute ID -->
+        <input type="hidden" th:field="*{instituteId}" />
+
+        <!-- NIC Audit Fix #1: CAPTCHA error alert -->
+        <div th:if="${param.error != null and param.error[0] == 'captcha'}" class="alert alert-danger mb-3" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Invalid CAPTCHA. Please re-enter the code shown in the image.
+        </div>
+
+        <div class="card main-form-card">
+            <div class="card-header">
+                <h1 class="mb-1">
+                    <i class="fa-solid fa-building-columns me-2"></i>
+                    <span th:text="${correctionMode} ? 'Update Your Application' : 'Institute Registration'">Institute Registration</span>
+                </h1>
+            </div>
+
+            <div class="card-body">
+                <!-- Disclaimer Box -->
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="fa-solid fa-circle-info fa-2x me-3"></i>
+                    <div>
+                        Please fill out the form with accurate details. Fields marked with a <span class="fw-bold">red asterisk (*)</span> are mandatory.
+                    </div>
+                </div>
+
+                <div id="step-indicator-container" class="mb-4">
+                    <div class="progress-track"></div>
+                    <div class="progress-fill"></div>
+
+                    <div class="step-indicator-wrapper d-flex justify-content-between">
+                        <div class="step-indicator active" data-step="1">
+                            <div class="step-indicator-icon"><i class="fa-solid fa-school-flag"></i></div>
+                            <div>Institute Details</div>
+                        </div>
+                        <div class="step-indicator" data-step="2">
+                            <div class="step-indicator-icon"><i class="fa-solid fa-address-card"></i></div>
+                            <div>Contact Info</div>
+                        </div>
+                        <div class="step-indicator" data-step="3">
+                            <div class="step-indicator-icon"><i class="fa-solid fa-briefcase"></i></div>
+                            <div>Affiliation</div>
+                        </div>
+                        <div class="step-indicator" data-step="4">
+                            <div class="step-indicator-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div>Address</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${globalError}" class="alert alert-danger" th:text="${globalError}"></div>
+
+                <!-- Step 1: Institute Details -->
+                <fieldset class="form-section form-step active-step">
+                    <legend class="section-title">
+                        <i class="fa-solid fa-school-flag"></i>
+                        <span th:text="${correctionMode} ? 'Institute Details (Correction)' : 'Institute Details'">Institute Details</span>
+                    </legend>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="instituteName" class="form-label required">Institute Name</label>
+                            <input type="text" class="form-control" id="instituteName" th:field="*{instituteName}" th:classappend="${#fields.hasErrors('instituteName')} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('instituteName')}" th:errors="*{instituteName}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="aisheId" class="form-label required">AISHE ID</label>
+                            <input type="text" class="form-control text-uppercase" id="aisheId" th:field="*{AISHEId}" th:classappend="${#fields.hasErrors('AISHEId') or AISHEIdError != null} ? 'is-invalid' : ''" maxlength="7" placeholder="e.g. U-12345">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('AISHEId')}" th:errors="*{AISHEId}"></div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label for="yearEstablished" class="form-label required">Year Established</label>
+                            <select class="form-select" id="yearEstablished" th:field="*{yearEstablished}" th:classappend="${#fields.hasErrors('yearEstablished')} ? 'is-invalid' : ''" required>
+                                <option value="">Select Year</option>
+                                <option th:each="y : ${#numbers.sequence(2025,1800,-1)}" th:value="${y}" th:text="${y}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('yearEstablished')}" th:errors="*{yearEstablished}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="borderDistrictArea" class="form-label">Border District Area (Optional)</label>
+                            <input type="text" class="form-control" id="borderDistrictArea" th:field="*{borderDistrictArea}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="universityName" class="form-label required">University Name</label>
+                            <input type="text" class="form-control" id="universityName" th:field="*{universityName}" th:classappend="${#fields.hasErrors('universityName')} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('universityName')}" th:errors="*{universityName}"></div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label for="institutionHeadDetails" class="form-label required">Institution Head</label>
+                            <input type="text" class="form-control" id="institutionHeadDetails" th:field="*{institutionHeadDetails}" th:classappend="${#fields.hasErrors('institutionHeadDetails')} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('institutionHeadDetails')}" th:errors="*{institutionHeadDetails}"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Step 2: Contact Info -->
+                <fieldset class="form-section form-step">
+                    <legend class="section-title"><i class="fa-solid fa-address-card"></i> Contact Information</legend>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="institutionOfficialEmailId" class="form-label required">Email</label>
+                            <input type="email" class="form-control" id="institutionOfficialEmailId" th:field="*{institutionOfficialEmailId}" th:classappend="${#fields.hasErrors('institutionOfficialEmailId') or institutionOfficialEmailIdError != null} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('institutionOfficialEmailId')}" th:errors="*{institutionOfficialEmailId}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="institutionOfficialContactNumber" class="form-label required">Contact Number</label>
+                            <!-- NIC Audit Fix #1: removed oninput inline JS; digit-only filtering moved to institute.js -->
+                            <input type="text" class="form-control js-digits-only" id="institutionOfficialContactNumber" th:field="*{institutionOfficialContactNumber}" th:classappend="${#fields.hasErrors('institutionOfficialContactNumber') or institutionOfficialContactNumberError != null} ? 'is-invalid' : ''" maxlength="10" required inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('institutionOfficialContactNumber')}" th:errors="*{institutionOfficialContactNumber}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="institutionWebsite" class="form-label">Website</label>
+                            <input type="url" class="form-control" id="institutionWebsite" th:field="*{institutionWebsite}" th:classappend="${#fields.hasErrors('institutionWebsite') or institutionWebsiteError != null} ? 'is-invalid' : ''" placeholder="https://example.com">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('institutionWebsite')}" th:errors="*{institutionWebsite}"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Step 3: Affiliation & Management -->
+                <fieldset class="form-section form-step">
+                    <legend class="section-title"><i class="fa-solid fa-briefcase"></i> Affiliation &amp; Management Type</legend>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="affiliationTypeId" class="form-label required">Affiliation Type</label>
+                            <select class="form-select" id="affiliationTypeId" th:field="*{affiliationTypeId}" th:classappend="${#fields.hasErrors('affiliationTypeId')} ? 'is-invalid' : ''" required>
+                                <option value="">Select Affiliation Type</option>
+                                <option th:each="type : ${affiliationTypes}" th:value="${type.affiliationTypeId}" th:text="${type.affiliationTypeName}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('affiliationTypeId')}" th:errors="*{affiliationTypeId}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="managementTypeId" class="form-label required">Management Type</label>
+                            <select class="form-select" id="managementTypeId" th:field="*{managementTypeId}" th:classappend="${#fields.hasErrors('managementTypeId')} ? 'is-invalid' : ''" required>
+                                <option value="">Select Management Type</option>
+                                <option th:each="mgmt : ${managementTypes}" th:value="${mgmt.managementTypeId}" th:text="${mgmt.managementTypeName}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('managementTypeId')}" th:errors="*{managementTypeId}"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Step 4: Address (LAST STEP — CAPTCHA rendered here) -->
+                <fieldset class="form-section form-step">
+                    <legend class="section-title"><i class="fa-solid fa-location-dot"></i> Institution Address</legend>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="addressLine1" class="form-label required">Address Line 1</label>
+                            <input type="text" class="form-control" id="addressLine1" th:field="*{addressDTO.addressLine1}" th:classappend="${#fields.hasErrors('addressDTO.addressLine1')} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressDTO.addressLine1')}" th:errors="*{addressDTO.addressLine1}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="addressLine2" class="form-label">Address Line 2 (Optional)</label>
+                            <input type="text" class="form-control" id="addressLine2" th:field="*{addressDTO.addressLine2}">
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label for="stateDropdown" class="form-label required">State</label>
+                            <select class="form-select" id="stateDropdown" th:field="*{addressDTO.stateCode}"
+                                    th:classappend="${#fields.hasErrors('addressDTO.stateCode')} ? 'is-invalid' : ''" required>
+                                <option th:each="state : ${states}"
+                                        th:if="${#strings.equalsIgnoreCase(state.stateName, 'Meghalaya')}"
+                                        th:value="${state.stateCode}"
+                                        th:text="${state.stateName}"
+                                        selected>
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressDTO.stateCode')}" th:errors="*{addressDTO.stateCode}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="districtDropdown" class="form-label required">District</label>
+                            <select class="form-select" id="districtDropdown" th:field="*{addressDTO.districtCode}" th:classappend="${#fields.hasErrors('addressDTO.districtCode')} ? 'is-invalid' : ''" required>
+                                <option value="">Select District</option>
+                                <option th:if="${districts}" th:each="d : ${districts}" th:value="${d.districtCode}" th:text="${d.districtName}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressDTO.districtCode')}" th:errors="*{addressDTO.districtCode}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="blockDropdown" class="form-label required">Block</label>
+                            <select class="form-select" id="blockDropdown" th:field="*{addressDTO.blockCode}" th:classappend="${#fields.hasErrors('addressDTO.blockCode')} ? 'is-invalid' : ''" required>
+                                <option value="">Select Block</option>
+                                <option th:if="${blocks}" th:each="b : ${blocks}" th:value="${b.blockCode}" th:text="${b.blockName}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressDTO.blockCode')}" th:errors="*{addressDTO.blockCode}"></div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label for="pincode" class="form-label required">PIN Code</label>
+                            <input type="text" class="form-control js-digits-only" id="pincode" th:field="*{addressDTO.pincode}" th:classappend="${#fields.hasErrors('addressDTO.pincode')} ? 'is-invalid' : ''" required pattern="\d{6}" maxlength="6" inputmode="numeric">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressDTO.pincode')}" th:errors="*{addressDTO.pincode}"></div>
+                        </div>
+                    </div>
+
+                    <!-- NIC Audit Fix #1: CAPTCHA section (shown only on final step via institute-captcha.js) -->
+                    <div id="institute-captcha-section" class="row g-3 mt-4 d-none">
+                        <div class="col-12">
+                            <hr>
+                            <p class="fw-semibold mb-2">
+                                <i class="fa-solid fa-shield-halved me-1"></i>
+                                Security Verification
+                            </p>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center gap-3">
+                            <img id="instituteCaptchaImg" src="" alt="CAPTCHA image" width="160" height="56" class="border rounded">
+                            <button type="button" id="instituteCaptchaRefreshBtn" class="btn btn-outline-secondary btn-sm" aria-label="Refresh CAPTCHA">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="instituteCaptchaInput" class="form-label required">Enter the code above</label>
+                            <input type="text" class="form-control" id="instituteCaptchaInput" name="captcha" autocomplete="off" required maxlength="6" placeholder="Enter CAPTCHA">
+                            <div id="instituteCaptchaError" class="invalid-feedback d-none"></div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="card-footer d-flex justify-content-between">
+                <button type="button" id="prevBtn" class="btn btn-secondary btn-lg px-5">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Previous
+                </button>
+                <button type="button" id="nextBtn" class="btn btn-primary btn-lg px-5">
+                    Next<i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg px-5 d-none">
+                    <i class="fa-solid fa-paper-plane me-2"></i>
+                    <span th:text="${correctionMode} ? 'Submit Corrections' : 'Submit Registration'">Submit</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- NIC Audit Fix #1: load order matters — captcha API first, then multistep, then init -->
+<script th:src="@{/js/sweetalert2.all.min.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/institute.js}"></script>
+<script th:src="@{/js/institute-success.js}"></script>
+<script th:src="@{/js/institute-captcha.js}"></script>
+<script th:src="@{/js/institute-multistep.js}"></script>
+<script th:src="@{/js/institute-captcha-init.js}"></script>
+<script th:src="@{/js/accessibility-widget.js}" defer="defer"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Meghalaya Common Admission Portal Receipt</title>
+    <style>
+        /* Professional Invoice Styling for PDF Generation */
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333333;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            border: 1px solid #eeeeee;
+        }
+
+        .header-table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            color: #0c82a5;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+
+        .brand-subtitle {
+            font-size: 14px;
+            color: #555555;
+            font-weight: normal;
+        }
+
+        .header-table td.invoice-details {
+            text-align: right;
+        }
+
+        .invoice-details strong {
+            color: #555555;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background-color: #198754;
+            color: #ffffff;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 40px;
+            border-collapse: collapse;
+        }
+
+        .info-table td {
+            padding: 8px 0;
+        }
+
+        .info-table td.label {
+            font-weight: bold;
+            color: #555555;
+            width: 20%;
+        }
+
+        .info-table td.value {
+            width: 30%;
+            color: #333333;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        .items-table th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .items-table th.align-right,
+        .items-table td.align-right {
+            text-align: right;
+        }
+
+        .total-row td {
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 2px solid #333333;
+            background-color: #f8f9fa;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #888888;
+            font-size: 12px;
+            border-top: 1px solid #eeeeee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+
+    <!-- Header Section -->
+    <table class="header-table">
+        <tr>
+            <td>
+                <!-- Nested table for perfect Logo and Text alignment in PDFs -->
+                <table style="border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-right: 15px; vertical-align: middle;">
+                            <!-- Note: Removed the leading slash so it resolves correctly with your classpath:static/ base URL -->
+                            <img src="images/emblem-logo.png" alt="Emblem Logo" style="width: 60px; height: auto;" />
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div class="brand-title">Meghalaya Common<br/>Admission Portal</div>
+                            <div class="brand-subtitle">Government of Meghalaya</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="invoice-details">
+                <div class="status-badge">PAYMENT SUCCESSFUL</div><br/>
+                <strong>Receipt No:</strong> <span th:text="${transactionId}">TXN-000000</span><br/>
+                <strong>Date:</strong> <span th:text="${paymentDate}">Jan 01, 2026</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Applicant Info Section -->
+    <table class="info-table">
+        <tr>
+            <td class="label">Applicant Name:</td>
+            <td class="value" th:text="${applicantName}">John Doe</td>
+            <td class="label">Application No:</td>
+            <td class="value" th:text="${applicationNo}">APP-12345</td>
+        </tr>
+        <tr>
+            <td class="label">Payment Method:</td>
+            <td class="value">Online Gateway</td>
+            <td class="label">Stream/Level:</td>
+            <td class="value" th:text="${programmeLevel}">UG</td>
+        </tr>
+    </table>
+
+    <!-- Line Items Section -->
+    <table class="items-table">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th class="align-right">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Application Registration &amp; Processing Fee</td>
+            <td class="align-right" th:text="'Rs. ' + ${amountPaid}">Rs. 0.00</td>
+        </tr>
+        <tr class="total-row">
+            <td class="align-right">Total Paid:</td>
+            <td class="align-right" th:text="'Rs. ' + ${amountPaid}">Rs. 0.00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>This is a computer-generated receipt and does not require a physical signature.</p>
+        <p>Keep this receipt for your records. If you have any questions, please contact the admissions office.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

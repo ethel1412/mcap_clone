@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <!--  Fragment 1: Reusable Institute Table HEADER ROWS -->
+    <tr th:fragment="instituteTableHeaderRow">
+        <th>#</th>
+        <th>Name</th>
+        <th>AISHE ID</th>
+        <th>Institution Head Details</th> <!-- Changed from Contact as per previous suggestion, as institutionHeadDetails is rendered below -->
+        <th class="text-center">Status</th>
+        <th class="text-center">Actions</th>
+    </tr>
+    
+    <!-- Fragment 2: Reusable Institute Table BODY ROWS -->
+    <th:block th:fragment="instituteTableBodyRows(instituteList)">
+    <tr th:each="institute, iterStat : ${instituteList}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${institute.instituteName}"></td>
+        <td th:text="${institute.AISHEId}"></td>
+        <!-- Display institutionHeadDetails -->
+        <td th:text="${institute.institutionHeadDetails}"></td>
+    
+        <td class="status-cell text-center">
+            <span class="badge rounded-pill"
+                  th:classappend="${institute.status.name() == 'ACCEPTED'} ? 'text-bg-success' : 
+                                  (${institute.status.name() == 'REJECTED'} ? 'text-bg-danger' : 
+                                  (${institute.status.name() == 'CORRECTION_REQUIRED'} ? 'text-bg-warning' : 'text-bg-info'))" 
+                  th:text="${institute.status.name()}"></span> <!-- Use .name() to get the uppercase string value -->
+        </td>
+
+        <td class="action-cell text-center">
+            <!-- Action buttons for PENDING status -->
+            <div th:if="${institute.status.name() == 'PENDING'}" class="btn-group btn-group-sm">
+                <button class="btn btn-outline-info" th:data-id="${institute.instituteId}" onclick="previewInstitute(this)" data-bs-toggle="tooltip" title="Preview"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-outline-success action-btn" th:data-id="${institute.instituteId}" onclick="updateStatus(this, 'ACCEPTED')" data-bs-toggle="tooltip" title="Accept"><i class="fas fa-check"></i></button> 
+                <button class="btn btn-outline-danger action-btn" th:data-id="${institute.instituteId}" onclick="updateStatus(this, 'REJECTED')" data-bs-toggle="tooltip" title="Reject"><i class="fas fa-times"></i></button> 
+                
+            </div>
+            
+            <!-- Dash for non-pending statuses -->
+            <div th:if="${institute.status.name() != 'PENDING'}">
+                <span class="text-muted">—</span>
+            </div>
+        </td>
+    </tr>
+</th:block>
+
+</body>
+</html>

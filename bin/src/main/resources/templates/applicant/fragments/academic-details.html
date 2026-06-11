@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 class="h3 fw-bold text-primary"><i class="bi bi-mortarboard-fill me-2"></i>Educational Qualifications</h1>
+    </div>
+    <div class="alert alert-info">
+        If your qualification(s) are not listed in the Drop Down box below, please mail to the Administrator.
+    </div>
+    
+    <form id="academic-details-form" th:action="@{/applicants/academics/save}" th:object="${academicDetailsDTO}" method="post">
+
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 5%;">Latest</th>
+                    <th style="width: 15%;">Name & Address Of Institution *</th>
+                    <th style="width: 12%;">Board/University *</th>
+                    <th style="width: 15%;">Examination Passed *</th>
+                    <th style="width: 12%;">Degree Name</th>
+                    <th style="width: 13%;">Stream / Major</th>
+                    <th style="width: 9%;">Year of Passing *</th>
+                    <th style="width: 9%;">Marks Obtained *</th>
+                    <th style="width: 9%;">Total Marks *</th>
+                </tr>
+                </thead>
+                <tbody id="records-container">
+                <tr class="record-row" th:each="record, iterStat : *{records}">
+                    <input type="hidden" th:field="*{records[__${iterStat.index}__].id}" />
+                    <input type="hidden" th:field="*{records[__${iterStat.index}__].resultStatus}" value="Passed" />
+
+                    <td class="text-center">
+                        <div class="form-check d-flex justify-content-center">
+                            <input class="form-check-input" type="radio"
+                                   th:field="*{latestQualificationIndex}"
+                                   th:value="${iterStat.index}"
+                                   th:checked="${record.isLatestQualification()}"
+                                   required/>
+                        </div>
+                    </td>
+
+                    <td><textarea class="form-control" rows="2" th:field="*{records[__${iterStat.index}__].schoolOrCollege}" required></textarea></td>
+                    <td><input type="text" class="form-control" th:field="*{records[__${iterStat.index}__].boardOrUniversity}" required /></td>
+                    <td>
+                        <input th:if="${iterStat.index < 2}" type="hidden" th:field="*{records[__${iterStat.index}__].qualificationLevel}" />
+                        <select class="form-select" th:field="*{records[__${iterStat.index}__].qualificationLevel}"
+                                th:disabled="${iterStat.index < 2}" required>
+                            <option value="">-- Select --</option>
+                            <option value="Class X">Class X</option>
+                            <option value="Class XII">Class XII</option>
+                            <option value="Undergraduate">Undergraduate</option>
+                            <option value="Postgraduate">Postgraduate</option>
+                            <option value="Diploma">Diploma</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" th:field="*{records[__${iterStat.index}__].degreeName}"
+                               th:disabled="${record.qualificationLevel == 'Class X' or record.qualificationLevel == 'Class XII'}"
+                               placeholder="e.g., B.Sc." />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" th:field="*{records[__${iterStat.index}__].streamOrMajor}"
+                               th:disabled="${record.qualificationLevel == 'Class X'}"
+                               placeholder="e.g., Science" />
+                    </td>
+                    <td>
+                        <select class="form-select" th:field="*{records[__${iterStat.index}__].yearOfPassing}" required>
+                            <option value="">-- Year --</option>
+                            <option th:each="year : ${passingYears}" th:value="${year}" th:text="${year}"></option>
+                        </select>
+                    </td>
+                    <td><input type="number" step="0.01" class="form-control" th:field="*{records[__${iterStat.index}__].marksObtained}" required /></td>
+                    <td><input type="number" step="0.01" class="form-control" th:field="*{records[__${iterStat.index}__].totalMarks}" required /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3">
+            <button type="button" id="add-record-btn" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Add More</button>
+            <button type="button" id="remove-record-btn" class="btn btn-danger"><i class="bi bi-trash me-2"></i>Remove Last</button>
+        </div>
+        
+        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+             <button type="submit" class="btn btn-success btn-lg px-4"><i class="bi bi-check-lg me-2"></i>Save & Continue</button>
+        </div>
+    </form>
+    
+    <!-- The template row for JS is unchanged and fully editable -->
+    <table style="display: none;">
+        <tr id="record-template" class="record-row">
+            <!-- Hidden fields remain the same -->
+            <input type="hidden" name="records[0].id" value="0" />
+            <input type="hidden" name="records[0].resultStatus" value="Passed" />
+
+            <!-- ✅ 1. ADD THE MISSING CELL FOR THE RADIO BUTTON -->
+            <td class="text-center">
+                <div class="form-check d-flex justify-content-center">
+                    <input class="form-check-input" type="radio" name="latestQualificationIndex" value="0" required />
+                </div>
+            </td>
+
+            <!-- The rest of the cells are the same -->
+            <td><textarea class="form-control" rows="2" name="records[0].schoolOrCollege" required></textarea></td>
+            <td><input type="text" class="form-control" name="records[0].boardOrUniversity" required /></td>
+            <td>
+                <select class="form-select" name="records[0].qualificationLevel" required>
+                    <option value="">-- Select --</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Postgraduate">Postgraduate</option>
+                    <option value="Diploma">Diploma</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control" name="records[0].degreeName" placeholder="e.g., B.Sc." /></td>
+            <td><input type="text" class="form-control" name="records[0].streamOrMajor" placeholder="e.g., Science" /></td>
+            <td>
+                <select class="form-select" name="records[0].yearOfPassing" required>
+                    <option value="">-- Year --</option>
+                    <option th:each="year : ${passingYears}" th:value="${year}" th:text="${year}"></option>
+                </select>
+            </td>
+            <td><input type="number" step="0.01" class="form-control" name="records[0].marksObtained" required /></td>
+            <td><input type="number" step="0.01" class="form-control" name="records[0].totalMarks" required /></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+
+<body>
+	<nav th:fragment="navbar-menu" class="navbar navbar-expand-sm navbar-custom">    
+		<div class="collapse navbar-collapse " id="navbarSupportedContent">
+		<button type="button" id="sidebarCollapse" class="text-menu">
+                <i class="fas fa-align-left fa-lg"></i>
+            </button>
+		  <ul class="navbar-nav me-auto order-0 ">
+			<li class="nav-item">
+			&nbsp;&nbsp;
+			  <span class="fa fa-tachometer-alt text-menu fa-lg"></span> &nbsp;&nbsp;&nbsp;
+			  <span sec:authorize="hasRole('SUPERADMIN')"  class="text-uppercase text-menu fa-2x" >Super Admin</span> 
+      	  	 <span sec:authorize="hasRole('ADMIN')"  class="text-uppercase text-menu fa-2x" >Admin</span> 
+      	  	 <span sec:authorize="hasRole('CONTENTMANAGER')"  class="text-uppercase text-menu fa-2x" >WELCOME</span> 
+			</li>
+			
+		  </ul>
+			<div class="navbar-custom">
+		  <form th:action = "@{/logout}" th:method = "post">
+		        <input type="submit" class="nav-link dropdown-toggle text-menu navbar-custom fa-1x" value="Logout"/>
+		  </form>
+		  </div>
+		</div>
+	</nav>
+</body>

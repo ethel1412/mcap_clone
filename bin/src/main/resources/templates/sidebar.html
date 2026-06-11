@@ -1,0 +1,64 @@
+<div th:fragment="sidebar" class="nav-custom">
+    <div>
+        <nav id="sidebar" class="d-flex flex-column align-items-center px-3 pt-2 min-vh-100 bg-light">
+            
+            <!-- Logo area centered horizontally -->
+            <div class="w-100 my-3 d-flex justify-content-center">
+                <img th:src="@{/images/logo.png}" alt="Govt of Meghalaya logo" width="100" />
+            </div>
+            
+            <!-- Sidebar Menu centered horizontally -->
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0"
+                id="sidebarMenu"
+                style="width: 200px; padding-left: 0;">
+                
+                <!-- Loop through all top-level menus -->
+                <li th:each="menu : ${menus}"
+                    class="nav-item"
+                    th:classappend="${#lists.isEmpty(menu.children)} ? '' : 'dropdown'">
+                    
+                    <!-- Menu item WITHOUT submenu -->
+                    <a th:if="${#lists.isEmpty(menu.children)}"
+                       class="nav-link d-flex align-items-center"
+                       th:href="@{${menu.pageUrl}}"
+                       role="menuitem"
+                       th:classappend="${menu.pageUrl == currentUrl} ? ' active'">
+                        <i th:if="${menu.iconClass != null}" th:class="${menu.iconClass} + ' me-2'"></i>
+                        <span th:text="${menu.menuName}"></span>
+                    </a>
+                    
+                    <!-- Menu item WITH submenu -->
+                    <a th:if="${!#lists.isEmpty(menu.children)}"
+                       href="#"
+                       class="nav-link dropdown-toggle d-flex align-items-center"
+                       id="dropdownMenuLink__${menu.menuId}"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                       aria-haspopup="true"
+                       th:classappend="${menu.pageUrl == currentUrl} ? ' active'">
+                        <i th:if="${menu.iconClass != null}" th:class="${menu.iconClass} + ' me-2'"></i>
+                        <span th:text="${menu.menuName}"></span>
+                    </a>
+                    
+                    <!-- Dropdown submenu -->
+                    <ul th:if="${!#lists.isEmpty(menu.children)}"
+                        class="dropdown-menu rounded-0 border-0 shadow"
+                        aria-labelledby="dropdownMenuLink__${menu.menuId}">
+                        <li th:each="child : ${menu.children}">
+                            <a class="dropdown-item d-flex align-items-center"
+                               th:href="@{${child.pageUrl}}"
+                               role="menuitem"
+                               th:classappend="${child.pageUrl == currentUrl} ? ' active'">
+                               <i th:if="${child.iconClass != null}"
+                                  th:class="${child.iconClass} + ' me-2'"
+                                  style="font-size: 0.85rem;"></i>
+                               <span th:text="${child.menuName}"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

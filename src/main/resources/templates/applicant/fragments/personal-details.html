@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="content" role="main" aria-labelledby="form-heading">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+        <h1 id="form-heading" class="h3 fw-bold text-primary"><i class="bi bi-person-vcard me-2" aria-hidden="true"></i>Personal Details</h1>
+        <div>
+            <span class="text-muted">Applicant No:</span>
+            <strong th:text="${applicant.applicantNo}" aria-label="Your Applicant Number"></strong>
+        </div>
+    </div>
+
+    <div class="visually-hidden" aria-live="polite" id="form-announcer"></div>
+
+    <div th:if="${status.isFormLocked()}" class="alert alert-info border-0" role="alert" aria-live="polite">
+        <h2 class="h5 alert-heading mb-1"><i class="bi bi-lock-fill me-2" aria-hidden="true"></i>Application Locked</h2>
+        <p class="mb-0">This application has been paid for and is now locked. No further edits are permitted unless a correction window is opened by the administrator.</p>
+    </div>
+
+    <form id="personal-details-form" th:action="@{/applicants/personal/update}" th:object="${personalDetailsDTO}" method="post" class="needs-validation" novalidate>
+        <input type="hidden" name="applicationId" th:value="${applicationId}" />
+
+        <fieldset th:disabled="${status.isFormLocked()}">
+
+            <p class="text-muted fst-italic"><small>Fields marked with <span class="text-danger" aria-hidden="true">*</span> are mandatory.</small></p>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="core-details-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="core-details-heading"><i class="bi bi-pencil-square me-2" aria-hidden="true"></i>Core Personal Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label for="firstName" class="form-label">First Name <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input type="text" id="firstName" class="form-control" th:field="*{firstName}" required autocomplete="given-name" aria-describedby="firstName-feedback"/>
+                            <div id="firstName-feedback" class="invalid-feedback">First name is required.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="middleName" class="form-label">Middle Name</label>
+                            <input type="text" id="middleName" class="form-control" th:field="*{middleName}" autocomplete="additional-name"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lastName" class="form-label">Last Name <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input type="text" id="lastName" class="form-control" th:field="*{lastName}" required autocomplete="family-name" aria-describedby="lastName-feedback"/>
+                            <div id="lastName-feedback" class="invalid-feedback">Last name is required.</div>
+                        </div>
+
+                        <!-- Email — EDITABLE -->
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input type="email" class="form-control" id="email"
+                                   th:field="*{email}" required
+                                   autocomplete="email"
+                                   aria-describedby="email-feedback"/>
+                            <div id="email-feedback" class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+
+                        <!-- Phone — EDITABLE -->
+                        <div class="col-md-6">
+                            <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger" aria-hidden="true">*</span></label>
+                            <div class="input-group">
+                                <select class="form-select flex-grow-0 country-code-select"
+                                        id="countryPhoneCode" name="countryPhoneCode"
+                                        required aria-label="Country calling code">
+                                    <option th:each="c : ${countries}"
+                                            th:value="${c.phoneCode}"
+                                            th:text="${c.phoneCode}"
+                                            th:attr="data-country-name=${c.countryName}"
+                                            th:selected="${#strings.equals(c.phoneCode, personalDetailsDTO.countryPhoneCode)}">
+                                    </option>
+                                </select>
+                                <input type="tel" class="form-control" id="phoneNumber"
+                                       th:field="*{phoneNumber}" required
+                                       autocomplete="tel"
+                                       pattern="[0-9]{7,15}"
+                                       maxlength="10"
+                                       inputmode="numeric"
+                                       aria-describedby="phone-feedback"/>
+                            </div>
+                            <div id="phone-feedback" class="invalid-feedback">Please enter a valid phone number (7–15 digits).</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input type="date" id="dateOfBirth" class="form-control"
+                                   name="dateOfBirth"
+                                   th:value="*{dateOfBirth != null ? #temporals.format(dateOfBirth, 'yyyy-MM-dd') : ''}"
+                                   required autocomplete="bday" aria-describedby="dob-feedback"/>
+                            <div id="dob-feedback" class="invalid-feedback">Please enter your date of birth.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="gender" class="form-label">Gender <span class="text-danger" aria-hidden="true">*</span></label>
+                            <select id="gender" class="form-select" th:field="*{genderCode}" required autocomplete="sex" aria-describedby="gender-feedback">
+                                <option value="">-- Select Gender --</option>
+                                <option th:each="g : ${genders}" th:value="${g.genderCode}" th:text="${g.genderName}"></option>
+                            </select>
+                            <div id="gender-feedback" class="invalid-feedback">Please select your gender.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="communityCategory" class="form-label">Community Category <span class="text-danger" aria-hidden="true">*</span></label>
+                            <select id="communityCategory" class="form-select" th:field="*{communityCategoryCode}" required aria-describedby="category-feedback">
+                                <option value="">-- Select Category --</option>
+                                <option th:each="cc : ${communityCategories}" th:value="${#strings.trim(cc.categoryCode)}" th:text="${cc.categoryName}"></option>
+                            </select>
+                            <div id="category-feedback" class="invalid-feedback">Please select your community category.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="additional-details-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="additional-details-heading">
+                        <i class="bi bi-person-lines-fill me-2" aria-hidden="true"></i>Additional Details
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label for="maritalStatus" class="form-label">Marital Status <span class="text-danger">*</span></label>
+                            <select id="maritalStatus" class="form-select" th:field="*{maritalStatusCode}" required aria-describedby="marital-feedback">
+                                <option value="">-- Select Status --</option>
+                                <option th:each="ms : ${maritalStatuses}"
+                                        th:value="${#strings.trim(ms.statusCode)}"
+                                        th:text="${ms.statusName}">
+                                </option>
+                            </select>
+                            <div id="marital-feedback" class="invalid-feedback">Please select your marital status.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="religion" class="form-label">Religion <span class="text-danger">*</span></label>
+                            <select id="religion" class="form-select" th:field="*{religionCode}" required aria-describedby="religion-feedback">
+                                <option value="">-- Select Religion --</option>
+                                <option th:each="r : ${religions}" th:value="${r.religionCode}" th:text="${r.religionName}"></option>
+                            </select>
+                            <div id="religion-feedback" class="invalid-feedback">Please select your religion.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="country" class="form-label">Country of Origin <span class="text-danger">*</span></label>
+                            <select id="country" class="form-select" th:field="*{countryCode}" required aria-describedby="country-feedback">
+                                <option value="">-- Select Country --</option>
+                                <option th:each="c : ${countries}" th:value="${c.countryCode}" th:text="${c.countryName}"></option>
+                            </select>
+                            <div id="country-feedback" class="invalid-feedback">Please select your country of origin.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="parent-info-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="parent-info-heading"><i class="bi bi-people-fill me-2" aria-hidden="true"></i>Parent / Guardian Information</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Please provide details for either your parents or a legal guardian.</p>
+                    <fieldset class="border p-3 rounded mb-3">
+                        <legend class="float-none w-auto px-2 h6">Parent Details</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="fatherName" class="form-label">Father's Full Name</label>
+                                <input type="text" id="fatherName" class="form-control parent-name-input" th:field="*{fatherName}" autocomplete="off">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="motherName" class="form-label">Mother's Full Name</label>
+                                <input type="text" id="motherName" class="form-control parent-name-input" th:field="*{motherName}" autocomplete="off">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="text-center text-muted my-3"><small>OR</small></div>
+
+                    <fieldset class="border p-3 rounded">
+                        <legend class="float-none w-auto px-2 h6">Guardian Details</legend>
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label for="guardianPrefix" class="form-label">Prefix</label>
+                                <select id="guardianPrefix" class="form-select" th:field="*{guardianPrefix}">
+                                    <option value="">--</option>
+                                    <option th:each="p : ${prefixes}" th:value="${p}" th:text="${p}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="guardianName" class="form-label">Guardian's Full Name</label>
+                                <input type="text" id="guardianName" class="form-control" th:field="*{guardianName}" autocomplete="off">
+                            </div>
+                            <div class="col-md-5">
+                                <label for="guardianRelationship" class="form-label">Relationship</label>
+                                <select id="guardianRelationship" class="form-select" th:field="*{guardianRelationshipCode}">
+                                    <option value="">-- Select --</option>
+                                    <option th:each="rel : ${relationships}" th:value="${rel.relationshipCode}" th:text="${rel.value}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </section>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="address-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="address-heading"><i class="bi bi-geo-alt-fill me-2" aria-hidden="true"></i>Address Details</h2>
+                </div>
+                <div class="card-body">
+                    <fieldset class="border p-3 rounded mb-4">
+                        <legend class="float-none w-auto px-2 h6">Permanent Address</legend>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="permAddress1" class="form-label">Address Line 1 <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="permAddress1" th:field="*{permanentAddress.addressLine1}" required autocomplete="address-line1" aria-describedby="permAddress1-feedback">
+                                <div id="permAddress1-feedback" class="invalid-feedback">Address line 1 is required.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="permAddress2" class="form-label">Address Line 2 (Optional)</label>
+                                <input type="text" class="form-control" id="permAddress2" th:field="*{permanentAddress.addressLine2}" autocomplete="address-line2">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="permState" class="form-label">State <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select class="form-select state-dropdown" id="permState" th:field="*{permanentAddress.stateCode}" required aria-describedby="permState-feedback">
+                                    <option value="">-- Select State --</option>
+                                    <option th:each="s : ${states}" th:value="${s.stateCode}" th:text="${s.stateName}"></option>
+                                </select>
+                                <div id="permState-feedback" class="invalid-feedback">Please select a state.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="permDistrict" class="form-label">District <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select class="form-select district-dropdown" id="permDistrict" th:field="*{permanentAddress.districtCode}" th:attr="data-saved-value=*{permanentAddress.districtCode}" required aria-describedby="permDistrict-feedback">
+                                    <option value="">-- Select State First --</option>
+                                </select>
+                                <div id="permDistrict-feedback" class="invalid-feedback">Please select a district.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="permTownVillage" class="form-label">Town/Village <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="permTownVillage" th:field="*{permanentAddress.townVillage}" required autocomplete="address-level2" aria-describedby="permTown-feedback"/>
+                                <div id="permTown-feedback" class="invalid-feedback">Town or Village is required.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="permPincode" class="form-label">Pincode <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="permPincode" th:field="*{permanentAddress.pincode}" required maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="postal-code" aria-describedby="permPincode-feedback">
+                                <div id="permPincode-feedback" class="invalid-feedback">Please provide a valid 6-digit pincode.</div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sameAsPermanent">
+                        <label class="form-check-label" for="sameAsPermanent">
+                            <strong>My Communication Address is the same as my Permanent Address</strong>
+                        </label>
+                    </div>
+
+                    <fieldset class="border p-3 rounded">
+                        <legend class="float-none w-auto px-2 h6">Communication Address</legend>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="commAddress1" class="form-label">Address Line 1 <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="commAddress1" th:field="*{communicationAddress.addressLine1}" required autocomplete="address-line1" aria-describedby="commAddress1-feedback">
+                                <div id="commAddress1-feedback" class="invalid-feedback">Address line 1 is required.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="commAddress2" class="form-label">Address Line 2 (Optional)</label>
+                                <input type="text" class="form-control" id="commAddress2" th:field="*{communicationAddress.addressLine2}" autocomplete="address-line2">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="commState" class="form-label">State <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select class="form-select state-dropdown" id="commState" th:field="*{communicationAddress.stateCode}" required aria-describedby="commState-feedback">
+                                    <option value="">-- Select State --</option>
+                                    <option th:each="s : ${states}" th:value="${s.stateCode}" th:text="${s.stateName}"></option>
+                                </select>
+                                <div id="commState-feedback" class="invalid-feedback">Please select a state.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="commDistrict" class="form-label">District <span class="text-danger" aria-hidden="true">*</span></label>
+                                <select class="form-select district-dropdown" id="commDistrict" th:field="*{communicationAddress.districtCode}" th:attr="data-saved-value=*{communicationAddress.districtCode}" required aria-describedby="commDistrict-feedback">
+                                    <option value="">-- Select State First --</option>
+                                </select>
+                                <div id="commDistrict-feedback" class="invalid-feedback">Please select a district.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="commTownVillage" class="form-label">Town/Village <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="commTownVillage" th:field="*{communicationAddress.townVillage}" required autocomplete="address-level2" aria-describedby="commTown-feedback"/>
+                                <div id="commTown-feedback" class="invalid-feedback">Town or Village is required.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="commPincode" class="form-label">Pincode <span class="text-danger" aria-hidden="true">*</span></label>
+                                <input type="text" class="form-control" id="commPincode" th:field="*{communicationAddress.pincode}" required maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="postal-code" aria-describedby="commPincode-feedback">
+                                <div id="commPincode-feedback" class="invalid-feedback">Please provide a valid 6-digit pincode.</div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </section>
+
+            <section class="card shadow-sm mb-4" aria-labelledby="certificates-heading">
+                <div class="card-header bg-light">
+                    <h2 class="h5 mb-0" id="certificates-heading"><i class="bi bi-patch-question-fill me-2" aria-hidden="true"></i>Certificates & Disclosures</h2>
+                	<p class="text-danger">
+				    Please select either <strong>Yes</strong> or <strong>No</strong> for all the fields below.
+				    Relevant document upload options will be enabled based on your selection.
+				    If no option is selected, the system may not enable upload of the required documents.
+				</p>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Are you a permanent resident of Meghalaya?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasDomicileCertificate}" value="true" id="resCertYes">
+                                    <label class="form-check-label" for="resCertYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasDomicileCertificate}" value="false" id="resCertNo">
+                                    <label class="form-check-label" for="resCertNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Are you a Differently Abled person?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{isDifferentlyAbled}" value="true" id="diffAbledYes">
+                                    <label class="form-check-label" for="diffAbledYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{isDifferentlyAbled}" value="false" id="diffAbledNo">
+                                    <label class="form-check-label" for="diffAbledNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!--div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Do you have an NCC Certificate?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasNccCertificate}" value="true" id="nccCertYes">
+                                    <label class="form-check-label" for="nccCertYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasNccCertificate}" value="false" id="nccCertNo">
+                                    <label class="form-check-label" for="nccCertNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div-->
+                        <!--div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Do you have an NSS Certificate?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasNssCertificate}" value="true" id="nssCertYes">
+                                    <label class="form-check-label" for="nssCertYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasNssCertificate}" value="false" id="nssCertNo">
+                                    <label class="form-check-label" for="nssCertNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div-->
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Do you have a Backward Area Certificate/ EWS Certificate?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasBackwardAreaCertificate}" value="true" id="backAreaCertYes">
+                                    <label class="form-check-label" for="backAreaCertYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasBackwardAreaCertificate}" value="false" id="backAreaCertNo">
+                                    <label class="form-check-label" for="backAreaCertNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend class="form-label fs-6">Do you have any Other Relevant Certificate?</legend>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasAnyOtherRelevantCertificate}" value="true" id="otherCertYes">
+                                    <label class="form-check-label" for="otherCertYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:field="*{hasAnyOtherRelevantCertificate}" value="false" id="otherCertNo">
+                                    <label class="form-check-label" for="otherCertNo">No</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </fieldset>
+
+        <div class="mt-4 text-end" th:if="${!status.isFormLocked()}">
+            <button type="submit" class="btn btn-lg btn-success">
+                <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>Save &amp; Continue
+            </button>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

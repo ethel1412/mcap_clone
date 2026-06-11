@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default}">
+
+<head>
+    <title>Subjects Management</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid p-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-1"><i class="fas fa-book-open text-primary me-2"></i>Subjects Management</h2>
+                        <p class="text-muted mb-0">Manage academic subjects for your institute</p>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                            <i class="fas fa-plus me-2"></i>Add Subject
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary bg-gradient rounded-circle p-3">
+                                    <i class="fas fa-book-open text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1">Total Subjects</h6>
+                                <h4 class="mb-0" id="totalCount">0 subjects</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert for empty state -->
+        <div class="alert alert-info d-none" id="alertBox" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle me-2"></i>
+                <div>
+                    <strong>No subjects found!</strong> Click "Add Subject" to start managing your institute's subjects.
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Subjects List
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                        <tr>
+                            <th class="text-center" style="width: 60px;">#</th>
+                            <th>Subject Name</th>
+                            <th style="width: 150px;">Subject Code</th>
+                            <th class="text-center" style="width: 120px;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="subjectsTableBody">
+                        <!-- Dynamic content will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Subject Modal -->
+    <div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSubjectModalLabel">
+                        <i class="fas fa-plus-circle text-primary me-2"></i>Add New Subject
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addSubjectForm" novalidate>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="subjectName" class="form-label">
+                                Subject Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="subjectName" name="subjectName" required maxlength="150">
+                            <div class="invalid-feedback">
+                                Subject name is required and cannot exceed 150 characters.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subjectCode" class="form-label">Subject Code</label>
+                            <input type="text" class="form-control" id="subjectCode" name="subjectCode" maxlength="20">
+                            <div class="form-text">Optional subject code (max 20 characters)</div>
+                            <div class="invalid-feedback">
+                                Subject code cannot exceed 20 characters.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>Add Subject
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Subject Modal -->
+    <div class="modal fade" id="editSubjectModal" tabindex="-1" aria-labelledby="editSubjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSubjectModalLabel">
+                        <i class="fas fa-edit text-primary me-2"></i>Edit Subject
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editSubjectForm" novalidate>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editSubjectName" class="form-label">
+                                Subject Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="editSubjectName" name="subjectName" required maxlength="150">
+                            <div class="invalid-feedback">
+                                Subject name is required and cannot exceed 150 characters.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editSubjectCode" class="form-label">Subject Code</label>
+                            <input type="text" class="form-control" id="editSubjectCode" name="subjectCode" maxlength="20">
+                            <div class="form-text">Optional subject code (max 20 characters)</div>
+                            <div class="invalid-feedback">
+                                Subject code cannot exceed 20 characters.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="editSubmitBtn">
+                            <i class="fas fa-save me-2"></i>Update Subject
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>Confirm Deletion
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the subject:</p>
+                    <p class="fw-bold text-danger" id="subjectToDelete"></p>
+                    <p class="text-muted small mb-0">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="successMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="errorMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <script src="/js/subjects/subjects.js"></script>
+</div>
+</body>
+
+</html>

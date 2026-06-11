@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Manage Subject Combinations</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <link th:href="@{/css/institute/my-departments.css}" rel="stylesheet"/>
+    <main class="container-fluid px-4 py-4" id="combinationsMain"
+      th:attr="data-programme-offered-id=${programmeOfferedId}">
+
+        <div id="scheduleLockBanner" class="alert shadow-sm mb-4 d-none lock-banner-red">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-lock fs-4 text-danger me-3"></i>
+                <div>
+                    <h6 class="mb-1 fw-bold text-danger">Configuration Locked</h6>
+                    <p class="mb-0 text-secondary small">The Institute Setup phase is currently closed. You can view the subject combinations but cannot modify them.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2 small fw-semibold">
+                        <li class="breadcrumb-item"><a href="/programmes-offered" class="text-decoration-none">Programmes Offered</a></li>
+                        <li class="breadcrumb-item active">Subject Combinations</li>
+                    </ol>
+                </nav>
+                <h2 class="h3 mb-1 text-gray-800 fw-bold">Manage Subject Combinations</h2>
+			    <p class="text-muted mb-0">
+				    <strong id="displayProgName" class="text-dark"
+				            th:text="${programmeName}">Loading...</strong> |
+				    
+				    <span id="displayDeptName"
+				          th:text="${departmentName}"></span> |
+				    
+				    Shift: 
+				    <span id="displayShiftName" class="badge bg-secondary"
+				          th:text="${shiftName}">NA</span>
+				</p>
+            </div>
+            <div>
+                <a href="/programmes-offered" class="btn btn-outline-secondary rounded-pill shadow-sm fw-semibold">
+                    <i class="fas fa-arrow-left me-1"></i>Back
+                </a>
+            </div>
+        </div>
+
+        <div class="alert alert-info shadow-sm border-0 mb-4 rounded-3 info-banner-blue">
+            <i class="fas fa-info-circle me-2"></i>
+            Use this page to create a <strong>set of subjects</strong> that applicants can choose from when applying to this specific programme/major/course shift.
+        </div>
+
+        <div id="loadingState" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3 fw-bold text-muted">Loading subject combinations...</p>
+        </div>
+
+        <div id="mainContent" class="card shadow-sm border-0 bg-white d-none">
+            <div class="card-header bg-white py-3">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fas fa-layer-group me-2"></i>Configure Subject Categories</h6>
+            </div>
+            <div class="card-body p-4">
+                <form id="combinationsForm">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Available Minor Subjects</label>
+                            <select id="minor-subjects" class="form-select" multiple></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Multidisciplinary Courses (MDC)</label>
+                            <select id="mdc-subjects" class="form-select" multiple></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Ability Enhancement (AEC)</label>
+                            <select id="aec-subjects" class="form-select" multiple></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Skill Enhancement (SEC)</label>
+                            <select id="sec-subjects" class="form-select" multiple></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Value Added Courses (VAC)</label>
+                            <select id="vac-subjects" class="form-select" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-top text-end">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm fw-bold" id="saveBtn">
+                            <i class="fas fa-save me-2"></i>Save Combinations
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast text-white bg-success border-0" role="alert">
+                <div class="d-flex"><div class="toast-body"><i class="fas fa-check-circle me-2"></i><span id="successMessage"></span></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+            </div>
+            <div id="errorToast" class="toast text-white bg-danger border-0" role="alert">
+                <div class="d-flex"><div class="toast-body"><i class="fas fa-exclamation-circle me-2"></i><span id="errorMessage"></span></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/js/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script th:src="@{/js/institute/manage-combinations.js}"></script>
+</th:block>
+</body>
+</html>

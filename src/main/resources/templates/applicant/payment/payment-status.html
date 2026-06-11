@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Payment Status</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/applicant/payment.css}">
+
+    <!-- External Status JS (No inline scripts) -->
+    <script defer src="/js/applicant/payment-status.js"></script>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+
+                    <div th:if="${status == 'PAID' or status == 'SUCCESS'}" class="mb-4 text-success">
+                        <i class="bi bi-check-circle-fill payment-status-icon"></i>
+                        <h2 class="mt-3 fw-bold">Payment Successful!</h2>
+                        <p class="text-muted">Your transaction has been processed successfully.</p>
+                    </div>
+
+                    <div th:unless="${status == 'PAID' or status == 'SUCCESS'}" class="mb-4 text-danger">
+                        <i class="bi bi-x-circle-fill payment-status-icon"></i>
+                        <h2 class="mt-3 fw-bold">Payment <span th:text="${status}">FAILED</span></h2>
+                        <p class="text-muted">We could not complete your transaction.</p>
+                    </div>
+
+                    <ul class="list-group list-group-flush text-start mb-4">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Order ID:</span>
+                            <strong id="orderId" th:text="${orderId}"></strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Status:</span>
+                            <strong id="statusText" th:text="${status}"></strong>
+                        </li>
+                    </ul>
+
+                    <a th:href="@{/login}" class="btn btn-primary px-4">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Go to Login
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

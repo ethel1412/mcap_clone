@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="applicantLayout(title, content)">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- CSRF for security -->
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
+
+    <title th:text="${title} ?: 'Applicant Portal'">Applicant Portal</title>
+
+    <!-- Use same CSS styling and palette as admin layout -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/dataTables.bootstrap5.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/all.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/applicant-dashboard.css}" /> <!-- custom css for applicant -->
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/css/css2.css}">
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <div class="bg-primary d-flex flex-column" id="sidebar-wrapper" style="min-width: 220px;">
+
+        <!-- Sidebar Header: Branding with MCAP logo and titles -->
+        <div class="sidebar-heading text-white p-3 text-center border-bottom" style="background-color: #0F4C81;">
+            <a href="#" class="d-flex align-items-center justify-content-center mb-2 text-decoration-none" aria-label="Meghalaya Common Admission Portal Home">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23ffffff'/><text x='50' y='55' font-family='Arial' font-size='18' fill='%230F4C81' text-anchor='middle'>MCAP</text></svg>"
+                     alt="MCAP Logo" style="width: 40px; height: 40px;">
+            </a>
+            <div>
+                <h6 class="sidebar-text mb-1" style="font-weight: 600;">Meghalaya Common Admission Portal</h6>
+                <small class="sidebar-text text-white-50">Applicant Portal</small>
+            </div>
+
+            <!-- User Info Display -->
+            <div class="user-info mt-3 text-white">
+                <i class="fas fa-user-circle me-1" aria-hidden="true"></i>
+                <span sec:authentication="principal.username">Applicant</span>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav aria-label="Applicant navigation" class="flex-grow-1">
+            <div class="list-group list-group-flush">
+                <!-- Example menu items, customize as needed -->
+                <a th:href="@{/applicant/dashboard}" 
+                   class="list-group-item list-group-item-action bg-primary text-white"
+                   th:classappend="${activePage == 'dashboard'} ? ' active' : ''">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Dashboard
+                </a>
+                <a th:href="@{/applicant/application}" 
+                   class="list-group-item list-group-item-action bg-primary text-white"
+                   th:classappend="${activePage == 'application'} ? ' active' : ''">
+                    <i class="fas fa-file-alt me-2"></i>
+                    My Application
+                </a>
+                <a th:href="@{/applicant/status}" 
+                   class="list-group-item list-group-item-action bg-primary text-white"
+                   th:classappend="${activePage == 'status'} ? ' active' : ''">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Application Status
+                </a>
+                <a th:href="@{/applicant/settings}" 
+                   class="list-group-item list-group-item-action bg-primary text-white"
+                   th:classappend="${activePage == 'settings'} ? ' active' : ''">
+                    <i class="fas fa-cogs me-2"></i>
+                    Settings
+                </a>
+            </div>
+        </nav>
+
+    </div>
+
+    <!-- ===================== PAGE CONTENT ===================== -->
+    <div id="page-content-wrapper" class="flex-grow-1">
+
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" aria-label="Top Menu">
+            <div class="container-fluid">
+
+                <!-- Sidebar toggle -->
+                <button class="btn btn-light" id="menu-toggle" aria-label="Toggle sidebar menu">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+
+                <!-- Optional: Page title or breadcrumb can go here -->
+                <div class="navbar-text ms-3 fw-semibold" th:text="${title} ?: 'Applicant Portal'"></div>
+
+                <!-- User Profile Dropdown -->
+                <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="applicantDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1" aria-hidden="true"></i>
+                            <span sec:authentication="principal.username">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="applicantDropdown">
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="m-0 p-0">
+                                    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <!-- Child page content injected here -->
+        <main class="p-3" id="main-content" tabindex="-1">
+            <div th:replace="${content} ?: ~{}"></div>
+        </main>
+
+    </div>
+</div>
+
+<!-- ===================== COMMON FRAGMENTS ===================== -->
+<!-- Include common reusable UI fragments for consistency -->
+<div th:replace="~{common/common-elements :: toast}"></div>
+<div th:replace="~{common/common-elements :: previewModal}"></div>
+<div th:replace="~{common/common-elements :: rejectionModal}"></div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/axios.min.js"></script>
+<script th:src="@{/js/applicant-dashboard.js}"></script>
+
+<script th:src="@{/js/applicant-layout.js}"></script>
+
+</body>
+</html>

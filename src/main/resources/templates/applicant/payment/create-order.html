@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Order</title>
+</head>
+<body>
+
+<h2>Start Payment</h2>
+
+<form th:action="@{/create-order}" method="post">
+    
+    <!-- Optional: You can later make these dynamic -->
+    <p>Amount: ₹1</p>
+
+    <button type="submit">
+        Proceed to Pay
+    </button>
+
+</form>
+
+</body>
+</html>

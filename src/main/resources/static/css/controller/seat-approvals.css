@@ -1,0 +1,122 @@
+/* Card Styles */
+.admission-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: 1px solid #e3e6f0;
+    background-color: #fff;
+    border-radius: 0.5rem;
+}
+
+.admission-card:hover:not(.opacity-75) {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border-color: #4e73df;
+}
+
+.opacity-75 {
+    cursor: not-allowed;
+    background-color: #f8f9fc;
+}
+
+/* Section Header */
+.section-header {
+    border-bottom: 1px solid #e3e6f0;
+    padding-bottom: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.step-badge {
+    width: 32px;
+    height: 32px;
+    background-color: #4e73df;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 0.95rem;
+}
+
+/* Search Box */
+.search-wrapper {
+    max-width: 300px;
+    width: 100%;
+}
+
+.search-wrapper .input-group-text {
+    background-color: #f8f9fc;
+    border-right: none;
+}
+
+.search-wrapper .form-control {
+    border-left: none;
+}
+
+.search-wrapper .form-control:focus {
+    box-shadow: none;
+    border-color: #d1d3e2;
+}
+
+/* Table Styles */
+.table-responsive .table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table thead th:nth-child(1) { width: 30%; }
+.table thead th:nth-child(2) { width: 25%; }
+.table thead th:nth-child(3) { width: 15%; }
+.table thead th:nth-child(4) { width: 15%; }
+.table thead th:nth-child(5) { width: 15%; }
+
+.table td,
+.table th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table tbody td:last-child {
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.approval-institute-name {
+    font-weight: 600;
+    color: #4e73df;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-wrapper {
+        max-width: 100%;
+        margin-top: 1rem;
+    }
+
+    .table thead th:nth-child(1) { width: 35%; }
+    .table thead th:nth-child(2) { width: 30%; }
+    .table thead th:nth-child(3) { width: 15%; }
+    .table thead th:nth-child(4) { width: 10%; }
+    .table thead th:nth-child(5) { width: 10%; }
+
+    .step-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .admission-card:hover:not(.opacity-75) {
+        transform: none;
+    }
+
+    .table {
+        font-size: 0.85rem;
+    }
+
+    .approval-institute-name {
+        font-size: 0.875rem;
+    }
+}

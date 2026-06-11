@@ -1,0 +1,308 @@
+<div th:fragment="toast" 
+     class="toast-container position-fixed top-0 end-0 p-3" 
+     style="z-index:1100">
+
+    <div id="statusToast" 
+         class="toast" 
+         role="alert" 
+         aria-live="assertive" 
+         aria-atomic="true">
+         
+        <div class="toast-header">
+            <i class="fas fa-bell me-2" aria-hidden="true"></i>
+            <!-- Removed duplicate bell icon for better spacing -->
+            <strong class="me-auto">Notification</strong>
+            <button type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="toast" 
+                    aria-label="Close notification">
+            </button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+
+<!-- ========== Institute Preview Modal (Admin Only) ========== -->
+<div th:fragment="previewModal" 
+     class="modal fade" 
+     id="instituteModal" 
+     tabindex="-1" 
+     aria-labelledby="instituteModalLabel" 
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="instituteModalLabel">
+                    <i class="fas fa-university me-2" aria-hidden="true"></i>
+                    Institute Preview
+                </h5>
+                <button type="button" 
+                        class="btn-close btn-close-white" 
+                        data-bs-dismiss="modal"
+                        aria-label="Close preview modal">
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4 bg-light">
+                <div class="row">
+
+                    <!-- General Info -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0 text-primary">
+                                    <i class="fas fa-info-circle me-2" aria-hidden="true"></i>
+                                    General Information
+                                </h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li>
+                                    <strong>Institute Name:</strong> 
+                                    <span id="modalInstituteName"></span>
+                                </li>
+                                <li>
+                                    <strong>AISHE ID:</strong> 
+                                    <span id="modalAISHEId"></span>
+                                </li>
+                                <li>
+                                    <strong>University:</strong> 
+                                    <span id="modalUniversityName"></span>
+                                </li>
+                                <li>
+                                    <strong>Year Established:</strong> 
+                                    <span id="modalYearEstablished"></span>
+                                </li>
+                                <li>
+                                    <strong>In Border Area:</strong> 
+                                    <span id="modalBorderDistrictArea"></span>
+                                </li>
+                                <li>
+                                    <strong>Management:</strong> 
+                                    <span id="modalManagementTypeName"></span>
+                                </li>
+                                <li>
+                                    <strong>Affiliation:</strong> 
+                                    <span id="modalAffiliationTypeName"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0 text-primary">
+                                    <i class="fas fa-map-marked-alt me-2" aria-hidden="true"></i>
+                                    Address
+                                </h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li><strong>Address Line 1:</strong> <span id="modalAddress1"></span></li>
+                                <li><strong>Address Line 2:</strong> <span id="modalAddress2"></span></li>
+                                <li><strong>State:</strong> <span id="modalStateName"></span></li>
+                                <li><strong>District:</strong> <span id="modalDistrictName"></span></li>
+                                <li><strong>Block:</strong> <span id="modalBlockName"></span></li>
+                                <li><strong>PIN Code:</strong> <span id="modalPinCode"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0 text-primary">
+                                    <i class="fas fa-user-tie me-2" aria-hidden="true"></i>
+                                    Contact Details
+                                </h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li>
+                                    <strong>Head of Institution:</strong> <span id="modalHead"></span>
+                                </li>
+                                <li>
+                                    <strong>Contact Number:</strong> <span id="modalContact"></span>
+                                </li>
+                                <li>
+                                    <strong>Email:</strong> <span id="modalEmail"></span>
+                                </li>
+                                <li>
+                                    <strong>Website:</strong> 
+                                    <a id="modalWebsite" href="#" target="_blank" aria-label="Institute website">N/A</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal"
+                        aria-label="Close preview modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== Rejection Modal (Admin Only) ========== -->
+<div th:fragment="rejectionModal"
+     class="modal fade"
+     id="rejectionModal"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1"
+     aria-labelledby="rejectionModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="rejectionModalLabel">
+                    <i class="fas fa-times-circle me-2" aria-hidden="true"></i>
+                    Institute Application Action <!-- MODIFIED: Generic title as it now handles both actions -->
+                </h5>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close action modal"> <!-- MODIFIED: aria-label -->
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <form id="rejectionForm" method="post">
+                    <!-- Hidden input to hold institute ID securely -->
+                    <input type="hidden" id="rejectionInstituteId"/>
+
+                    <div class="text-center mb-4">
+                        <h6 class="text-muted mb-2">Taking action on application for institute:</h6>
+                        <div class="alert alert-info">
+                            <h6 class="fw-bold text-primary mb-0" id="rejectionInstituteName"></h6> 
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="rejectionReasonText" class="form-label fw-bold">
+                            Reason/Comments <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="rejectionReasonText" rows="5"
+                                  placeholder="Please provide a detailed reason or specific corrections needed..."
+                                  required></textarea>
+                        <div class="form-text">This reason will be shared with the institute.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-danger">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-ban text-danger fa-2x mb-2"></i>
+                                    <h6 class="card-title text-danger">Reject Application</h6>
+                                    <p class="card-text small">Permanently reject this application. The institute cannot resubmit.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-edit text-warning fa-2x mb-2"></i>
+                                    <h6 class="card-title text-warning">Send for Correction</h6>
+                                    <p class="card-text small">Allow institute to make corrections and resubmit the application.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                        <!-- Both buttons are always present and visible in the modal's HTML -->
+                        <button type="button" class="btn btn-warning" id="sendForCorrectionBtn"> 
+                            <i class="fas fa-edit me-2"></i>Send for Correction
+                        </button>
+                        <button type="submit" class="btn btn-danger" id="submitRejectionBtn"> 
+                            <i class="fas fa-ban me-2"></i>Reject Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ========== Confirmation Modal (Admin Only) ========== -->
+<div th:fragment="confirmationModal"
+     class="modal fade"
+     id="confirmationModal"
+     tabindex="-1"
+     aria-labelledby="confirmationModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">
+                    <i class="fas fa-question-circle me-2 text-warning"></i>Confirm Action
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close confirmation modal">
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                </div>
+                <p class="text-center mb-3">
+                    Are you sure you want to <strong class="text-success" id="confirmationAction">accept</strong> the application for:
+                </p>
+                <div class="alert alert-info text-center">
+                    <h6 class="fw-bold text-primary mb-0" id="confirmationInstituteName"></h6>
+                </div>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Important:</strong> This action is permanent and cannot be undone.
+                </div>
+
+                <input type="hidden" id="confirmationInstituteId" />
+                <input type="hidden" id="confirmationStatus" />
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="button"
+                        class="btn btn-success"
+                        id="confirmAcceptReject">
+                    <i class="fas fa-check me-2"></i>Yes, Confirm
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

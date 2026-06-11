@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <th:block th:fragment="title">
+        <title>Manage Programmes/Majors/Courses for Admission Window</title>
+        <link th:href="@{/css/manage-programmes/admission-window-programmes.css}" rel="stylesheet">
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="content">
+    <main class="container-fluid px-4 py-4"
+          th:data-admission-window-code="${window.admissionCode}"
+          th:data-admission-window-id="${window.admissionId}">
+
+        <!-- Replaced inline styles with Bootstrap classes -->
+        <div id="alert-box" class="position-fixed top-0 end-0 p-3 z-3 d-none"></div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">
+                        <a href="/admission-window/institute" class="text-decoration-none">
+                            Admission Window
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Window [[${window.admissionCode}]]
+                    </li>
+                </ol>
+            </nav>
+            <a href="/admission-window/institute" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        </div>
+
+        <div class="mb-4">
+            <h2 class="h3 mb-2">
+                <i class="bi bi-gear me-2 text-primary"></i>Configure Programmes/Majors/Courses
+            </h2>
+            <p class="text-muted">
+                Configure seat allocation and seat reservations for each programme/major/course.
+            </p>
+        </div>
+
+        <!-- ===== INSTITUTE-LEVEL CUET PREFERENCE CARD ===== -->
+        <div class="card shadow-sm mb-4" id="cuetPreferenceCard">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold">
+                    <i class="bi bi-mortarboard me-2 text-primary"></i>CUET Participation Preference
+                </h6>
+                <span id="cuetPreferenceLockedBadge" class="badge bg-danger d-none">
+                    <i class="bi bi-lock-fill me-1"></i>Locked
+                </span>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <p class="mb-1 text-muted small">
+                        This is an <strong>institute-wide</strong> setting for this admission window. All programmes will follow the same preference.
+                    </p>
+                    <div id="cuetPreferenceDisplay">
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary fs-6 px-3 py-2" id="cuetPreferenceBadge">
+                            <i class="bi bi-dash-circle me-1"></i>Non-CUET
+                        </span>
+                    </div>
+                </div>
+                <button type="button"
+                        class="btn btn-outline-primary btn-sm"
+                        id="changeCuetPreferenceBtn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cuetPreferenceModal">
+                    <i class="bi bi-pencil me-1"></i>Change Preference
+                </button>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-table me-2"></i>Programmes/Majors/Courses for Window [[${window.admissionCode}]]
+                </h5>
+                <!-- Removed onclick -->
+                <button type="button" class="btn btn-sm btn-light text-danger fw-bold shadow-sm" id="finalSubmitBtn" disabled>
+                    <i class="bi bi-lock-fill me-1"></i>Final Submit Selected
+                </button>
+            </div>
+            <div class="card-body">
+
+                <div id="shiftTabsContainer"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle" id="shiftTable">
+                        <thead class="table-light">
+                        <tr>
+                            <!-- Removed inline widths and onchange -->
+                            <th class="text-center col-1">
+                                <input class="form-check-input shadow-sm" type="checkbox" id="selectAllCheckbox">
+                            </th>
+                            <th class="col-3">Programme/Major/Course Name</th>
+                            <th class="col-2">Stream</th>
+                            <th class="col-1">Level</th>
+                            <th class="text-center col-1">Total Seats</th>
+                            <th class="text-center col-2">Status</th>
+                            <th class="text-center col-2">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="window-programmes-body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="no-programmes-box"
+                     class="alert alert-info text-center mt-3 d-none">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No programmes/majors/courses available for this admission window.
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="updateSeatMatrixModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning text-dark">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil me-2"></i>Update Seat Allocation
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateSeatMatrixForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Programme/Major/Course</label>
+                                <input type="text"
+                                       class="form-control bg-light"
+                                       id="updateProgrammeName"
+                                       readonly>
+                                <small id="updateProgrammeShiftLabel" class="text-muted d-block mt-1"></small>
+                                <input type="hidden" id="updateProgrammeId">
+                            </div>
+                            <div class="mb-3">
+                                <label for="totalSeatsInput"
+                                       class="form-label fw-bold">Total Seats *</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="totalSeatsInput"
+                                       min="1" max="999" required>
+                                <small class="text-muted">
+                                    Number of seats available for this programme/major/course shift
+                                </small>
+                            </div>
+                            <!-- CUET preference is institute-wide; managed in the CUET Preference card above -->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                        <button type="button"
+                                class="btn btn-primary"
+                                id="saveSeatBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="finalSubmitModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-danger shadow">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Final Submission</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <!-- Replaced inline font-size with display-1 class -->
+                        <i class="bi bi-lock text-danger display-1"></i>
+                        <h5 class="mt-3 fw-bold text-dark">Are you absolutely sure?</h5>
+                        <p class="text-muted mb-0">You are about to permanently submit the seat matrix for the selected programmes/majors/courses. <strong>This action cannot be undone.</strong> Once submitted, you will not be able to change the seat counts.</p>
+                    </div>
+                    <div class="modal-footer bg-light justify-content-center">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                        <!-- Removed onclick -->
+                        <button type="button" class="btn btn-danger px-4 fw-bold" id="confirmSubmitBtn">
+                            <i class="bi bi-check-circle-fill me-2"></i>Yes, Lock & Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CUET PREFERENCE MODAL ===== -->
+        <div class="modal fade" id="cuetPreferenceModal" tabindex="-1" aria-labelledby="cuetPreferenceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="cuetPreferenceModalLabel">
+                            <i class="bi bi-mortarboard me-2"></i>Set CUET Participation Preference
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-3">
+                            This preference applies to <strong>all programmes</strong> offered by your institute for this admission window. It cannot be changed after Final Submit.
+                        </p>
+                        <div class="d-flex align-items-center gap-3 p-3 border rounded bg-light">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       role="switch"
+                                       id="instituteCuetToggle">
+                                <label class="form-check-label fw-semibold ms-2" id="instituteCuetLabel" for="instituteCuetToggle">
+                                    Non-CUET
+                                </label>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                            <strong>CUET</strong> — your institute participates in the CUET allotment route for this window.<br>
+                            <strong>Non-CUET</strong> — your institute participates in the Non-CUET allotment route (default).
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveCuetPreferenceBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save Preference
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/axios.min.js"></script>
+        <script th:src="@{/js/manage-programmes/admission-window-programmes.js}"></script>
+    </main>
+</th:block>
+</body>
+</html>

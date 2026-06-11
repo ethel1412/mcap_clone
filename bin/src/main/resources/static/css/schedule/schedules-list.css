@@ -1,0 +1,33 @@
+table#schedulesTable tr:hover {
+  background-color: #e2e6ea;
+}
+
+@media (max-width: 768px) {
+  table#schedulesTable, table#schedulesTable thead, table#schedulesTable tbody, table#schedulesTable th, table#schedulesTable td, table#schedulesTable tr {
+    display: block;
+  }
+
+  table#schedulesTable tr {
+    margin-bottom: 1rem;
+  }
+
+  table#schedulesTable th {
+    display: none;
+  }
+
+  table#schedulesTable td {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  table#schedulesTable td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: bold;
+  }
+}

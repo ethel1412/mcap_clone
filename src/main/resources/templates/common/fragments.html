@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<tr th:fragment="instituteTableHeaderRow">
+    <th>#</th>
+    <th>Name</th>
+    <th>AISHE ID</th>
+    <th>Institution Head Details</th>
+    <th class="text-center">Status</th>
+    <th class="text-center">Active</th>
+    <th class="text-center">Actions</th>
+</tr>
+
+
+<th:block th:fragment="instituteTableBodyRows(instituteList)">
+    <tr th:each="institute, iterStat : ${instituteList}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${institute.instituteName}"></td>
+        <td th:text="${institute.AISHEId}"></td>
+        <td th:text="${institute.institutionHeadDetails}"></td>
+        <td class="status-cell text-center">
+            <span class="badge rounded-pill"
+                  th:classappend="${institute.status.name() == 'ACCEPTED'} ? 'text-bg-success' :
+                                (${institute.status.name() == 'REJECTED'} ? 'text-bg-danger' :
+                                (${institute.status.name() == 'CORRECTION_REQUIRED'} ? 'text-bg-warning' : 'text-bg-info'))"
+                  th:text="${institute.status.name()}"></span>
+        </td>
+        <td class="text-center">
+            <div class="form-check form-switch d-inline-block">
+                <input
+                        class="form-check-input institute-active-toggle institute-switch"
+                        type="checkbox"
+                        role="switch"
+                        th:checked="${institute.active}"
+                        th:data-id="${institute.instituteId}"
+                        th:aria-label="'Toggle active status for ' + ${institute.instituteName}"
+                />
+            </div>
+        </td>
+        <td class="action-cell text-center">
+            <div th:if="${institute.status.name() == 'PENDING'}" class="btn-group btn-group-sm">
+                <button
+                        class="btn btn-outline-info"
+                        th:data-id="${institute.instituteId}"
+                        data-action="preview"
+                        data-bs-toggle="tooltip" title="Preview">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button
+                        class="btn btn-outline-success action-btn"
+                        th:data-id="${institute.instituteId}"
+                        data-action="accept"
+                        data-bs-toggle="tooltip" title="Accept">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button
+                        class="btn btn-outline-danger action-btn"
+                        th:data-id="${institute.instituteId}"
+                        data-action="reject"
+                        data-bs-toggle="tooltip" title="Reject">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div th:if="${institute.status.name() != 'PENDING'}">
+                <button
+                        class="btn btn-sm btn-info"
+                        th:data-id="${institute.instituteId}"
+                        data-action="preview"
+                        title="Preview Institute">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+            </div>
+        </td>
+    </tr>
+</th:block>
+
+</body>
+</html>

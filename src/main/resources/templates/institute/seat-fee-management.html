@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Seat Acceptance Fee Management</title>
+</head>
+<body>
+
+<!-- Page-specific CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+<link rel="stylesheet" th:href="@{/css/institute-seat-fee.css}">
+
+<div class="container-fluid mt-3">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-0">
+                <i class="bi bi-cash-coin me-2" aria-hidden="true"></i>Seat Acceptance Fee
+            </h3>
+            <p class="text-muted small mb-0">
+                Define fee structures and assign them to programmes or streams.
+                Applicants will see and pay this amount when they accept an allotted seat.
+            </p>
+        </div>
+        <button type="button" class="btn btn-primary" id="openAddModalBtn">
+            <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>Add Fee Structure
+        </button>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" class="col-12" role="status" aria-live="polite"></div>
+
+    <!-- Structures Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white fee-card-header">
+            <i class="bi bi-table me-2" aria-hidden="true"></i>Configured Fee Structures
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0" id="feeStructuresTable">
+                    <thead class="table-primary">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Fee Structure Name</th>
+                        <th scope="col">Total Amount (&#x20B9;)</th>
+                        <th scope="col">Particulars</th>
+                        <th scope="col">Applies To</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="feeStructuresTableBody"></tbody>
+                </table>
+            </div>
+            <!-- Empty state -->
+            <div id="emptyState" class="fee-empty-state" hidden>
+                <div class="fee-empty-icon">
+                    <i class="bi bi-inbox" aria-hidden="true"></i>
+                </div>
+                <p class="text-muted">
+                    No fee structures added yet.
+                    Click <strong>Add Fee Structure</strong> to create one.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================== ADD / EDIT MODAL ================== -->
+<div class="modal fade" id="feeModal" tabindex="-1"
+     aria-labelledby="feeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="feeModalLabel">
+                    <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+                    <span id="modalTitleText">Add Fee Structure</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Opaque token (no PK) -->
+                <input type="hidden" id="editFeeToken" />
+
+                <!-- Name -->
+                <div class="mb-3">
+                    <label for="feeName" class="form-label fw-semibold">
+                        Fee Structure Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="feeName" class="form-control"
+                           placeholder="e.g. Admission Fee 2026-27" maxlength="150" />
+                    <div class="text-danger small mt-1" id="feeNameError" role="alert"></div>
+                </div>
+
+                <!-- Particulars table -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label fw-semibold mb-0">
+                            Fee Particulars <span class="text-danger">*</span>
+                        </label>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="addRowBtn">
+                            <i class="bi bi-plus" aria-hidden="true"></i> Add Row
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm particulars-table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Particulars</th>
+                                <th scope="col">Amount (&#x20B9;)</th>
+                                <th scope="col" class="text-center">Remove</th>
+                            </tr>
+                            </thead>
+                            <tbody id="particularsBody"></tbody>
+                            <tfoot>
+                            <tr>
+                                <td class="fw-bold">Total</td>
+                                <td id="totalAmountCell" class="total-amount-cell">&#x20B9; 0.00</td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="text-danger small" id="particularsError" role="alert"></div>
+                </div>
+
+                <!-- Scope -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Applies To <span class="text-danger">*</span>
+                    </label>
+                    <p class="text-muted small mb-2">
+                        Choose whether this fee applies to specific programmes or an entire stream.
+                    </p>
+
+                    <div class="btn-group w-100 mb-3 scope-type-group" role="group"
+                         aria-label="Scope type selector">
+                        <input type="radio" class="btn-check" name="scopeType"
+                               id="scopeProgramme" value="programme" checked />
+                        <label class="btn btn-outline-primary" for="scopeProgramme">
+                            <i class="bi bi-book me-1" aria-hidden="true"></i>Specific Programmes
+                        </label>
+                        <input type="radio" class="btn-check" name="scopeType"
+                               id="scopeStream" value="stream" />
+                        <label class="btn btn-outline-secondary" for="scopeStream">
+                            <i class="bi bi-layers me-1" aria-hidden="true"></i>Entire Stream(s)
+                        </label>
+                    </div>
+
+                    <div id="programmeScopeDiv">
+                        <label for="programmeSelect" class="form-label small text-muted">
+                            Select Programmes
+                        </label>
+                        <select id="programmeSelect" class="form-select" multiple size="5"
+                                aria-describedby="programmeScopeError"></select>
+                        <small class="text-muted">Hold Ctrl / Cmd to select multiple.</small>
+                        <div class="text-danger small mt-1" id="programmeScopeError" role="alert"></div>
+                    </div>
+
+                    <div id="streamScopeDiv" hidden>
+                        <label for="streamSelect" class="form-label small text-muted">
+                            Select Streams
+                        </label>
+                        <select id="streamSelect" class="form-select" multiple size="4"
+                                aria-describedby="streamScopeError"></select>
+                        <small class="text-muted">
+                            Selecting a stream applies this fee to all its programmes.
+                        </small>
+                        <div class="text-danger small mt-1" id="streamScopeError" role="alert"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveFeeStructureBtn">
+                    <i class="bi bi-save me-1" aria-hidden="true"></i>Save Fee Structure
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================== VIEW MODAL ================== -->
+<div class="modal fade" id="viewModal" tabindex="-1"
+     aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title" id="viewModalLabel">
+                    <i class="bi bi-eye me-2" aria-hidden="true"></i>Fee Structure Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="fw-bold mb-3" id="viewModalFeeName"></h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered mb-3 fee-breakdown-table">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col">Particular</th>
+                            <th scope="col" class="text-end">Amount (&#x20B9;)</th>
+                        </tr>
+                        </thead>
+                        <tbody id="viewParticularsBody"></tbody>
+                        <tfoot>
+                        <tr>
+                            <td class="fw-bold">Total</td>
+                            <td id="viewTotalAmount"
+                                class="text-end fee-breakdown-total fw-bold"></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div>
+                    <strong>Applies to:</strong>
+                    <span class="text-muted" id="viewModalScopeText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== DELETE CONFIRM MODAL ================== -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1"
+     aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">
+                    <i class="bi bi-trash me-2" aria-hidden="true"></i>Confirm Delete
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete fee structure
+                    <strong id="deleteFeeName"></strong>?
+                </p>
+                <p class="text-muted small">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page-specific JS (loaded last) -->
+<script th:src="@{/js/institute-seat-fee.js}"></script>
+
+</body>
+</html>
