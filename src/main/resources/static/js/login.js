@@ -1,437 +1,458 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
-    const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+  const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-    const userType = document.getElementById("userType");
-    const loginForm = document.getElementById("login-form");
-    const loginBtn = document.getElementById("login-submit-btn");
-    const dob = document.getElementById("dob-temp");
-    const hiddenDob = document.getElementById("dob");
-    const dobGroup = document.getElementById("dob-group");
+  axios.defaults.headers.common[csrfHeader] = csrfToken;
+
+  const steps = document.querySelectorAll(".step-number");
+  const userType = document.getElementById("userType");
+  const loginForm = document.getElementById("login-form");
+  const dob = document.getElementById("dob-temp");
+  const dobGroup = document.getElementById("dob-group");
+  let isSubmitting = false;
+
+  window.addEventListener("pageshow", function (event) {
+
+    const navigation =
+        performance.getEntriesByType("navigation");
+
+    if (
+        event.persisted ||
+        (
+            navigation.length > 0 &&
+            navigation[0].type === "back_forward"
+        )
+    ) {
+
+        window.location.reload();
+    }
+});
+
+  function handleUserTypeChange() {
+    if (!userType || !dobGroup || !dob) return;
+
+    if (userType.value === "APPLICANT") {
+      dobGroup.classList.remove("d-none");
+      dob.setAttribute("required", "required");
+    } else {
+      dobGroup.classList.add("d-none");
+      dob.removeAttribute("required");
+      dob.value = "";
+    }
+  }
+
+  if (userType) {
+    userType.addEventListener("change", handleUserTypeChange);
+    handleUserTypeChange();
+  }
+
+  steps.forEach((step, index) => {
+    step.style.animation = `bounceIn 0.6s ${index * 0.2}s forwards`;
+    step.style.opacity = "0";
+  });
+
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes bounceIn {
+      0% { transform: scale(0.1); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  document.getElementById("refresh-button")?.addEventListener("click", getCaptcha);
+  getCaptcha();
+
+	if (loginForm) {
+
+loginForm.addEventListener("submit", function (e) {
+
+if (isSubmitting) return;
+
+e.preventDefault();
+
+getPublicKey().then(function (publicKey) {
+
+  if (!publicKey) return;
+
+  const en = new JSEncrypt();
+
+  en.setPublicKey(publicKey);
+
+  const type = userType.value;
+
+  // ================= ENCRYPT PASSWORD =================
+
+		const passwordField =
+		    document.getElementById("password");
+
+		if (!passwordField.dataset.originalValue) {
+
+		  passwordField.dataset.originalValue =
+		      passwordField.value;
+		}
+
+		const encryptedPassword =
+		    en.encrypt(
+		      passwordField.dataset.originalValue
+		    );
+
+		if (!encryptedPassword) {
+
+		  alert("Password encryption failed");
+
+		  return;
+		}
+
+		passwordField.value = encryptedPassword;
+
+  // ================= ENCRYPT DOB =================
+
+  if (type === "APPLICANT") {
+
+    if (!dob.value) {
+
+      alert("Please select Date of Birth");
+
+      return;
+    }
+
+    if (!encryptField(
+          en,
+          "dob-temp",
+          "Date of Birth"
+        )) {
+
+      return;
+    }
+
+  } else {
+
+    dob.value = "";
+  }
+
+  isSubmitting = true;
+
+  const formData =
+        new FormData(loginForm);
+
+  axios.post(
+
+    loginForm.action,
+
+    new URLSearchParams(formData),
+
+    {
+      headers: {
+        "Content-Type":
+          "application/x-www-form-urlencoded"
+      },
+
+      withCredentials: true
+    }
+
+  )
+
+  // ================= SUCCESS =================
+
+  .then(function (response) {
+    const data = response.data;
+
+    const errorDiv =
+        document.getElementById(
+          "login-error"
+        );
+
+    const successDiv =
+        document.getElementById(
+          "login-success"
+        );
+
+    // reset alerts
+    errorDiv.classList.add("d-none");
+    successDiv.classList.add("d-none");
+
+    // ================= OTP REQUIRED =================
+
+ 	if (data.status === "OTP_REQUIRED") {
+
+	  isSubmitting = false;
+
+	  successDiv.innerText =
+	    data.message || "OTP sent successfully";
+
+	  successDiv.classList.remove("d-none");
+
+	  const loginBtn =
+	    document.getElementById("login-submit-btn");
+
+	  if (loginBtn) {
+	    loginBtn.disabled = true;
+	  }
+
+	  const otpModalElement =
+	    document.getElementById("otpModal");
+
+	  let otpModal =
+	    bootstrap.Modal.getInstance(otpModalElement);
+
+	  if (!otpModal) {
+	    otpModal = new bootstrap.Modal(
+	      otpModalElement,
+	      {
+	        backdrop: "static",
+	        keyboard: false
+	      }
+	    );
+	  }
+
+	  otpModal.show();
+
+	  return;
+	}
+
+
+    // ================= LOGIN SUCCESS =================
+
+    if (data.status === "LOGIN_SUCCESS") {
+
+      const otpModalElement =
+  	  document.getElementById("otpModal");
+
+	  const otpModal =bootstrap.Modal.getInstance(otpModalElement);
+
+		if (otpModal) {
+		  otpModal.hide();
+		}
+
+		window.location.replace(data.redirectUrl);
+    }
+
+  })
+
+  // ================= ERROR =================
+
+  .catch(function (error) {
+
+	 getCaptcha();
+
     const captchaInput = document.getElementById("captcha");
-    const refreshButton = document.getElementById("refresh-button");
 
-    const loginError = document.getElementById("login-error");
-    const loginSuccess = document.getElementById("login-success");
+    if (captchaInput) {
+      captchaInput.value = "";
+    }
 
-    const otpForm = document.getElementById("otp-form");
-    const otpInput = document.getElementById("otp");
+	const passwordField = document.getElementById("password");
+
+	if (
+	    passwordField &&
+	    passwordField.dataset.originalValue
+	) {
+
+	    passwordField.value = passwordField.dataset.originalValue;
+	}
+
+    const errorDiv =
+        document.getElementById(
+          "login-error"
+        );
+
+    const successDiv =
+        document.getElementById(
+          "login-success"
+        );
+
+    errorDiv.classList.add("d-none");
+    successDiv.classList.add("d-none");
+
+    // ================= OTP REQUIRED IN CATCH =================
+
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.status ===
+        "OTP_REQUIRED"
+    ) {
+
+      successDiv.innerText =
+          error.response.data.message ||
+          "OTP sent successfully";
+
+      successDiv.classList.remove(
+          "d-none"
+      );
+      return;
+    }
+
+    // ================= NORMAL LOGIN ERROR =================
+
+    errorDiv.classList.remove(
+      "d-none"
+    );
+
+    if (
+      error.response &&
+      error.response.data
+    ) {
+
+      errorDiv.innerText =
+          error.response.data.message ||
+          "Invalid credentials";
+
+    } else {
+
+      errorDiv.innerText =
+          "Login failed";
+    }
+
+    isSubmitting = false;
+  });
+
+});
+
+
+});
+
+}
+
+
+  // ================= OTP VERIFY =================
+
+  const otpForm = document.getElementById("otp-form");
+
+if (otpForm) {
+
+  otpForm.addEventListener("submit", function (e) {
+
+    e.preventDefault();
+
+    const otp = document.getElementById("otp").value;
+
+      if (!/^\d{6}$/.test(otp)) {
+
+		  otpError.classList.remove("d-none");
+
+		  otpError.innerText =
+		    "Please enter valid 6 digit OTP";
+
+		  return;
+		}
+
     const otpError = document.getElementById("otp-modal-error");
     const otpSuccess = document.getElementById("otp-modal-success");
-    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-    const resendOtpBtn = document.getElementById("resendOtpBtn");
 
-    let isSubmitting = false;
-    let resendCountdownTimer = null;
-    let resendSeconds = 30;
+    otpError.classList.add("d-none");
+    otpSuccess.classList.add("d-none");
 
-    if (csrfTokenMeta && csrfHeaderMeta && window.axios) {
-        axios.defaults.headers.common[csrfHeaderMeta.content] = csrfTokenMeta.content;
-        axios.defaults.withCredentials = true;
-    }
+    const verifyBtn = document.getElementById("verifyOtpBtn");
+	verifyBtn.disabled = true;
+	verifyBtn.innerText = "Verifying...";
 
-    window.addEventListener("pageshow", function (event) {
-        const navigation = performance.getEntriesByType("navigation");
-        if (
-            event.persisted ||
-            (navigation.length > 0 && navigation[0].type === "back_forward")
-        ) {
-            window.location.reload();
-        }
-    });
+    axios.post("/otp/verify-login-otp", {
+      otp: otp,
+      purpose: "APPLICANT_LOGIN"
+    })
 
-    function showElement(el) {
-        if (el) {
-            el.classList.remove("d-none");
-        }
-    }
+    .then(function (response) {
 
-    function hideElement(el) {
-        if (el) {
-            el.classList.add("d-none");
-        }
-    }
+    const data = response.data;
 
-    function setText(el, message) {
-        if (el) {
-            el.innerText = message || "";
-        }
-    }
+    const errorDiv = document.getElementById("login-error");
 
-    function clearAlerts() {
-        hideElement(loginError);
-        hideElement(loginSuccess);
-        hideElement(otpError);
-        hideElement(otpSuccess);
+    const successDiv = document.getElementById("login-success");
 
-        setText(loginError, "");
-        setText(loginSuccess, "");
-        setText(otpError, "");
-        setText(otpSuccess, "");
-    }
+    errorDiv.classList.add("d-none");
+    successDiv.classList.add("d-none");
 
-    function showLoginError(message) {
-        hideElement(loginSuccess);
-        setText(loginError, message || "Login failed");
-        showElement(loginError);
-    }
+    // ================= OTP REQUIRED =================
 
-    function showLoginSuccess(message) {
-        hideElement(loginError);
-        setText(loginSuccess, message || "Success");
-        showElement(loginSuccess);
-    }
+    if (data.status === "OTP_REQUIRED") {
 
-    function showOtpError(message) {
-        hideElement(otpSuccess);
-        setText(otpError, message || "Invalid OTP");
-        showElement(otpError);
-    }
+        isSubmitting = false;
 
-    function showOtpSuccess(message) {
-        hideElement(otpError);
-        setText(otpSuccess, message || "OTP verified");
-        showElement(otpSuccess);
-    }
+        successDiv.innerText =
+            data.message || "OTP sent successfully";
 
-    function getOtpModal() {
-        const otpModalElement = document.getElementById("otpModal");
-        let otpModal = bootstrap.Modal.getInstance(otpModalElement);
-        if (!otpModal) {
-            otpModal = new bootstrap.Modal(otpModalElement, {
-                backdrop: "static",
-                keyboard: false
-            });
-        }
-        return otpModal;
-    }
+        successDiv.classList.remove("d-none");
 
-    function handleUserTypeChange() {
-        if (!userType || !dobGroup || !dob) {
-            return;
+        const loginBtn =
+            document.getElementById("login-submit-btn");
+
+        if (loginBtn) {
+            loginBtn.disabled = true;
         }
 
-        if (userType.value === "APPLICANT") {
-            dobGroup.classList.remove("d-none");
-            dob.setAttribute("required", "required");
-        } else {
-            dobGroup.classList.add("d-none");
-            dob.removeAttribute("required");
-            dob.value = "";
-            if (hiddenDob) {
-                hiddenDob.value = "";
-            }
-        }
-    }
+        const otpModalElement =
+            document.getElementById("otpModal");
 
-    function encryptField(encryptor, fieldId, fieldName) {
-        const field = document.getElementById(fieldId);
-        if (!field) {
-            alert(fieldName + " element not found");
-            return false;
-        }
-
-        const value = field.value;
-        if (!value || value.trim() === "") {
-            alert(fieldName + " is required");
-            return false;
-        }
-
-        const encryptedValue = encryptor.encrypt(value);
-        if (!encryptedValue) {
-            alert(fieldName + " encryption failed");
-            return false;
-        }
-
-        if (fieldId === "dob-temp") {
-            if (!hiddenDob) {
-                alert("Hidden DOB field not found");
-                return false;
-            }
-            hiddenDob.value = encryptedValue;
-        } else {
-            field.value = encryptedValue;
-        }
-
-        return true;
-    }
-
-    function restorePasswordIfNeeded() {
-        const passwordField = document.getElementById("password");
-        if (passwordField && passwordField.dataset.originalValue) {
-            passwordField.value = passwordField.dataset.originalValue;
-        }
-    }
-
-    function resetCaptchaInput() {
-        if (captchaInput) {
-            captchaInput.value = "";
-        }
-    }
-
-    function setLoginButtonState(disabled, text) {
-        if (!loginBtn) {
-            return;
-        }
-        loginBtn.disabled = disabled;
-        loginBtn.innerText = text || "Log In";
-    }
-
-    function setVerifyButtonState(disabled, text) {
-        if (!verifyOtpBtn) {
-            return;
-        }
-        verifyOtpBtn.disabled = disabled;
-        verifyOtpBtn.innerText = text || "Verify OTP";
-    }
-
-    function startResendCountdown() {
-        if (!resendOtpBtn) {
-            return;
-        }
-
-        resendSeconds = 30;
-        resendOtpBtn.disabled = true;
-        resendOtpBtn.innerText = `Resend OTP in ${resendSeconds}s`;
-
-        if (resendCountdownTimer) {
-            clearInterval(resendCountdownTimer);
-        }
-
-        resendCountdownTimer = setInterval(function () {
-            resendSeconds -= 1;
-
-            if (resendSeconds <= 0) {
-                clearInterval(resendCountdownTimer);
-                resendCountdownTimer = null;
-                resendOtpBtn.disabled = false;
-                resendOtpBtn.innerText = "Resend OTP";
-                return;
-            }
-
-            resendOtpBtn.innerText = `Resend OTP in ${resendSeconds}s`;
-        }, 1000);
-    }
-
-    async function submitLoginForm() {
-        if (!loginForm || isSubmitting) {
-            return;
-        }
-
-        clearAlerts();
-
-        const passwordField = document.getElementById("password");
-        const type = userType ? userType.value : "";
-
-        try {
-            const publicKey = await getPublicKey();
-            if (!publicKey) {
-                showLoginError("Unable to load public key");
-                return;
-            }
-
-            const encryptor = new JSEncrypt();
-            encryptor.setPublicKey(publicKey);
-
-            if (passwordField && !passwordField.dataset.originalValue) {
-                passwordField.dataset.originalValue = passwordField.value;
-            }
-
-            const encryptedPassword = encryptor.encrypt(passwordField.dataset.originalValue);
-            if (!encryptedPassword) {
-                showLoginError("Password encryption failed");
-                return;
-            }
-
-            passwordField.value = encryptedPassword;
-
-            if (type === "APPLICANT") {
-                if (!dob || !dob.value) {
-                    restorePasswordIfNeeded();
-                    showLoginError("Please select Date of Birth");
-                    return;
-                }
-
-                if (!encryptField(encryptor, "dob-temp", "Date of Birth")) {
-                    restorePasswordIfNeeded();
-                    return;
-                }
-            } else if (dob) {
-                dob.value = "";
-                if (hiddenDob) {
-                    hiddenDob.value = "";
-                }
-            }
-
-            isSubmitting = true;
-            setLoginButtonState(true, "Logging in...");
-
-            const formData = new FormData(loginForm);
-            const response = await axios.post(
-                loginForm.action,
-                new URLSearchParams(formData),
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    }
-                }
+        let otpModal =
+            bootstrap.Modal.getInstance(
+                otpModalElement
             );
 
-            const data = response.data || {};
+        if (!otpModal) {
 
-            hideElement(loginError);
-            hideElement(loginSuccess);
-
-            if (data.status === "OTP_REQUIRED") {
-                isSubmitting = false;
-                setLoginButtonState(false, "Log In");
-                showLoginSuccess(data.message || "OTP sent successfully");
-                if (loginBtn) {
-                    loginBtn.disabled = true;
+            otpModal = new bootstrap.Modal(
+                otpModalElement,
+                {
+                    backdrop: "static",
+                    keyboard: false
                 }
-                startResendCountdown();
-                getOtpModal().show();
-                return;
-            }
-
-            if (data.status === "LOGIN_SUCCESS") {
-                window.location.replace(data.redirectUrl);
-                return;
-            }
-
-            isSubmitting = false;
-            setLoginButtonState(false, "Log In");
-            restorePasswordIfNeeded();
-            showLoginError(data.message || "Login failed");
-        } catch (error) {
-            getCaptcha();
-            resetCaptchaInput();
-            restorePasswordIfNeeded();
-
-            hideElement(loginSuccess);
-
-            if (
-                error.response &&
-                error.response.data &&
-                error.response.data.status === "OTP_REQUIRED"
-            ) {
-                isSubmitting = false;
-                setLoginButtonState(false, "Log In");
-                showLoginSuccess(error.response.data.message || "OTP sent successfully");
-                if (loginBtn) {
-                    loginBtn.disabled = true;
-                }
-                startResendCountdown();
-                getOtpModal().show();
-                return;
-            }
-
-            const message =
-                error.response?.data?.message || "Invalid credentials";
-
-            showLoginError(message);
-            isSubmitting = false;
-            setLoginButtonState(false, "Log In");
-        }
-    }
-
-    async function submitOtpVerification() {
-        const otpValue = otpInput ? otpInput.value.trim() : "";
-
-        hideElement(otpError);
-        hideElement(otpSuccess);
-
-        if (!/^\d{6}$/.test(otpValue)) {
-            showOtpError("Please enter valid 6 digit OTP");
-            return;
+            );
         }
 
-        setVerifyButtonState(true, "Verifying...");
+        otpModal.show();
 
-        try {
-            const response = await axios.post("/otp/verify-login-otp", {
-                otp: otpValue,
-                purpose: "APPLICANT_LOGIN"
-            });
-
-            const data = response.data || {};
-
-            hideElement(loginError);
-            hideElement(loginSuccess);
-
-            if (data.status === "OTP_REQUIRED") {
-                setVerifyButtonState(false, "Verify OTP");
-                showLoginSuccess(data.message || "OTP sent successfully");
-                startResendCountdown();
-                getOtpModal().show();
-                return;
-            }
-
-            showOtpSuccess(data.message || "OTP verified successfully");
-
-            if (data.redirectUrl) {
-                window.location.replace(data.redirectUrl);
-                return;
-            }
-
-            window.location.reload();
-        } catch (error) {
-            setVerifyButtonState(false, "Verify OTP");
-            showOtpError(error.response?.data?.message || "Invalid OTP");
-        }
+        return;
     }
 
-    async function resendOtp() {
-        if (!resendOtpBtn || resendOtpBtn.disabled) {
-            return;
-        }
+    // ================= NORMAL LOGIN SUCCESS =================
+	window.location.replace(data.redirectUrl);
+})
 
-        resendOtpBtn.disabled = true;
-        resendOtpBtn.innerText = "Sending...";
+    .catch(function (error) {
+		verifyBtn.disabled = false;
+		verifyBtn.innerText = "Verify OTP";
+	      otpError.classList.remove("d-none");
 
-        try {
-            const response = await axios.post("/otp/resend-login-otp", {
-                purpose: "APPLICANT_LOGIN"
-            });
+	      otpError.innerText =
+	        error.response?.data?.message ||
+	        "Invalid OTP";
 
-            const data = response.data || {};
-            showOtpSuccess(data.message || "OTP resent successfully");
-            startResendCountdown();
-        } catch (error) {
-            resendOtpBtn.disabled = false;
-            resendOtpBtn.innerText = "Resend OTP";
-            showOtpError(error.response?.data?.message || "Unable to resend OTP");
-        }
+	    });
+
+  });
+
+}
+
+  function encryptField(en, fieldId, fieldName) {
+    const el = document.getElementById(fieldId);
+    if (!el) {
+      alert(fieldName + " element not found");
+      return false;
     }
 
-    if (userType) {
-        userType.addEventListener("change", handleUserTypeChange);
-        handleUserTypeChange();
+    const value = el.value;
+
+    if (!value || value.trim() === "") {
+      alert(fieldName + " is required");
+      return false;
     }
 
-    if (refreshButton) {
-        refreshButton.addEventListener("click", function () {
-            getCaptcha();
-        });
+    const encrypted = en.encrypt(value);
+    if (!encrypted) return false;
+
+    if (fieldId === "dob-temp") {
+      const hiddenDob = document.getElementById("dob");
+      if (!hiddenDob) return false;
+
+      hiddenDob.value = encrypted;
+    } else {
+      el.value = encrypted;
     }
 
-    getCaptcha();
+    return true;
+  }
 
-    if (loginForm) {
-        loginForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            submitLoginForm();
-        });
-    }
-
-    if (otpForm) {
-        otpForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-            submitOtpVerification();
-        });
-    }
-
-    if (resendOtpBtn) {
-        resendOtpBtn.addEventListener("click", resendOtp);
-    }
 });
