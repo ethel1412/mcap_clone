@@ -1,0 +1,28 @@
+/* =============================================
+   login.css — Login page specific styles
+   Fixes:
+   1. MIME type error (file was missing)
+   2. CSP inline style violation — bounceIn
+      keyframe moved here from login.js
+   ============================================= */
+
+/* Step number bounce-in animation (was injected
+   as inline <style> in login.js — CSP violation) */
+@keyframes bounceIn {
+  0%   { transform: scale(0.1); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* Applied via JS: step.style.animation = `bounceIn ...`
+   Keep opacity:0 as the initial state via JS attribute,
+   the animation fills forward to opacity:1 */
+.step-number {
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+/* Password field — autocomplete accessibility fix */
+input[name="password"] {
+  /* autocomplete="current-password" is set in HTML */
+}
