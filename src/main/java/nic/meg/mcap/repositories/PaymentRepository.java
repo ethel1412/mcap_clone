@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import nic.meg.mcap.entities.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-	Optional<Payment> findByOrderId(String orderId);
+    Optional<Payment> findByOrderId(String orderId);
+    Optional<Payment> findByPaymentSessionId(String paymentSessionId);
 }

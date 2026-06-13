@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import nic.meg.mcap.dto.request.CreateOrderRequestDTO;
-import nic.meg.mcap.dto.request.CustomerDTO;
 import nic.meg.mcap.entities.Payment;
 import nic.meg.mcap.repositories.PaymentRepository;
 import nic.meg.mcap.services.PaymentService;
@@ -22,13 +20,13 @@ import nic.meg.mcap.services.PaymentService;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    private static final String BASE_URL = "https://sandbox.cashfree.com/pg/orders";
+    private static final String BASE_URL = "https://api.razorpay.com/v1/orders";
 
-    @Value("${cashfree.client.id}")
-    private String clientId;
+    @Value("${razorpay.key.id}")
+    private String keyId;
 
-    @Value("${cashfree.client.secret}")
-    private String clientSecret;
+    @Value("${razorpay.key.secret}")
+    private String keySecret;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -36,91 +34,123 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 1. CREATE ORDER — called before showing the Razorpay checkout modal
+    // ─────────────────────────────────────────────────────────────────────
     @Override
     public Map<String, String> createOrder(Double amount, String customerId, String customerName,
                                            String customerEmail, String customerPhone,
                                            String returnUrl, String orderId) {
 
-        // 1. Map real applicant details
-        CustomerDTO customer = new CustomerDTO(customerId, customerName, customerEmail, customerPhone);
+        // Razorpay requires amount in PAISE (multiply by 100, no decimals)
+        int amountInPaise = (int) Math.round(amount * 100);
 
-        // 2. Prepare Cashfree Request
-        CreateOrderRequestDTO request = new CreateOrderRequestDTO();
-        request.setOrder_id(orderId);
-        request.setOrder_amount(amount);
-        request.setOrder_currency("INR");
-        request.setCustomer_details(customer);
-        request.setOrder_meta(Map.of("return_url", returnUrl));
+        Map<String, Object> request = Map.of(
+            "amount",   amountInPaise,
+            "currency", "INR",
+            "receipt",  orderId,
+            "notes", Map.of(
+                "customer_id",    customerId,
+                "customer_name",  customerName,
+                "customer_email", customerEmail
+            )
+        );
 
-        HttpEntity<CreateOrderRequestDTO> entity = new HttpEntity<>(request, getHeaders());
-
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, getHeaders());
         ResponseEntity<Map> response = restTemplate.postForEntity(BASE_URL, entity, Map.class);
 
         Map body = response.getBody();
-
-        if (body == null || !body.containsKey("payment_session_id")) {
-            throw new RuntimeException("Invalid response from Cashfree");
+        if (body == null || !body.containsKey("id")) {
+            throw new RuntimeException("Invalid response from Razorpay: " + body);
         }
 
-        String sessionId = (String) body.get("payment_session_id");
+        String razorpayOrderId = (String) body.get("id");
 
-        // 3. Save to DB
+        // Save to DB — paymentSessionId field now stores the Razorpay order id
         Payment payment = new Payment();
         payment.setOrderId(orderId);
-        payment.setPaymentSessionId(sessionId);
-        payment.setAmount(request.getOrder_amount());
-        payment.setCurrency(request.getOrder_currency());
-        payment.setCustomerId(customer.getCustomer_id());
+        payment.setPaymentSessionId(razorpayOrderId);
+        payment.setAmount(amount);
+        payment.setCurrency("INR");
+        payment.setCustomerId(customerId);
         payment.setStatus("CREATED");
         payment.setCreatedAt(LocalDateTime.now());
-
         paymentRepository.save(payment);
 
-        return Map.of("sessionId", sessionId, "orderId", orderId);
+        // Return keyId + razorpayOrderId — frontend needs both to open the modal
+        return Map.of(
+            "orderId",   razorpayOrderId,
+            "keyId",     keyId,
+            "receiptId", orderId
+        );
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 2. FETCH PAYMENT STATUS
+    //    Razorpay order statuses: "created" | "attempted" | "paid"
+    // ─────────────────────────────────────────────────────────────────────
     @Override
-    public Map<String, Object> fetchPaymentStatus(String orderId) {
-        String url = BASE_URL + "/" + orderId;
+    public Map<String, Object> fetchPaymentStatus(String razorpayOrderId) {
+        String url = BASE_URL + "/" + razorpayOrderId;
         HttpEntity<Void> entity = new HttpEntity<>(getHeaders());
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         Map<String, Object> body = response.getBody();
 
-        if (body != null && body.containsKey("order_status")) {
-            String status = (String) body.get("order_status");
-            updatePaymentStatus(orderId, status);
+        if (body != null && body.containsKey("status")) {
+            String rzpStatus = (String) body.get("status");
+            String internalStatus = switch (rzpStatus) {
+                case "paid"      -> "PAYMENT_SUCCESS";
+                case "attempted" -> "PAYMENT_ATTEMPTED";
+                default          -> rzpStatus.toUpperCase();
+            };
+            paymentRepository.findByPaymentSessionId(razorpayOrderId)
+                .ifPresent(p -> updatePaymentStatus(p.getOrderId(), internalStatus));
         }
 
         return body;
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 3. VERIFY PAYMENT SIGNATURE
+    //    HMAC-SHA256(keySecret, razorpayOrderId + "|" + razorpayPaymentId)
+    // ─────────────────────────────────────────────────────────────────────
     @Override
-    public Map<String, Object> payOrder(String sessionId) {
-        String url = "https://sandbox.cashfree.com/pg/orders/sessions";
-        Map<String, Object> body = Map.of(
-                "payment_session_id", sessionId,
-                "payment_method", Map.of("upi", Map.of("channel", "link"))
-        );
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, getHeaders());
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
-        return response.getBody();
+    public boolean verifyPaymentSignature(String razorpayOrderId,
+                                          String razorpayPaymentId,
+                                          String razorpaySignature) {
+        try {
+            String message = razorpayOrderId + "|" + razorpayPaymentId;
+            javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+            mac.init(new javax.crypto.spec.SecretKeySpec(
+                keySecret.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] hash = mac.doFinal(message.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) hexString.append(String.format("%02x", b));
+            return hexString.toString().equals(razorpaySignature);
+        } catch (Exception e) {
+            throw new RuntimeException("Signature verification failed", e);
+        }
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 4. UPDATE PAYMENT STATUS — gateway-agnostic, no changes needed
+    // ─────────────────────────────────────────────────────────────────────
     @Override
     public void updatePaymentStatus(String orderId, String status) {
         Payment payment = paymentRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
         payment.setStatus(status);
         payment.setUpdatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // HEADERS — Basic Auth replaces x-client-id / x-client-secret
+    // ─────────────────────────────────────────────────────────────────────
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-client-id", clientId);
-        headers.set("x-client-secret", clientSecret);
-        headers.set("x-api-version", "2023-08-01"); // Updated to latest stable Cashfree version
+        headers.setBasicAuth(keyId, keySecret);
         return headers;
     }
 }

@@ -4,14 +4,15 @@ import java.util.Map;
 
 public interface PaymentService {
 
-    // Updated to take dynamic order and customer details
     Map<String, String> createOrder(Double amount, String customerId, String customerName,
                                     String customerEmail, String customerPhone,
                                     String returnUrl, String orderId);
 
-    Map<String, Object> fetchPaymentStatus(String orderId);
+    Map<String, Object> fetchPaymentStatus(String razorpayOrderId);
 
-    Map<String, Object> payOrder(String sessionId);
+    boolean verifyPaymentSignature(String razorpayOrderId,
+                                   String razorpayPaymentId,
+                                   String razorpaySignature);
 
     void updatePaymentStatus(String orderId, String status);
 }
