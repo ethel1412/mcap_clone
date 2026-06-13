@@ -2,6 +2,7 @@ package nic.meg.mcap.entities;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +23,23 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// Your internal order reference (used as Razorpay receipt)
 	private String orderId;
-	private String paymentSessionId;
+
+	// Razorpay-specific fields
+	@Column(name = "razorpay_order_id")
+	private String razorpayOrderId;         // e.g. order_XXXXXXXXXXXXXXXX
+
+	@Column(name = "razorpay_payment_id")
+	private String razorpayPaymentId;       // e.g. pay_XXXXXXXXXXXXXXXX (set after capture)
+
+	@Column(name = "razorpay_signature")
+	private String razorpaySignature;       // HMAC-SHA256 signature (set after payment success)
+
 	private Double amount;
 	private String currency;
 	private String customerId;
-	private String status;
+	private String status;                  // CREATED, CAPTURED, FAILED
 
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
