@@ -72,20 +72,29 @@ public class PaymentController {
     @Autowired
     private InstituteSeatFeeService instituteSeatFeeService;
 
-    /** Meghalaya state code as stored in the state table */
     private static final short MEGHALAYA_STATE_CODE = 17;
 
+    /**
+     * Shows the Razorpay checkout page.
+     * Receives razorpayOrderId, keyId, and receiptId from the redirect.
+     */
     @GetMapping("/make-payment")
-    public String showPaymentPage(@RequestParam(required = false) String sessionId,
-                                  @RequestParam(required = false) String orderId, Model model) {
-        model.addAttribute("paymentSessionId", sessionId);
-        model.addAttribute("orderId", orderId);
+    public String showPaymentPage(
+            @RequestParam(required = false) String razorpayOrderId,
+            @RequestParam(required = false) String keyId,
+            @RequestParam(required = false) String receiptId,
+            Model model) {
+        model.addAttribute("razorpayOrderId", razorpayOrderId);
+        model.addAttribute("razorpayKeyId",   keyId);
+        model.addAttribute("receiptId",        receiptId);
         return "applicant/payment/make-payment";
     }
 
     @PostMapping("/initiate-application-fee")
-    public String initiateApplicationFee(@RequestParam("applicationId") Long applicationId, Authentication auth,
-                                         HttpServletRequest httpRequest, RedirectAttributes redirectAttributes) {
+    public String initiateApplicationFee(@RequestParam("applicationId") Long applicationId,
+                                         Authentication auth,
+                                         HttpServletRequest httpRequest,
+                                         RedirectAttributes redirectAttributes) {
         try {
             Application app = applicationRepository.findById(applicationId)
                     .filter(a -> a.getApplicant().getApplicantNo().equals(auth.getName()))
@@ -93,15 +102,10 @@ public class PaymentController {
 
             Applicant applicant = app.getApplicant();
 
-            // --- FEE LOGIC ---
-            // SC/ST residents of Meghalaya (permanent address stateCode = 17) → ₹200
-            // Other residents of Meghalaya (OBC/General with domicile certificate) → ₹500
-            // Applicants from outside Meghalaya → ₹1000
             boolean hasDomicile = Boolean.TRUE.equals(applicant.getHasDomicileCertificate());
             String category = applicant.getCommunityCategory() != null ?
                     applicant.getCommunityCategory().getCategoryCode().trim().toUpperCase() : "GEN";
 
-            // Check if permanent address is in Meghalaya
             boolean permanentAddressInMeghalaya = addressRepository
                     .findByEntityIdAndAddressType(applicant.getApplicantId(), "PERMANENT")
                     .map(addr -> addr.getState() != null && addr.getState().getStateCode() == MEGHALAYA_STATE_CODE)
@@ -110,13 +114,12 @@ public class PaymentController {
             boolean isMeghalayaResident = hasDomicile || permanentAddressInMeghalaya;
 
             BigDecimal totalFee;
-
             if (!isMeghalayaResident) {
-                totalFee = new BigDecimal("1000.00"); // Outside Meghalaya
+                totalFee = new BigDecimal("1000.00");
             } else if ("ST".equals(category) || "SC".equals(category)) {
-                totalFee = new BigDecimal("200.00");  // SC / ST residents of Meghalaya
+                totalFee = new BigDecimal("200.00");
             } else {
-                totalFee = new BigDecimal("500.00");  // OBC / General residents of Meghalaya
+                totalFee = new BigDecimal("500.00");
             }
 
             if (totalFee.compareTo(BigDecimal.ZERO) <= 0) {
@@ -126,22 +129,27 @@ public class PaymentController {
 
             String orderId = "APP_" + applicationId + "_" + System.currentTimeMillis();
 
-            // FIX 1: Dynamically generate the return URL so the session domain is strictly preserved
-            String baseUrl = ServletUriComponentsBuilder.fromRequestUri(httpRequest).replacePath(null).build().toUriString();
-            String returnUrl = baseUrl + "/applicants/payment/payment-status?order_id={order_id}";
+            String baseUrl = ServletUriComponentsBuilder.fromRequestUri(httpRequest)
+                    .replacePath(null).build().toUriString();
+            // returnUrl kept for reference — actual redirect is handled by the Razorpay handler callback
+            String returnUrl = baseUrl + "/applicants/payment/payment-callback";
 
-            String customerName = applicant.getFirstName() + " " + (applicant.getLastName() != null ? applicant.getLastName() : "");
+            String customerName  = applicant.getFirstName() + " " + (applicant.getLastName() != null ? applicant.getLastName() : "");
             String customerPhone = applicant.getPhoneNumber() != null ? applicant.getPhoneNumber() : "9999999999";
             String customerEmail = applicant.getEmail() != null ? applicant.getEmail() : "no-email@domain.com";
 
             Map<String, String> response = paymentService.createOrder(
                     totalFee.doubleValue(), applicant.getApplicantNo(), customerName.trim(),
-                    customerEmail, customerPhone, returnUrl, orderId
-            );
+                    customerEmail, customerPhone, returnUrl, orderId);
 
-            return "redirect:/applicants/payment/make-payment?sessionId=" + response.get("sessionId") + "&orderId=" + response.get("orderId");
+            // Razorpay: redirect with orderId (rzp order id), keyId (public key), receiptId (internal id)
+            return "redirect:/applicants/payment/make-payment"
+                    + "?razorpayOrderId=" + response.get("orderId")
+                    + "&keyId="           + response.get("keyId")
+                    + "&receiptId="       + response.get("receiptId");
 
         } catch (Exception e) {
+            logger.error("Error initiating application fee payment", e);
             redirectAttributes.addFlashAttribute("errorMessage", "Could not initiate payment. Please try again.");
             return "redirect:/applicants/dashboard";
         }
@@ -161,7 +169,6 @@ public class PaymentController {
                 throw new SecurityException("Unauthorized access to allotment.");
             }
 
-            // Verify status matches the intent
             AllotmentStatus currentStatus = allotment.getStatus();
             boolean validStatus = isSlideUp
                     ? currentStatus == AllotmentStatus.SLIDE_UP
@@ -173,7 +180,6 @@ public class PaymentController {
                 return "redirect:/applicants/dashboard";
             }
 
-            // Resolve dynamic seat acceptance fee from institute's fee structure
             Integer programmeOfferedId = allotment.getProgrammeOffered() != null
                     ? allotment.getProgrammeOffered().getProgrammeOfferedId()
                     : null;
@@ -189,19 +195,16 @@ public class PaymentController {
             }
 
             double acceptanceFee = resolvedFee.doubleValue();
-
             Applicant applicant = allotment.getApplicant();
 
-            // Prefix encodes the action: SEAT_ = accept, SLIDEUP_ = slide-up hold
-            String prefix = isSlideUp ? "SLIDEUP_" : "SEAT_";
+            String prefix  = isSlideUp ? "SLIDEUP_" : "SEAT_";
             String orderId = prefix + allotmentId + "_" + System.currentTimeMillis();
 
-            String baseUrl = ServletUriComponentsBuilder.fromRequestUri(httpRequest)
+            String baseUrl  = ServletUriComponentsBuilder.fromRequestUri(httpRequest)
                     .replacePath(null).build().toUriString();
-            String returnUrl = baseUrl + "/applicants/payment/payment-status?order_id={order_id}";
+            String returnUrl = baseUrl + "/applicants/payment/payment-callback";
 
-            String customerName = applicant.getFirstName() + " "
-                    + (applicant.getLastName() != null ? applicant.getLastName() : "");
+            String customerName  = applicant.getFirstName() + " " + (applicant.getLastName() != null ? applicant.getLastName() : "");
             String customerPhone = applicant.getPhoneNumber() != null ? applicant.getPhoneNumber() : "9999999999";
             String customerEmail = applicant.getEmail() != null ? applicant.getEmail() : "no-email@domain.com";
 
@@ -209,19 +212,58 @@ public class PaymentController {
                     acceptanceFee, applicant.getApplicantNo(), customerName.trim(),
                     customerEmail, customerPhone, returnUrl, orderId);
 
-            return "redirect:/applicants/payment/make-payment?sessionId="
-                    + response.get("sessionId") + "&orderId=" + response.get("orderId");
+            return "redirect:/applicants/payment/make-payment"
+                    + "?razorpayOrderId=" + response.get("orderId")
+                    + "&keyId="           + response.get("keyId")
+                    + "&receiptId="       + response.get("receiptId");
 
         } catch (Exception e) {
+            logger.error("Error initiating seat fee payment", e);
             redirectAttributes.addFlashAttribute("errorMessage", "Could not initiate seat fee payment.");
             return "redirect:/applicants/dashboard";
         }
     }
 
     /**
-     * Returns the fee structure breakdown for a given programmeOfferedId.
-     * Called via AJAX from the applicant dashboard before the applicant proceeds to pay.
+     * Razorpay frontend callback — called after the modal closes (success or failure).
+     * The Razorpay JS handler POSTs the three fields below to this endpoint.
+     * Signature is verified server-side before any business logic runs.
      */
+    @PostMapping("/payment-callback")
+    public String paymentCallback(
+            @RequestParam("razorpay_order_id")   String razorpayOrderId,
+            @RequestParam("razorpay_payment_id") String razorpayPaymentId,
+            @RequestParam("razorpay_signature")  String razorpaySignature,
+            @RequestParam("receipt_id")           String receiptId,
+            RedirectAttributes redirectAttributes) {
+
+        boolean valid = paymentService.verifyPaymentSignature(
+                razorpayOrderId, razorpayPaymentId, razorpaySignature);
+
+        if (!valid) {
+            logger.warn("Invalid Razorpay signature for order {}", razorpayOrderId);
+            redirectAttributes.addFlashAttribute("errorMessage", "Payment verification failed. Please contact support.");
+            return "redirect:/applicants/dashboard";
+        }
+
+        // Mark as success and run downstream business logic
+        paymentService.updatePaymentStatus(receiptId, "PAYMENT_SUCCESS");
+        finalizeSuccessfulPayment(receiptId, razorpayPaymentId);
+
+        return "redirect:/applicants/payment/payment-status?order_id=" + receiptId
+                + "&payment_id=" + razorpayPaymentId;
+    }
+
+    @GetMapping("/payment-status")
+    public String paymentStatus(@RequestParam("order_id") String orderId,
+                                @RequestParam(required = false) String payment_id,
+                                Model model) {
+        model.addAttribute("orderId",   orderId);
+        model.addAttribute("paymentId", payment_id);
+        model.addAttribute("status",    "PAYMENT_SUCCESS");
+        return "applicant/payment/payment-status";
+    }
+
     @GetMapping("/seat-fee-structure/{programmeOfferedId}")
     @ResponseBody
     public ResponseEntity<?> getSeatFeeStructure(@PathVariable Integer programmeOfferedId) {
@@ -239,100 +281,57 @@ public class PaymentController {
         }
     }
 
-    // FIX 2: Remove Authentication requirement from the return URL processing
-    @GetMapping("/payment-status")
-    public String paymentStatus(@RequestParam("order_id") String orderId, Model model) {
-
-        Map<String, Object> response = paymentService.fetchPaymentStatus(orderId);
-        String status = (String) response.get("order_status");
-
-        if ("PAID".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
-            finalizeSuccessfulPayment(orderId, response);
+    @GetMapping("/receipt/{id}")
+    public org.springframework.http.ResponseEntity<byte[]> downloadReceipt(
+            @PathVariable("id") Long applicationId, Authentication auth) {
+        try {
+            byte[] pdfBytes = pdfGenerationService.generateReceiptPdf(applicationId, auth.getName());
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("inline", "Payment-Receipt-" + applicationId + ".pdf");
+            return new org.springframework.http.ResponseEntity<>(pdfBytes, headers, org.springframework.http.HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return org.springframework.http.ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return org.springframework.http.ResponseEntity.internalServerError().build();
         }
-
-        model.addAttribute("orderId", orderId);
-        model.addAttribute("status", status);
-
-        return "applicant/payment/payment-status";
     }
 
-    // FIX 3: Look up applicantNo directly from the database to bypass session loss vulnerabilities
-    private void finalizeSuccessfulPayment(String orderId, Map<String, Object> cashfreeResponse) {
-        try {
-            if (orderId.startsWith("APP_")) {
-                Long applicationId = Long.parseLong(orderId.split("_")[1]);
+    // ─────────────────────────────────────────────────────────────────────
+    // PRIVATE HELPERS
+    // ─────────────────────────────────────────────────────────────────────
 
+    private void finalizeSuccessfulPayment(String receiptOrderId, String razorpayPaymentId) {
+        try {
+            if (receiptOrderId.startsWith("APP_")) {
+                Long applicationId = Long.parseLong(receiptOrderId.split("_")[1]);
                 Application app = applicationRepository.findById(applicationId).orElseThrow();
                 String applicantNo = app.getApplicant().getApplicantNo();
 
                 applicationService.confirmPayment(applicationId, applicantNo);
 
                 app = applicationRepository.findById(applicationId).orElseThrow();
-
-                if (cashfreeResponse.get("order_amount") != null) {
-                    app.setAmountPaid(BigDecimal.valueOf(
-                            Double.parseDouble(cashfreeResponse.get("order_amount").toString())));
-                }
-
-                String txId = cashfreeResponse.get("cf_order_id") != null
-                        ? cashfreeResponse.get("cf_order_id").toString()
-                        : cashfreeResponse.getOrDefault("payment_session_id", "").toString();
-                app.setTransactionId(txId.length() > 100 ? txId.substring(0, 100) : txId);
-
+                app.setTransactionId(razorpayPaymentId.length() > 100
+                        ? razorpayPaymentId.substring(0, 100) : razorpayPaymentId);
                 applicationRepository.save(app);
+
                 submissionService.finalizeApplicationSubmission(app);
                 eligibilityCalculationService.calculateAndSaveEligibility(app);
 
-            } else if (orderId.startsWith("SEAT_") || orderId.startsWith("SLIDEUP_")) {
-                // Both SEAT_ and SLIDEUP_ encode the allotmentId in position [1]
-                Long allotmentId = Long.parseLong(orderId.split("_")[1]);
+            } else if (receiptOrderId.startsWith("SEAT_") || receiptOrderId.startsWith("SLIDEUP_")) {
+                Long allotmentId = Long.parseLong(receiptOrderId.split("_")[1]);
                 SeatAllotment allotment = seatAllotmentRepository.findById(allotmentId).orElseThrow();
                 String applicantNo = allotment.getApplicant().getApplicantNo();
 
-                if (orderId.startsWith("SLIDEUP_")) {
-                    // Payment confirms the slide-up hold — status stays SLIDE_UP (already set)
-                    // Just log; the allotment is already in SLIDE_UP state from the earlier button click
+                if (receiptOrderId.startsWith("SLIDEUP_")) {
                     logger.info("Slide Up fee paid for allotment {} by applicant {}", allotmentId, applicantNo);
                 } else {
-                    // SEAT_ → standard acceptance
                     counselingService.acceptAllotment(applicantNo, allotmentId);
                     logger.info("Seat acceptance fee paid, allotment {} accepted for applicant {}", allotmentId, applicantNo);
                 }
             }
         } catch (Exception e) {
-            logger.info("Failed to finalise post-payment logic for order {}", orderId, e);
-        }
-    }
-
-    @GetMapping("/payment-status-api/{orderId}")
-    @ResponseBody
-    public Map<String, Object> getPaymentStatusAPI(@PathVariable String orderId) {
-        Map<String, Object> response = paymentService.fetchPaymentStatus(orderId);
-        String status = (String) response.get("order_status");
-
-        if ("PAID".equalsIgnoreCase(status) || "SUCCESS".equalsIgnoreCase(status)) {
-            finalizeSuccessfulPayment(orderId, response);
-        }
-
-        return response;
-    }
-
-    @GetMapping("/receipt/{id}")
-    public org.springframework.http.ResponseEntity<byte[]> downloadReceipt(@PathVariable("id") Long applicationId, Authentication auth) {
-        try {
-            byte[] pdfBytes = pdfGenerationService.generateReceiptPdf(applicationId, auth.getName());
-
-            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-            headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
-            // "inline" opens it in a new browser tab. Change to "attachment" if you want it to force-download.
-            headers.setContentDispositionFormData("inline", "Payment-Receipt-" + applicationId + ".pdf");
-
-            return new org.springframework.http.ResponseEntity<>(pdfBytes, headers, org.springframework.http.HttpStatus.OK);
-
-        } catch (IllegalStateException e) {
-            return org.springframework.http.ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return org.springframework.http.ResponseEntity.internalServerError().build();
+            logger.error("Failed to finalise post-payment logic for order {}", receiptOrderId, e);
         }
     }
 }
