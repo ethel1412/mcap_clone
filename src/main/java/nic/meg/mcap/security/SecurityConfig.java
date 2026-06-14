@@ -118,7 +118,11 @@ public class SecurityConfig {
 					""");
 		});
 
-		http.csrf(csrf -> csrf.ignoringRequestMatchers("/applicants/payment/webhook", "/otp/**"))
+				http.csrf(csrf -> csrf.ignoringRequestMatchers(
+					"/applicants/payment/webhook",   // keep for backward compat
+					"/webhook/razorpay",             // ← ADD THIS (new RazorpayWebhookController)
+					"/otp/**"
+				))
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.addFilterBefore(noCacheFilter, UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
@@ -284,23 +288,37 @@ public class SecurityConfig {
 //								+ "form-action 'self'; " + "frame-ancestors 'none'; " + "upgrade-insecure-requests; "
 //								+ "block-all-mixed-content;"))
 
-						csp.policyDirectives("default-src 'self'; " +
+						csp.policyDirectives(
+							"default-src 'self'; " +
 
-								"script-src 'self' https://sdk.cashfree.com; " +
+							"script-src 'self' " +
+								"https://checkout.razorpay.com " +      // Razorpay checkout SDK
+								"https://api.razorpay.com; " +          // Razorpay API calls from SDK
 
-								"style-src 'self' " + "https://cdn.ux4g.gov.in " + "https://fonts.googleapis.com; " +
+							"style-src 'self' " +
+								"https://cdn.ux4g.gov.in " +
+								"https://fonts.googleapis.com; " +
 
-								"font-src 'self' data: " + "https://fonts.gstatic.com " + "https://cdn.ux4g.gov.in; " +
+							"font-src 'self' data: " +
+								"https://fonts.gstatic.com " +
+								"https://cdn.ux4g.gov.in; " +
 
-								"connect-src 'self' https://sandbox.cashfree.com https: ;" +
+							"connect-src 'self' " +
+								"https://api.razorpay.com " +           // Razorpay API
+								"https://lumberjack.razorpay.com " +    // Razorpay analytics/logging
+								"https:; " +
 
-								"frame-src 'self'; " +
+							"frame-src 'self' " +
+								"https://api.razorpay.com; " +          // Razorpay modal iframe
 
-								"form-action 'self' https://sandbox.cashfree.com; " +
+							"form-action 'self'; " +                    // no more cashfree in form-action
 
-								"img-src 'self' data: https:; " +
+							"img-src 'self' data: https:; " +
 
-								"object-src 'none'; " + "base-uri 'self';" + "frame-ancestors 'none';"))
+							"object-src 'none'; " +
+							"base-uri 'self'; " +
+							"frame-ancestors 'none';"
+						))
 						.referrerPolicy(ref -> ref.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)));
 
 		return http.build();
