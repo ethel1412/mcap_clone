@@ -39,6 +39,13 @@ public class PaymentController {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
+    // ─── TEST OVERRIDE ───────────────────────────────────────────────────────────
+    // Set to true to charge ₹1 for all payments (Razorpay test mode).
+    // REMOVE or set to false before going to production.
+    private static final boolean TEST_OVERRIDE_AMOUNT = true;
+    private static final BigDecimal TEST_AMOUNT = new BigDecimal("1.00");
+    // ─────────────────────────────────────────────────────────────────────────────
+
     @Autowired
     private PaymentService paymentService;
 
@@ -114,7 +121,10 @@ public class PaymentController {
             boolean isMeghalayaResident = hasDomicile || permanentAddressInMeghalaya;
 
             BigDecimal totalFee;
-            if (!isMeghalayaResident) {
+            if (TEST_OVERRIDE_AMOUNT) {
+                // TEST MODE: charge ₹1 regardless of category/domicile
+                totalFee = TEST_AMOUNT;
+            } else if (!isMeghalayaResident) {
                 totalFee = new BigDecimal("1000.00");
             } else if ("ST".equals(category) || "SC".equals(category)) {
                 totalFee = new BigDecimal("200.00");
@@ -184,14 +194,20 @@ public class PaymentController {
                     ? allotment.getProgrammeOffered().getProgrammeOfferedId()
                     : null;
 
-            BigDecimal resolvedFee = (programmeOfferedId != null)
-                    ? instituteSeatFeeService.resolveAcceptanceFee(programmeOfferedId)
-                    : null;
+            BigDecimal resolvedFee;
+            if (TEST_OVERRIDE_AMOUNT) {
+                // TEST MODE: charge ₹1 regardless of configured seat fee
+                resolvedFee = TEST_AMOUNT;
+            } else {
+                resolvedFee = (programmeOfferedId != null)
+                        ? instituteSeatFeeService.resolveAcceptanceFee(programmeOfferedId)
+                        : null;
 
-            if (resolvedFee == null || resolvedFee.compareTo(BigDecimal.ZERO) <= 0) {
-                redirectAttributes.addFlashAttribute("errorMessage",
-                        "No seat acceptance fee has been configured for your allotted programme. Please contact the institute.");
-                return "redirect:/applicants/dashboard";
+                if (resolvedFee == null || resolvedFee.compareTo(BigDecimal.ZERO) <= 0) {
+                    redirectAttributes.addFlashAttribute("errorMessage",
+                            "No seat acceptance fee has been configured for your allotted programme. Please contact the institute.");
+                    return "redirect:/applicants/dashboard";
+                }
             }
 
             double acceptanceFee = resolvedFee.doubleValue();
