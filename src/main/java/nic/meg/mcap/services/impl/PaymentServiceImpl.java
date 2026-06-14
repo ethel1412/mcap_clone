@@ -56,20 +56,23 @@ public class PaymentServiceImpl implements PaymentService {
             )
         );
 
+        // FIX: use parameterized Map<String, Object> instead of raw Map
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, getHeaders());
-        ResponseEntity<Map> response = restTemplate.postForEntity(BASE_URL, entity, Map.class);
+        ResponseEntity<Map<String, Object>> response =
+            restTemplate.exchange(BASE_URL, HttpMethod.POST, entity,
+                new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {});
 
-        Map body = response.getBody();
+        Map<String, Object> body = response.getBody();
         if (body == null || !body.containsKey("id")) {
             throw new RuntimeException("Invalid response from Razorpay: " + body);
         }
 
         String razorpayOrderId = (String) body.get("id");
 
-        // Save to DB — paymentSessionId field now stores the Razorpay order id
+        // FIX: use setRazorpayOrderId() — Payment entity has no setPaymentSessionId()
         Payment payment = new Payment();
         payment.setOrderId(orderId);
-        payment.setPaymentSessionId(razorpayOrderId);
+        payment.setRazorpayOrderId(razorpayOrderId);   // ← was: setPaymentSessionId()
         payment.setAmount(amount);
         payment.setCurrency("INR");
         payment.setCustomerId(customerId);
@@ -93,7 +96,12 @@ public class PaymentServiceImpl implements PaymentService {
     public Map<String, Object> fetchPaymentStatus(String razorpayOrderId) {
         String url = BASE_URL + "/" + razorpayOrderId;
         HttpEntity<Void> entity = new HttpEntity<>(getHeaders());
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+
+        // FIX: fully parameterized response type — no raw Map, no unchecked cast
+        ResponseEntity<Map<String, Object>> response =
+            restTemplate.exchange(url, HttpMethod.GET, entity,
+                new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {});
+
         Map<String, Object> body = response.getBody();
 
         if (body != null && body.containsKey("status")) {
@@ -103,7 +111,8 @@ public class PaymentServiceImpl implements PaymentService {
                 case "attempted" -> "PAYMENT_ATTEMPTED";
                 default          -> rzpStatus.toUpperCase();
             };
-            paymentRepository.findByPaymentSessionId(razorpayOrderId)
+            // FIX: use findByRazorpayOrderId() to match the correct field
+            paymentRepository.findByRazorpayOrderId(razorpayOrderId)
                 .ifPresent(p -> updatePaymentStatus(p.getOrderId(), internalStatus));
         }
 
@@ -133,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     // ─────────────────────────────────────────────────────────────────────
-    // 4. UPDATE PAYMENT STATUS — gateway-agnostic, no changes needed
+    // 4. UPDATE PAYMENT STATUS — gateway-agnostic
     // ─────────────────────────────────────────────────────────────────────
     @Override
     public void updatePaymentStatus(String orderId, String status) {
