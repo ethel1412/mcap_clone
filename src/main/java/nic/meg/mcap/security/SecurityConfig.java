@@ -81,10 +81,6 @@ public class SecurityConfig {
 		customFilter.setFilterProcessesUrl("/login/process");
 		customFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
 
-//		customFilter.setAuthenticationFailureHandler((request, response, exception) -> {
-//			response.sendRedirect(request.getContextPath() + "/login?error");
-//		});
-
 		customFilter.setAuthenticationFailureHandler((request, response, exception) -> {
 
 			response.setContentType("application/json");
@@ -97,11 +93,11 @@ public class SecurityConfig {
 				response.setStatus(HttpServletResponse.SC_OK);
 
 				response.getWriter().write("""
-							{
-							  "status":"OTP_REQUIRED",
-							  "message":"OTP sent successfully"
-							}
-						""");
+						{
+						  "status":"OTP_REQUIRED",
+						  "message":"OTP sent successfully"
+						}
+					""");
 
 				return;
 			}
@@ -111,16 +107,16 @@ public class SecurityConfig {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
 			response.getWriter().write("""
-						{
-						  "status":"LOGIN_FAILED",
-						  "message":"Invalid credentials"
-						}
-					""");
+					{
+					  "status":"LOGIN_FAILED",
+					  "message":"Invalid credentials"
+					}
+				""");
 		});
 
 				http.csrf(csrf -> csrf.ignoringRequestMatchers(
 					"/applicants/payment/webhook",   // keep for backward compat
-					"/webhook/razorpay",             // ← ADD THIS (new RazorpayWebhookController)
+					"/webhook/razorpay",             // RazorpayWebhookController
 					"/otp/**"
 				))
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -150,7 +146,7 @@ public class SecurityConfig {
 
 						.requestMatchers(HttpMethod.POST, "/applicants/payment/webhook").permitAll()
 
-						.requestMatchers(HttpMethod.POST, "/webhook/razorpay").permitAll() 
+						.requestMatchers(HttpMethod.POST, "/webhook/razorpay").permitAll()
 
 						.requestMatchers(HttpMethod.POST, "/captcha/get-captcha", "/key/get-publickey").permitAll()
 
@@ -246,9 +242,7 @@ public class SecurityConfig {
 				.headers(headers -> headers.addHeaderWriter((request, response) -> {
 					headers.cacheControl(Customizer.withDefaults());
 
-					response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-
-					response.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
+					response.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
 
 					response.setHeader("Cross-Origin-Resource-Policy", "same-origin");
 				})
@@ -268,58 +262,49 @@ public class SecurityConfig {
 
 						.contentTypeOptions(Customizer.withDefaults())
 
-						.contentSecurityPolicy(csp ->
-//                        csp.policyDirectives(
-//                            "default-src 'self'; " +
-//                            "script-src 'self' https://cdn.ux4g.gov.in https://cdn.jsdelivr.net https://sdk.cashfree.com https://*.cashfree.com; " +
-//                            "style-src 'self' https://cdn.ux4g.gov.in https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-//                            "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.ux4g.gov.in; " +
-//                            "img-src 'self' data: https://*.cashfree.com; " +
-//                            "connect-src 'self' https://sandbox.cashfree.com https://api.cashfree.com https://*.cashfree.com; " +
-//                            "frame-src 'self' https://*.cashfree.com; " +
-//                            "object-src 'none'; " +
-//                            "base-uri 'self'; " +
-//                            "form-action 'self'; " +
-//                            "frame-ancestors 'self';"
-//                        )
-//						csp.policyDirectives("default-src 'self'; " + "script-src 'self' https://cdn.ux4g.gov.in;"
-//								+ "style-src 'self' https://cdn.ux4g.gov.in; "
-//								+ "font-src 'self' https://cdn.ux4g.gov.in; " + "img-src 'self' data: https:; "
-//								+ "connect-src 'self'; " + "object-src 'none'; " + "base-uri 'self'; "
+						.contentSecurityPolicy(csp -> csp.policyDirectives(
+								"default-src 'self'; " +
 
-//								+ "form-action 'self'; " + "frame-ancestors 'none'; " + "upgrade-insecure-requests; "
-//								+ "block-all-mixed-content;"))
+								// Razorpay checkout SDK + risk-detection bundle (cdn.razorpay.com)
+								// plus any other scripts loaded by the checkout modal at runtime
+								"script-src 'self' " +
+									"https://checkout.razorpay.com " +
+									"https://cdn.razorpay.com " +
+									"https://api.razorpay.com " +
+									"https://cdn.ux4g.gov.in " +
+									"https://cdn.jsdelivr.net; " +
 
-						csp.policyDirectives(
-							"default-src 'self'; " +
+								// 'unsafe-inline' is required — Razorpay injects inline styles
+								// into its modal iframe; there is no hash/nonce alternative
+								"style-src 'self' 'unsafe-inline' " +
+									"https://cdn.ux4g.gov.in " +
+									"https://fonts.googleapis.com " +
+									"https://cdn.jsdelivr.net " +
+									"https://cdnjs.cloudflare.com; " +
 
-							"script-src 'self' " +
-								"https://checkout.razorpay.com " +      // Razorpay checkout SDK
-								"https://api.razorpay.com; " +          // Razorpay API calls from SDK
+								"font-src 'self' data: " +
+									"https://fonts.gstatic.com " +
+									"https://cdn.ux4g.gov.in " +
+									"https://cdnjs.cloudflare.com " +
+									"https://cdn.jsdelivr.net; " +
 
-							"style-src 'self' " +
-								"https://cdn.ux4g.gov.in " +
-								"https://fonts.googleapis.com; " +
+								// Razorpay JS makes XHR calls to api + lumberjack (analytics)
+								"connect-src 'self' " +
+									"https://api.razorpay.com " +
+									"https://cdn.razorpay.com " +
+									"https://lumberjack.razorpay.com; " +
 
-							"font-src 'self' data: " +
-								"https://fonts.gstatic.com " +
-								"https://cdn.ux4g.gov.in; " +
+								// Razorpay payment modal is an iframe from api.razorpay.com
+								"frame-src 'self' " +
+									"https://api.razorpay.com " +
+									"https://checkout.razorpay.com; " +
 
-							"connect-src 'self' " +
-								"https://api.razorpay.com " +           // Razorpay API
-								"https://lumberjack.razorpay.com " +    // Razorpay analytics/logging
-								"https:; " +
+								"img-src 'self' data: https:; " +
 
-							"frame-src 'self' " +
-								"https://api.razorpay.com; " +          // Razorpay modal iframe
-
-							"form-action 'self'; " +                    // no more cashfree in form-action
-
-							"img-src 'self' data: https:; " +
-
-							"object-src 'none'; " +
-							"base-uri 'self'; " +
-							"frame-ancestors 'none';"
+								"form-action 'self'; " +
+								"object-src 'none'; " +
+								"base-uri 'self'; " +
+								"frame-ancestors 'none';"
 						))
 						.referrerPolicy(ref -> ref.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)));
 
