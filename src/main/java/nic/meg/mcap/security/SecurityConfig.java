@@ -150,6 +150,8 @@ public class SecurityConfig {
 
 						.requestMatchers(HttpMethod.POST, "/applicants/payment/webhook").permitAll()
 
+						.requestMatchers(HttpMethod.POST, "/webhook/razorpay").permitAll() 
+
 						.requestMatchers(HttpMethod.POST, "/captcha/get-captcha", "/key/get-publickey").permitAll()
 
 						.requestMatchers("/controller/admissions/**", "/roadmap", "/step-template-data/templates/**",
