@@ -8,5 +8,5 @@ import nic.meg.mcap.entities.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Optional<Payment> findByOrderId(String orderId);
-    Optional<Payment> findByPaymentSessionId(String paymentSessionId);
+    Optional<Payment> findByRazorpayOrderId(String razorpayOrderId); // replaces findByPaymentSessionId
 }
